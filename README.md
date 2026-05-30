@@ -52,6 +52,29 @@ project-root/
 - Cursor: prefer `.cursor/rules/*.mdc` project rules. `.cursorrules` may be generated only as legacy fallback.
 - Generic agents: read `AGENTS.md` and `.agents/skills/**/SKILL.md` as the portable source of truth.
 
-## Install
+## Installation
 
-Use `scripts/install-ai-workflow.sh` from a target project root.
+You have multiple cross-platform installation methods available:
+
+### Method 1: Using NPM (Recommended & Automatic)
+Add the package to your development dependencies. The installation triggers a `postinstall` hook that automatically populates the directory structures and templates in your project root:
+```bash
+npm install --save-dev alex-agent-workflow
+```
+
+### Method 2: Zero-Dependency Run (`npx`)
+If you want to initialize the workspace without adding it to `package.json`:
+```bash
+npx alex-agent-workflow
+```
+
+### Method 3: Shell Scripts (Fallback)
+Run the script from your project root:
+*   **Windows**:
+    ```powershell
+    powershell -ExecutionPolicy Bypass -File .\install-ai-workflow.ps1
+    ```
+*   **macOS / Linux**:
+    ```bash
+    bash ./install-ai-workflow.sh
+    ```

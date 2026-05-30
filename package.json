@@ -1,0 +1,32 @@
+{
+  "name": "alex-agent-workflow",
+  "version": "2.0.0",
+  "description": "Controlled software delivery workflow template for AI agents",
+  "main": "bin/install.js",
+  "bin": {
+    "alex-agent-workflow": "bin/install.js"
+  },
+  "scripts": {
+    "postinstall": "node bin/install.js"
+  },
+  "keywords": [
+    "alex",
+    "agent",
+    "workflow",
+    "claude",
+    "gemini",
+    "cursor",
+    "ai",
+    "copilot"
+  ],
+  "author": "Antigravity",
+  "license": "MIT",
+  "files": [
+    "templates",
+    "bin",
+    "AGENTS.md",
+    "CLAUDE.md",
+    "GEMINI.md",
+    "README.md"
+  ]
+}
