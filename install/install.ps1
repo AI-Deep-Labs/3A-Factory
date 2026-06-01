@@ -37,6 +37,13 @@ if ([string]::IsNullOrWhiteSpace($TemplateRoot)) {
 
 $TemplateRoot = (Resolve-Path -LiteralPath $TemplateRoot).Path
 $TargetRoot = Resolve-FullPath $Target
+
+# Avoid polluting the template developer's repository root during local package install or run.
+if ($TargetRoot -eq $TemplateRoot) {
+    Write-Host "[OK] Running in development repository. Skipping template installation to avoid root pollution." -ForegroundColor Green
+    exit 0
+}
+
 $TemplatesDir = Join-Path $TemplateRoot "templates"
 
 if (-not (Test-Path -LiteralPath $TemplatesDir -PathType Container)) {

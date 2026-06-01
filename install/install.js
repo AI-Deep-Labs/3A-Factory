@@ -19,6 +19,12 @@ const isVerbose = args.includes('--verbose');
 const targetRoot = process.env.INIT_CWD || process.cwd();
 const templateRoot = path.resolve(__dirname, '..');
 
+// Avoid polluting the template developer's repository root during local package install or run.
+if (path.resolve(targetRoot) === path.resolve(templateRoot)) {
+  console.log('\x1b[32m%s\x1b[0m', '[OK] Running in development repository. Skipping template installation to avoid root pollution.');
+  process.exit(0);
+}
+
 // ANSI Terminal Colors
 const colors = {
   reset: '\x1b[0m',

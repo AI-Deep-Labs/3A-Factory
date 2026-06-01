@@ -63,6 +63,13 @@ done
 
 TEMPLATE_ROOT="$(cd "$TEMPLATE_ROOT" && pwd)"
 TARGET_ROOT="$(mkdir -p "$TARGET_ROOT" && cd "$TARGET_ROOT" && pwd)"
+
+# Avoid polluting the template developer's repository root during local package install or run.
+if [[ "$TARGET_ROOT" == "$TEMPLATE_ROOT" ]]; then
+  success "Running in development repository. Skipping template installation to avoid root pollution."
+  exit 0
+fi
+
 TEMPLATES_DIR="$TEMPLATE_ROOT/templates"
 
 if [[ ! -d "$TEMPLATES_DIR" ]]; then
