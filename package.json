@@ -2,12 +2,12 @@
   "name": "3a-factory",
   "version": "1.0.5",
   "description": "Controlled software delivery workflow template for AI agents",
-  "main": "install/install.js",
+  "main": "scripts/install.js",
   "bin": {
-    "3a-factory": "install/install.js"
+    "3a-factory": "scripts/install.js"
   },
   "scripts": {
-    "postinstall": "node install/install.js"
+    "postinstall": "node scripts/install.js"
   },
   "keywords": [
     "alex",
@@ -23,7 +23,7 @@
   "license": "MIT",
   "files": [
     "templates",
-    "install",
+    "scripts",
     "AGENTS.md",
     "CLAUDE.md",
     "GEMINI.md",

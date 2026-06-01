@@ -70,9 +70,9 @@ npx 3a-factory
 Run the script from your project root:
 *   **Windows**:
     ```powershell
-    powershell -ExecutionPolicy Bypass -File .\install\install.ps1
+    powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
     ```
 *   **macOS / Linux**:
     ```bash
-    bash ./install/install.sh
+    bash ./scripts/install.sh
     ```
