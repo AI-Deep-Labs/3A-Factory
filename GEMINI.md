@@ -6,7 +6,7 @@ Gemini-specific usage:
 - **Language**: Follow `AGENTS.md` strictly and generate all workspace documents and outputs in Vietnamese (tiếng Việt).
 - Gemini CLI custom commands should live in `.gemini/commands/*.toml`.
 - For Gemini Advanced / AI Studio, use `.agents/skills/*/SKILL.md` as copy-paste prompts.
-- If slash commands are unavailable, treat `/grill-me`, `/spec`, `/plan`, `/code`, `/review`, `/init-ai-workflow`, `/project-overview`, `/adr`, `/caveman`, `/handoff` as natural-language phase requests.
+- If slash commands are unavailable, treat `/grill-me`, `/spec`, `/plan`, `/code`, `/review`, `/init-ai-workflow`, `/project-overview`, `/adr`, `/caveman`, `/handoff`, `/qa` as natural-language phase requests.
 
 Project context is filled by `/init-ai-workflow`:
 - Project type: `[DETECTED_PROJECT_TYPE]`

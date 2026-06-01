@@ -35,6 +35,7 @@ For each workflow phase, read the corresponding skill:
 - ADR: `.agents/skills/adr/SKILL.md`
 - CAVEMAN: `.agents/skills/caveman/SKILL.md`
 - HANDOFF: `.agents/skills/handoff/SKILL.md`
+- QA: `.agents/skills/qa/SKILL.md`
 
 ## Language & Output Rules
 - **Communication Language**: Default to the user's language (tiếng Việt). Keep outputs structured and action-oriented.
