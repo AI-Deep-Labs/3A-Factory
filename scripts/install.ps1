@@ -73,6 +73,7 @@ $TargetDirs = @(
     ".agents\skills\caveman",
     ".agents\skills\handoff",
     ".agents\skills\qa",
+    ".agents\skills\synthesize-design-doc",
     ".claude\skills\init-ai-workflow",
     ".claude\skills\grill-me",
     ".claude\skills\spec",
@@ -84,6 +85,7 @@ $TargetDirs = @(
     ".claude\skills\caveman",
     ".claude\skills\handoff",
     ".claude\skills\qa",
+    ".claude\skills\synthesize-design-doc",
     ".claude\commands",
     ".gemini\commands",
     ".gemini\prompts",
@@ -108,6 +110,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.claude\commands\caveman.md"; Dest = ".claude\commands\caveman.md" },
     @{ Src = "templates\.claude\commands\handoff.md"; Dest = ".claude\commands\handoff.md" },
     @{ Src = "templates\.claude\commands\qa.md"; Dest = ".claude\commands\qa.md" },
+    @{ Src = "templates\.claude\commands\synthesize-design-doc.md"; Dest = ".claude\commands\synthesize-design-doc.md" },
     @{ Src = "templates\.gemini\commands\grill-me.toml"; Dest = ".gemini\commands\grill-me.toml" },
     @{ Src = "templates\.gemini\commands\spec.toml"; Dest = ".gemini\commands\spec.toml" },
     @{ Src = "templates\.gemini\commands\plan.toml"; Dest = ".gemini\commands\plan.toml" },
@@ -119,6 +122,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.gemini\commands\caveman.toml"; Dest = ".gemini\commands\caveman.toml" },
     @{ Src = "templates\.gemini\commands\handoff.toml"; Dest = ".gemini\commands\handoff.toml" },
     @{ Src = "templates\.gemini\commands\qa.toml"; Dest = ".gemini\commands\qa.toml" },
+    @{ Src = "templates\.gemini\commands\synthesize-design-doc.toml"; Dest = ".gemini\commands\synthesize-design-doc.toml" },
     @{ Src = "templates\.cursor\rules\ai-workflow.mdc"; Dest = ".cursor\rules\ai-workflow.mdc" },
     @{ Src = "templates\.cursor\rules\init-ai-workflow.mdc"; Dest = ".cursor\rules\init-ai-workflow.mdc" },
     @{ Src = "templates\.cursor\rules\project-overview.mdc"; Dest = ".cursor\rules\project-overview.mdc" },
@@ -131,6 +135,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.cursor\rules\caveman.mdc"; Dest = ".cursor\rules\caveman.mdc" },
     @{ Src = "templates\.cursor\rules\handoff.mdc"; Dest = ".cursor\rules\handoff.mdc" },
     @{ Src = "templates\.cursor\rules\qa.mdc"; Dest = ".cursor\rules\qa.mdc" },
+    @{ Src = "templates\.cursor\rules\synthesize-design-doc.mdc"; Dest = ".cursor\rules\synthesize-design-doc.mdc" },
     @{ Src = "templates\.agents\skills\init-ai-workflow\SKILL.md"; Dest = ".agents\skills\init-ai-workflow\SKILL.md" },
     @{ Src = "templates\.agents\skills\grill-me\SKILL.md"; Dest = ".agents\skills\grill-me\SKILL.md" },
     @{ Src = "templates\.agents\skills\spec\SKILL.md"; Dest = ".agents\skills\spec\SKILL.md" },
@@ -142,6 +147,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.agents\skills\caveman\SKILL.md"; Dest = ".agents\skills\caveman\SKILL.md" },
     @{ Src = "templates\.agents\skills\handoff\SKILL.md"; Dest = ".agents\skills\handoff\SKILL.md" },
     @{ Src = "templates\.agents\skills\qa\SKILL.md"; Dest = ".agents\skills\qa\SKILL.md" },
+    @{ Src = "templates\.agents\skills\synthesize-design-doc\SKILL.md"; Dest = ".agents\skills\synthesize-design-doc\SKILL.md" },
     @{ Src = "templates\.claude\skills\init-ai-workflow\SKILL.md"; Dest = ".claude\skills\init-ai-workflow\SKILL.md" },
     @{ Src = "templates\.claude\skills\grill-me\SKILL.md"; Dest = ".claude\skills\grill-me\SKILL.md" },
     @{ Src = "templates\.claude\skills\spec\SKILL.md"; Dest = ".claude\skills\spec\SKILL.md" },
@@ -152,7 +158,8 @@ $RequiredFiles = @(
     @{ Src = "templates\.claude\skills\adr\SKILL.md"; Dest = ".claude\skills\adr\SKILL.md" },
     @{ Src = "templates\.claude\skills\caveman\SKILL.md"; Dest = ".claude\skills\caveman\SKILL.md" },
     @{ Src = "templates\.claude\skills\handoff\SKILL.md"; Dest = ".claude\skills\handoff\SKILL.md" },
-    @{ Src = "templates\.claude\skills\qa\SKILL.md"; Dest = ".claude\skills\qa\SKILL.md" }
+    @{ Src = "templates\.claude\skills\qa\SKILL.md"; Dest = ".claude\skills\qa\SKILL.md" },
+    @{ Src = "templates\.claude\skills\synthesize-design-doc\SKILL.md"; Dest = ".claude\skills\synthesize-design-doc\SKILL.md" }
 )
 
 $OptionalFiles = @(
@@ -258,7 +265,7 @@ function Copy-WorkflowFile([hashtable]$Item, [bool]$Required) {
 }
 
 Write-Host "=============================================" -ForegroundColor Cyan
-Write-Host "  ALEX AI Workflow v2 Installer" -ForegroundColor Cyan
+Write-Host "  3A Factory Installer" -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host "Template root: $TemplateRoot"
 Write-Host "Target root:   $TargetRoot"

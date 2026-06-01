@@ -1,4 +1,4 @@
-# ALEX AI Workflow
+# 3A Factory
 
 ## Lifecycle
 ```mermaid

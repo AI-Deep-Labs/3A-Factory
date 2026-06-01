@@ -1,0 +1,6 @@
+---
+description: Triggered when synthesizing a conversation, Q&A, or raw analysis into a professional requirement or design document.
+globs: .agents/requirements/REQ-*.md, .agents/specs/SPEC-*.md, .agents/decisions/ADR-*.md
+---
+
+Read and execute the design document synthesis workflow defined in `.agents/skills/synthesize-design-doc/SKILL.md`.

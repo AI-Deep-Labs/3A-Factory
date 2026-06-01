@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-# ALEX AI Workflow v2 Installer
+# 3A Factory Installer
 # For macOS, Linux, WSL, and Git Bash
 # Installs portable + native agent workflow files for Claude, Gemini, Cursor, and generic agents.
 
@@ -97,6 +97,7 @@ REQUIRED_FILES=(
   "templates/.claude/commands/caveman.md:.claude/commands/caveman.md"
   "templates/.claude/commands/handoff.md:.claude/commands/handoff.md"
   "templates/.claude/commands/qa.md:.claude/commands/qa.md"
+  "templates/.claude/commands/synthesize-design-doc.md:.claude/commands/synthesize-design-doc.md"
   "templates/.gemini/commands/grill-me.toml:.gemini/commands/grill-me.toml"
   "templates/.gemini/commands/spec.toml:.gemini/commands/spec.toml"
   "templates/.gemini/commands/plan.toml:.gemini/commands/plan.toml"
@@ -108,6 +109,7 @@ REQUIRED_FILES=(
   "templates/.gemini/commands/caveman.toml:.gemini/commands/caveman.toml"
   "templates/.gemini/commands/handoff.toml:.gemini/commands/handoff.toml"
   "templates/.gemini/commands/qa.toml:.gemini/commands/qa.toml"
+  "templates/.gemini/commands/synthesize-design-doc.toml:.gemini/commands/synthesize-design-doc.toml"
   "templates/.cursor/rules/ai-workflow.mdc:.cursor/rules/ai-workflow.mdc"
   "templates/.cursor/rules/init-ai-workflow.mdc:.cursor/rules/init-ai-workflow.mdc"
   "templates/.cursor/rules/project-overview.mdc:.cursor/rules/project-overview.mdc"
@@ -120,6 +122,7 @@ REQUIRED_FILES=(
   "templates/.cursor/rules/caveman.mdc:.cursor/rules/caveman.mdc"
   "templates/.cursor/rules/handoff.mdc:.cursor/rules/handoff.mdc"
   "templates/.cursor/rules/qa.mdc:.cursor/rules/qa.mdc"
+  "templates/.cursor/rules/synthesize-design-doc.mdc:.cursor/rules/synthesize-design-doc.mdc"
   "templates/.agents/skills/init-ai-workflow/SKILL.md:.agents/skills/init-ai-workflow/SKILL.md"
   "templates/.agents/skills/grill-me/SKILL.md:.agents/skills/grill-me/SKILL.md"
   "templates/.agents/skills/spec/SKILL.md:.agents/skills/spec/SKILL.md"
@@ -131,6 +134,7 @@ REQUIRED_FILES=(
   "templates/.agents/skills/caveman/SKILL.md:.agents/skills/caveman/SKILL.md"
   "templates/.agents/skills/handoff/SKILL.md:.agents/skills/handoff/SKILL.md"
   "templates/.agents/skills/qa/SKILL.md:.agents/skills/qa/SKILL.md"
+  "templates/.agents/skills/synthesize-design-doc/SKILL.md:.agents/skills/synthesize-design-doc/SKILL.md"
   "templates/.claude/skills/init-ai-workflow/SKILL.md:.claude/skills/init-ai-workflow/SKILL.md"
   "templates/.claude/skills/grill-me/SKILL.md:.claude/skills/grill-me/SKILL.md"
   "templates/.claude/skills/spec/SKILL.md:.claude/skills/spec/SKILL.md"
@@ -142,6 +146,7 @@ REQUIRED_FILES=(
   "templates/.claude/skills/caveman/SKILL.md:.claude/skills/caveman/SKILL.md"
   "templates/.claude/skills/handoff/SKILL.md:.claude/skills/handoff/SKILL.md"
   "templates/.claude/skills/qa/SKILL.md:.claude/skills/qa/SKILL.md"
+  "templates/.claude/skills/synthesize-design-doc/SKILL.md:.claude/skills/synthesize-design-doc/SKILL.md"
 )
 
 # Optional legacy/fallback files. Missing files are skipped.
@@ -177,6 +182,7 @@ TARGET_DIRS=(
   ".agents/skills/caveman"
   ".agents/skills/handoff"
   ".agents/skills/qa"
+  ".agents/skills/synthesize-design-doc"
   ".claude/skills/init-ai-workflow"
   ".claude/skills/grill-me"
   ".claude/skills/spec"
@@ -188,6 +194,7 @@ TARGET_DIRS=(
   ".claude/skills/caveman"
   ".claude/skills/handoff"
   ".claude/skills/qa"
+  ".claude/skills/synthesize-design-doc"
   ".claude/commands"
   ".gemini/commands"
   ".gemini/prompts"
@@ -284,7 +291,7 @@ copy_one() {
 
 print_header() {
   log "============================================="
-  log "  ALEX AI Workflow v2 Installer"
+  log "  3A Factory Installer"
   log "============================================="
   log "Template root: $TEMPLATE_ROOT"
   log "Target root:   $TARGET_ROOT"

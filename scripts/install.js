@@ -62,6 +62,7 @@ const targetDirs = [
   '.agents/skills/caveman',
   '.agents/skills/handoff',
   '.agents/skills/qa',
+  '.agents/skills/synthesize-design-doc',
   '.claude/skills/init-ai-workflow',
   '.claude/skills/grill-me',
   '.claude/skills/spec',
@@ -73,6 +74,7 @@ const targetDirs = [
   '.claude/skills/caveman',
   '.claude/skills/handoff',
   '.claude/skills/qa',
+  '.claude/skills/synthesize-design-doc',
   '.claude/commands',
   '.gemini/commands',
   '.gemini/prompts',
@@ -97,6 +99,7 @@ const requiredFiles = [
   { src: 'templates/.claude/commands/caveman.md', dest: '.claude/commands/caveman.md' },
   { src: 'templates/.claude/commands/handoff.md', dest: '.claude/commands/handoff.md' },
   { src: 'templates/.claude/commands/qa.md', dest: '.claude/commands/qa.md' },
+  { src: 'templates/.claude/commands/synthesize-design-doc.md', dest: '.claude/commands/synthesize-design-doc.md' },
   { src: 'templates/.gemini/commands/grill-me.toml', dest: '.gemini/commands/grill-me.toml' },
   { src: 'templates/.gemini/commands/spec.toml', dest: '.gemini/commands/spec.toml' },
   { src: 'templates/.gemini/commands/plan.toml', dest: '.gemini/commands/plan.toml' },
@@ -108,6 +111,7 @@ const requiredFiles = [
   { src: 'templates/.gemini/commands/caveman.toml', dest: '.gemini/commands/caveman.toml' },
   { src: 'templates/.gemini/commands/handoff.toml', dest: '.gemini/commands/handoff.toml' },
   { src: 'templates/.gemini/commands/qa.toml', dest: '.gemini/commands/qa.toml' },
+  { src: 'templates/.gemini/commands/synthesize-design-doc.toml', dest: '.gemini/commands/synthesize-design-doc.toml' },
   { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' },
   { src: 'templates/.cursor/rules/init-ai-workflow.mdc', dest: '.cursor/rules/init-ai-workflow.mdc' },
   { src: 'templates/.cursor/rules/project-overview.mdc', dest: '.cursor/rules/project-overview.mdc' },
@@ -120,6 +124,7 @@ const requiredFiles = [
   { src: 'templates/.cursor/rules/caveman.mdc', dest: '.cursor/rules/caveman.mdc' },
   { src: 'templates/.cursor/rules/handoff.mdc', dest: '.cursor/rules/handoff.mdc' },
   { src: 'templates/.cursor/rules/qa.mdc', dest: '.cursor/rules/qa.mdc' },
+  { src: 'templates/.cursor/rules/synthesize-design-doc.mdc', dest: '.cursor/rules/synthesize-design-doc.mdc' },
   { src: 'templates/.agents/skills/init-ai-workflow/SKILL.md', dest: '.agents/skills/init-ai-workflow/SKILL.md' },
   { src: 'templates/.agents/skills/grill-me/SKILL.md', dest: '.agents/skills/grill-me/SKILL.md' },
   { src: 'templates/.agents/skills/spec/SKILL.md', dest: '.agents/skills/spec/SKILL.md' },
@@ -131,6 +136,7 @@ const requiredFiles = [
   { src: 'templates/.agents/skills/caveman/SKILL.md', dest: '.agents/skills/caveman/SKILL.md' },
   { src: 'templates/.agents/skills/handoff/SKILL.md', dest: '.agents/skills/handoff/SKILL.md' },
   { src: 'templates/.agents/skills/qa/SKILL.md', dest: '.agents/skills/qa/SKILL.md' },
+  { src: 'templates/.agents/skills/synthesize-design-doc/SKILL.md', dest: '.agents/skills/synthesize-design-doc/SKILL.md' },
   { src: 'templates/.claude/skills/init-ai-workflow/SKILL.md', dest: '.claude/skills/init-ai-workflow/SKILL.md' },
   { src: 'templates/.claude/skills/grill-me/SKILL.md', dest: '.claude/skills/grill-me/SKILL.md' },
   { src: 'templates/.claude/skills/spec/SKILL.md', dest: '.claude/skills/spec/SKILL.md' },
@@ -141,7 +147,8 @@ const requiredFiles = [
   { src: 'templates/.claude/skills/adr/SKILL.md', dest: '.claude/skills/adr/SKILL.md' },
   { src: 'templates/.claude/skills/caveman/SKILL.md', dest: '.claude/skills/caveman/SKILL.md' },
   { src: 'templates/.claude/skills/handoff/SKILL.md', dest: '.claude/skills/handoff/SKILL.md' },
-  { src: 'templates/.claude/skills/qa/SKILL.md', dest: '.claude/skills/qa/SKILL.md' }
+  { src: 'templates/.claude/skills/qa/SKILL.md', dest: '.claude/skills/qa/SKILL.md' },
+  { src: 'templates/.claude/skills/synthesize-design-doc/SKILL.md', dest: '.claude/skills/synthesize-design-doc/SKILL.md' }
 ];
 
 const optionalFiles = [
