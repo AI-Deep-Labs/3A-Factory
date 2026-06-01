@@ -1,4 +1,4 @@
-# ALEX AI Agent Factory
+# 3a-factory
 
 A cross-agent development workflow template for Claude Code, Gemini CLI/AI Studio, Cursor, and other agentic coding tools.
 
@@ -59,13 +59,13 @@ You have multiple cross-platform installation methods available:
 ### Method 1: Using NPM (Recommended & Automatic)
 Add the package to your development dependencies. The installation triggers a `postinstall` hook that automatically populates the directory structures and templates in your project root:
 ```bash
-npm install --save-dev alex-agent-workflow
+npm install --save-dev 3a-factory
 ```
 
 ### Method 2: Zero-Dependency Run (`npx`)
 If you want to initialize the workspace without adding it to `package.json`:
 ```bash
-npx alex-agent-workflow
+npx 3a-factory
 ```
 
 ### Method 3: Shell Scripts (Fallback)

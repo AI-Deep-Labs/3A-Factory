@@ -1,10 +1,10 @@
 {
-  "name": "alex-ai-agent-factory",
+  "name": "3a-factory",
   "version": "1.0.0",
   "description": "Controlled software delivery workflow template for AI agents",
   "main": "bin/install.js",
   "bin": {
-    "alex-ai-agent-factory": "bin/install.js"
+    "3a-factory": "bin/install.js"
   },
   "scripts": {
     "postinstall": "node bin/install.js"
@@ -12,7 +12,7 @@
   "keywords": [
     "alex",
     "alex-ai-agent",
-    "alex-agent-factory",
+    "3a-factory",
     "claude",
     "gemini",
     "cursor",
