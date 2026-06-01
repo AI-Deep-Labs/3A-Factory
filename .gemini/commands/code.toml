@@ -1,5 +1,0 @@
-description = "Execute ALEX code workflow"
-prompt = """
-Read AGENTS.md first, then read .agents/skills/code/SKILL.md and execute that workflow.
-Arguments: {{args}}
-"""

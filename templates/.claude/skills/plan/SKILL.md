@@ -8,11 +8,11 @@ argument-hint: "[short-name]"
 # PLAN Skill
 
 ## Gate
-Do not modify application source code. You may create or update `.ai/plans/PLAN-[short-name].md` only.
+Do not modify application source code. You may create or update `.agents/plans/PLAN-[short-name].md` only.
 
 ## Inputs
-- Approved `.ai/specs/SPEC-[short-name].md`.
-- Template: `.ai/templates/PLAN-template.md`.
+- Approved `.agents/specs/SPEC-[short-name].md`.
+- Template: `.agents/templates/PLAN-template.md`.
 - Actual codebase files inspected with read/search tools.
 
 ## Process

@@ -16,12 +16,12 @@ To navigate and give feedback between design phases, the user can issue the foll
 - **`RE-EXECUTE`** (also accepts `re-excute`): Requests re-execution of the current phase with a more polished and refined approach. AI **must NOT create a new SPEC or PLAN file**, but rather edit and refine the existing file directly. AI should ask clarifying questions if needed to gather deeper context.
 
 ## Canonical artifacts
-- Requirements: `.ai/requirements/REQ-[short-name].md`
-- Specification: `.ai/specs/SPEC-[short-name].md`
-- Plan: `.ai/plans/PLAN-[short-name].md`
-- Decision records: `.ai/decisions/ADR-[short-name].md`
-- Review reports: `.ai/reviews/REVIEW-[short-name].md`
-- Build/test run logs: `.ai/runs/RUN-[short-name]-YYYYMMDD-HHMM.md`
+- Requirements: `.agents/requirements/REQ-[short-name].md`
+- Specification: `.agents/specs/SPEC-[short-name].md`
+- Plan: `.agents/plans/PLAN-[short-name].md`
+- Decision records: `.agents/decisions/ADR-[short-name].md`
+- Review reports: `.agents/reviews/REVIEW-[short-name].md`
+- Build/test run logs: `.agents/runs/RUN-[short-name]-YYYYMMDD-HHMM.md`
 
 ## Skill loading
 For each workflow phase, read the corresponding skill:

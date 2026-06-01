@@ -8,7 +8,7 @@ set -Eeuo pipefail
 IFS=$'\n\t'
 
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-TEMPLATE_ROOT="$SCRIPT_DIR"
+TEMPLATE_ROOT="$(dirname "$SCRIPT_DIR")"
 TARGET_ROOT="$(pwd)"
 FORCE=0
 DRY_RUN=0
@@ -17,10 +17,10 @@ VERBOSE=0
 
 usage() {
   cat <<USAGE
-ALEX AI Workflow v2 Installer
+3A-Factory Installer
 
 Usage:
-  ./install-ai-workflow-v2.sh [options]
+  ./install.sh [options]
 
 Options:
   --target <path>         Project directory to install into. Default: current directory.
@@ -32,9 +32,9 @@ Options:
   -h, --help              Show this help.
 
 Examples:
-  ./install-ai-workflow-v2.sh
-  ./install-ai-workflow-v2.sh --target /path/to/project
-  ./install-ai-workflow-v2.sh --force --target .
+  ./install.sh
+  ./install.sh --target /path/to/project
+  ./install.sh --force --target .
 USAGE
 }
 
@@ -76,10 +76,10 @@ REQUIRED_FILES=(
   "AGENTS.md:AGENTS.md"
   "CLAUDE.md:CLAUDE.md"
   "GEMINI.md:GEMINI.md"
-  "templates/docs/AI_WORKFLOW.md:docs/AI_WORKFLOW.md"
-  "templates/.ai/templates/SPEC-template.md:.ai/templates/SPEC-template.md"
-  "templates/.ai/templates/PLAN-template.md:.ai/templates/PLAN-template.md"
-  "templates/.ai/templates/ADR-template.md:.ai/templates/ADR-template.md"
+  "templates/WORKFLOW.md:WORKFLOW.md"
+  "templates/.agents/templates/SPEC-template.md:.agents/templates/SPEC-template.md"
+  "templates/.agents/templates/PLAN-template.md:.agents/templates/PLAN-template.md"
+  "templates/.agents/templates/ADR-template.md:.agents/templates/ADR-template.md"
   "templates/.claude/commands/grill-me.md:.claude/commands/grill-me.md"
   "templates/.claude/commands/spec.md:.claude/commands/spec.md"
   "templates/.claude/commands/plan.md:.claude/commands/plan.md"
@@ -135,13 +135,13 @@ OPTIONAL_FILES=(
 )
 
 TARGET_DIRS=(
-  ".ai/requirements"
-  ".ai/specs"
-  ".ai/plans"
-  ".ai/decisions"
-  ".ai/reviews"
-  ".ai/runs"
-  ".ai/templates"
+  ".agents/requirements"
+  ".agents/specs"
+  ".agents/plans"
+  ".agents/decisions"
+  ".agents/reviews"
+  ".agents/runs"
+  ".agents/templates"
   ".agents/skills/init-ai-workflow"
   ".agents/skills/grill-me"
   ".agents/skills/spec"
@@ -163,7 +163,6 @@ TARGET_DIRS=(
   ".gemini/prompts"
   ".cursor/rules"
   ".cursor/prompts"
-  "docs"
 )
 
 created_dirs=0

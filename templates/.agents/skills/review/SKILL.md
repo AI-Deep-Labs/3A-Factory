@@ -14,7 +14,7 @@ Read-only phase. Do not modify source code.
 1. Inspect git status and git diff.
 2. Compare implementation against SPEC acceptance criteria and PLAN scope.
 3. Check correctness, business logic, security, performance, maintainability, and tests.
-4. Save report under `.ai/reviews/REVIEW-[short-name].md` when possible.
+4. Save report under `.agents/reviews/REVIEW-[short-name].md` when possible.
 
 ## Output
 1. **Summary**

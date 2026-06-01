@@ -165,7 +165,7 @@ README.md
 CHANGELOG.md
 CONTRIBUTING.md
 docs/
-.ai/
+.agents/
 .github/
 .gitlab/
 .vscode/

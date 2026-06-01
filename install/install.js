@@ -36,13 +36,13 @@ function logWarn(msg) { console.warn(`${colors.yellow}[WARN]${colors.reset} ${ms
 function logErr(msg) { console.error(`${colors.red}[ERROR]${colors.reset} ${msg}`); }
 
 const targetDirs = [
-  '.ai/requirements',
-  '.ai/specs',
-  '.ai/plans',
-  '.ai/decisions',
-  '.ai/reviews',
-  '.ai/runs',
-  '.ai/templates',
+  '.agents/requirements',
+  '.agents/specs',
+  '.agents/plans',
+  '.agents/decisions',
+  '.agents/reviews',
+  '.agents/runs',
+  '.agents/templates',
   '.agents/skills/init-ai-workflow',
   '.agents/skills/grill-me',
   '.agents/skills/spec',
@@ -63,18 +63,17 @@ const targetDirs = [
   '.gemini/commands',
   '.gemini/prompts',
   '.cursor/rules',
-  '.cursor/prompts',
-  'docs'
+  '.cursor/prompts'
 ];
 
 const requiredFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
   { src: 'CLAUDE.md', dest: 'CLAUDE.md' },
   { src: 'GEMINI.md', dest: 'GEMINI.md' },
-  { src: 'templates/docs/AI_WORKFLOW.md', dest: 'docs/AI_WORKFLOW.md' },
-  { src: 'templates/.ai/templates/SPEC-template.md', dest: '.ai/templates/SPEC-template.md' },
-  { src: 'templates/.ai/templates/PLAN-template.md', dest: '.ai/templates/PLAN-template.md' },
-  { src: 'templates/.ai/templates/ADR-template.md', dest: '.ai/templates/ADR-template.md' },
+  { src: 'templates/WORKFLOW.md', dest: 'WORKFLOW.md' },
+  { src: 'templates/.agents/templates/SPEC-template.md', dest: '.agents/templates/SPEC-template.md' },
+  { src: 'templates/.agents/templates/PLAN-template.md', dest: '.agents/templates/PLAN-template.md' },
+  { src: 'templates/.agents/templates/ADR-template.md', dest: '.agents/templates/ADR-template.md' },
   { src: 'templates/.claude/commands/grill-me.md', dest: '.claude/commands/grill-me.md' },
   { src: 'templates/.claude/commands/spec.md', dest: '.claude/commands/spec.md' },
   { src: 'templates/.claude/commands/plan.md', dest: '.claude/commands/plan.md' },

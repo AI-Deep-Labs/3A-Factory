@@ -15,15 +15,14 @@ project-root/
 ├── AGENTS.md
 ├── CLAUDE.md
 ├── GEMINI.md
-├── .ai/
+├── .agents/
 │   ├── requirements/
 │   ├── specs/
 │   ├── plans/
 │   ├── decisions/
 │   ├── reviews/
 │   ├── runs/
-│   └── templates/
-├── .agents/
+│   ├── templates/
 │   └── skills/
 │       ├── grill-me/SKILL.md
 │       ├── spec/SKILL.md
@@ -41,8 +40,7 @@ project-root/
 ├── .cursor/
 │   ├── rules/               # Cursor modern project rules in MDC
 │   └── prompts/             # Copy-paste prompt fallbacks
-└── docs/
-    └── AI_WORKFLOW.md
+└── WORKFLOW.md
 ```
 
 ## Compatibility notes
@@ -72,9 +70,9 @@ npx 3a-factory
 Run the script from your project root:
 *   **Windows**:
     ```powershell
-    powershell -ExecutionPolicy Bypass -File .\install-ai-workflow.ps1
+    powershell -ExecutionPolicy Bypass -File .\install\install.ps1
     ```
 *   **macOS / Linux**:
     ```bash
-    bash ./install-ai-workflow.sh
+    bash ./install/install.sh
     ```

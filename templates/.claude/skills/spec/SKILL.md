@@ -8,17 +8,17 @@ argument-hint: "[short-name or requirement]"
 # SPEC Skill
 
 ## Gate
-Do not modify application source code. You may create or update `.ai/specs/SPEC-[short-name].md` only.
+Do not modify application source code. You may create or update `.agents/specs/SPEC-[short-name].md` only.
 
 ## Inputs
 - User requirement and ASK answers.
-- Existing requirement file if available in `.ai/requirements/`.
-- Template: `.ai/templates/SPEC-template.md`.
+- Existing requirement file if available in `.agents/requirements/`.
+- Template: `.agents/templates/SPEC-template.md`.
 
 ## Process
 1. Choose a kebab-case `[short-name]`.
 2. Inspect existing docs if they affect the behavior.
-3. Create or update `.ai/specs/SPEC-[short-name].md`.
+3. Create or update `.agents/specs/SPEC-[short-name].md`.
 4. Include Mermaid only when it clarifies flow/state.
 5. Keep open questions explicit; do not silently invent high-risk rules.
 

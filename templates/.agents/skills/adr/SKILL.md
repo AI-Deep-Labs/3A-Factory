@@ -8,20 +8,20 @@ disable-model-invocation: false
 
 ## Purpose
 
-This skill guides an agent to analyze a technical design problem, compare different options, and document the selected option in a high-quality Architectural Decision Record (ADR) file named `.ai/decisions/ADR-[short-name].md`.
+This skill guides an agent to analyze a technical design problem, compare different options, and document the selected option in a high-quality Architectural Decision Record (ADR) file named `.agents/decisions/ADR-[short-name].md`.
 
 ---
 
 ## Output Contract
 
-The agent must output a single markdown file under `.ai/decisions/`:
+The agent must output a single markdown file under `.agents/decisions/`:
 
 ```text
-.ai/decisions/ADR-[short-name].md
+.agents/decisions/ADR-[short-name].md
 ```
 
 ### Language Rule
-All contents inside the generated `.ai/decisions/ADR-[short-name].md` file **must be written in Vietnamese**, keeping technical terminology clean, accurate, and professional.
+All contents inside the generated `.agents/decisions/ADR-[short-name].md` file **must be written in Vietnamese**, keeping technical terminology clean, accurate, and professional.
 
 ---
 
@@ -49,7 +49,7 @@ All contents inside the generated `.ai/decisions/ADR-[short-name].md` file **mus
 
 ## Required ADR Structure
 
-The output file `.ai/decisions/ADR-[short-name].md` must strictly follow this structure:
+The output file `.agents/decisions/ADR-[short-name].md` must strictly follow this structure:
 
 ```markdown
 # Architectural Decision Record: [Short Architectural Decision Title]

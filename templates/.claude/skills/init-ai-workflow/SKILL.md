@@ -10,7 +10,7 @@ disable-model-invocation: true
 Make the repository ready for Claude, Gemini, Cursor, and generic agents.
 
 ## Process
-1. Verify/create directories: `.ai/{requirements,specs,plans,decisions,reviews,runs,templates}`, `.agents/skills`, `.claude/skills`, `.gemini/commands`, `.cursor/rules`, `docs`.
+1. Verify/create directories: `.agents/{requirements,specs,plans,decisions,reviews,runs,templates,skills}`, `.claude/skills`, `.gemini/commands`, `.cursor/rules`, `docs`.
 2. Detect stack from marker files: `package.json`, `*.sln`, `*.csproj`, `pyproject.toml`, `requirements.txt`, `pom.xml`, `build.gradle`, `go.mod`, `Cargo.toml`, Docker files.
 3. Detect build/test/run commands from project files, not guesses when possible.
 4. Update placeholders in `AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, and Cursor rule files.

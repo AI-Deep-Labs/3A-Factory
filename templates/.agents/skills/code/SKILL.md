@@ -11,8 +11,8 @@ argument-hint: "[short-name]"
 Stop unless the user has provided a case-insensitive `APPROVED` directive in the current task context.
 
 ## Required inputs
-- Approved SPEC: `.ai/specs/SPEC-[short-name].md`
-- Approved PLAN: `.ai/plans/PLAN-[short-name].md`
+- Approved SPEC: `.agents/specs/SPEC-[short-name].md`
+- Approved PLAN: `.agents/plans/PLAN-[short-name].md`
 
 ## Boundaries
 - Modify only files listed in PLAN section **Files Expected To Change**.
@@ -25,7 +25,7 @@ Stop unless the user has provided a case-insensitive `APPROVED` directive in the
 3. Run formatting/lint if configured.
 4. Run build command.
 5. Run tests; if impossible, explain why and provide manual verification.
-6. Save a run summary under `.ai/runs/` when possible.
+6. Save a run summary under `.agents/runs/` when possible.
 
 ## Output
 1. **Files Changed**

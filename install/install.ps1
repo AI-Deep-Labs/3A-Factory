@@ -1,4 +1,4 @@
-# ALEX AI Workflow v2 Installer
+# 3A-Factory Windows PowerShell Installer
 # For Windows PowerShell 5.1+ and PowerShell 7+
 # Installs portable + native agent workflow files for Claude, Gemini, Cursor, and generic agents.
 
@@ -32,7 +32,7 @@ if ([string]::IsNullOrWhiteSpace($ScriptDir)) {
     $ScriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path
 }
 if ([string]::IsNullOrWhiteSpace($TemplateRoot)) {
-    $TemplateRoot = $ScriptDir
+    $TemplateRoot = Split-Path -Parent $ScriptDir
 }
 
 $TemplateRoot = (Resolve-Path -LiteralPath $TemplateRoot).Path
@@ -46,13 +46,13 @@ if (-not (Test-Path -LiteralPath $TemplatesDir -PathType Container)) {
 }
 
 $TargetDirs = @(
-    ".ai\requirements",
-    ".ai\specs",
-    ".ai\plans",
-    ".ai\decisions",
-    ".ai\reviews",
-    ".ai\runs",
-    ".ai\templates",
+    ".agents\requirements",
+    ".agents\specs",
+    ".agents\plans",
+    ".agents\decisions",
+    ".agents\reviews",
+    ".agents\runs",
+    ".agents\templates",
     ".agents\skills\init-ai-workflow",
     ".agents\skills\grill-me",
     ".agents\skills\spec",
@@ -73,18 +73,17 @@ $TargetDirs = @(
     ".gemini\commands",
     ".gemini\prompts",
     ".cursor\rules",
-    ".cursor\prompts",
-    "docs"
+    ".cursor\prompts"
 )
 
 $RequiredFiles = @(
     @{ Src = "AGENTS.md"; Dest = "AGENTS.md" },
     @{ Src = "CLAUDE.md"; Dest = "CLAUDE.md" },
     @{ Src = "GEMINI.md"; Dest = "GEMINI.md" },
-    @{ Src = "templates\docs\AI_WORKFLOW.md"; Dest = "docs\AI_WORKFLOW.md" },
-    @{ Src = "templates\.ai\templates\SPEC-template.md"; Dest = ".ai\templates\SPEC-template.md" },
-    @{ Src = "templates\.ai\templates\PLAN-template.md"; Dest = ".ai\templates\PLAN-template.md" },
-    @{ Src = "templates\.ai\templates\ADR-template.md"; Dest = ".ai\templates\ADR-template.md" },
+    @{ Src = "templates\WORKFLOW.md"; Dest = "WORKFLOW.md" },
+    @{ Src = "templates\.agents\templates\SPEC-template.md"; Dest = ".agents\templates\SPEC-template.md" },
+    @{ Src = "templates\.agents\templates\PLAN-template.md"; Dest = ".agents\templates\PLAN-template.md" },
+    @{ Src = "templates\.agents\templates\ADR-template.md"; Dest = ".agents\templates\ADR-template.md" },
     @{ Src = "templates\.claude\commands\grill-me.md"; Dest = ".claude\commands\grill-me.md" },
     @{ Src = "templates\.claude\commands\spec.md"; Dest = ".claude\commands\spec.md" },
     @{ Src = "templates\.claude\commands\plan.md"; Dest = ".claude\commands\plan.md" },
