@@ -1,0 +1,4 @@
+description = "Trigger ultra-compressed caveman communication mode"
+prompt = """
+Read .agents/skills/caveman/SKILL.md and execute that behavior modifier.
+"""

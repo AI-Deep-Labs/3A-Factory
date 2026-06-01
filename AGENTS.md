@@ -33,6 +33,7 @@ For each workflow phase, read the corresponding skill:
 - INIT: `.agents/skills/init-ai-workflow/SKILL.md`
 - PROJECT-OVERVIEW: `.agents/skills/project-overview/SKILL.md`
 - ADR: `.agents/skills/adr/SKILL.md`
+- CAVEMAN: `.agents/skills/caveman/SKILL.md`
 
 ## Language & Output Rules
 - **Communication Language**: Default to the user's language (tiếng Việt). Keep outputs structured and action-oriented.
