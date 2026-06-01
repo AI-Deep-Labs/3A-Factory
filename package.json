@@ -1,6 +1,6 @@
 {
   "name": "3a-factory",
-  "version": "1.0.1",
+  "version": "1.0.2",
   "description": "Controlled software delivery workflow template for AI agents",
   "main": "install/install.js",
   "bin": {
