@@ -1,0 +1,6 @@
+---
+description: Triggered when writing or modifying application source code under hard gates during the CODE phase.
+globs: *
+---
+
+Read and execute the coding and implementation rules defined in `.agents/skills/code/SKILL.md`. Edit only files listed in the approved plan.

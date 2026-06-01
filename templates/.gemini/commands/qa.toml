@@ -1,0 +1,4 @@
+description = "Start an interactive QA session to explore issues and write ISSUE files under .agents/issues/"
+prompt = """
+Read .agents/skills/qa/SKILL.md and execute that workflow.
+"""

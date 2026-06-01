@@ -1,0 +1,6 @@
+---
+description: Triggered when creating or refining step-by-step implementation plans during the PLAN phase.
+globs: .agents/plans/PLAN-*.md
+---
+
+Read and execute the implementation plan design workflow defined in `.agents/skills/plan/SKILL.md`.

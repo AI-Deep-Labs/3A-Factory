@@ -87,8 +87,7 @@ $TargetDirs = @(
     ".claude\commands",
     ".gemini\commands",
     ".gemini\prompts",
-    ".cursor\rules",
-    ".cursor\prompts"
+    ".cursor\rules"
 )
 
 $RequiredFiles = @(
@@ -120,18 +119,18 @@ $RequiredFiles = @(
     @{ Src = "templates\.gemini\commands\caveman.toml"; Dest = ".gemini\commands\caveman.toml" },
     @{ Src = "templates\.gemini\commands\handoff.toml"; Dest = ".gemini\commands\handoff.toml" },
     @{ Src = "templates\.gemini\commands\qa.toml"; Dest = ".gemini\commands\qa.toml" },
-    @{ Src = "templates\.cursor\rules\alex-workflow.mdc"; Dest = ".cursor\rules\alex-workflow.mdc" },
-    @{ Src = "templates\.cursor\prompts\grill-me.md"; Dest = ".cursor\prompts\grill-me.md" },
-    @{ Src = "templates\.cursor\prompts\spec.md"; Dest = ".cursor\prompts\spec.md" },
-    @{ Src = "templates\.cursor\prompts\plan.md"; Dest = ".cursor\prompts\plan.md" },
-    @{ Src = "templates\.cursor\prompts\code.md"; Dest = ".cursor\prompts\code.md" },
-    @{ Src = "templates\.cursor\prompts\review.md"; Dest = ".cursor\prompts\review.md" },
-    @{ Src = "templates\.cursor\prompts\init-ai-workflow.md"; Dest = ".cursor\prompts\init-ai-workflow.md" },
-    @{ Src = "templates\.cursor\prompts\project-overview.md"; Dest = ".cursor\prompts\project-overview.md" },
-    @{ Src = "templates\.cursor\prompts\adr.md"; Dest = ".cursor\prompts\adr.md" },
-    @{ Src = "templates\.cursor\prompts\caveman.md"; Dest = ".cursor\prompts\caveman.md" },
-    @{ Src = "templates\.cursor\prompts\handoff.md"; Dest = ".cursor\prompts\handoff.md" },
-    @{ Src = "templates\.cursor\prompts\qa.md"; Dest = ".cursor\prompts\qa.md" },
+    @{ Src = "templates\.cursor\rules\ai-workflow.mdc"; Dest = ".cursor\rules\ai-workflow.mdc" },
+    @{ Src = "templates\.cursor\rules\init-ai-workflow.mdc"; Dest = ".cursor\rules\init-ai-workflow.mdc" },
+    @{ Src = "templates\.cursor\rules\project-overview.mdc"; Dest = ".cursor\rules\project-overview.mdc" },
+    @{ Src = "templates\.cursor\rules\grill-me.mdc"; Dest = ".cursor\rules\grill-me.mdc" },
+    @{ Src = "templates\.cursor\rules\spec.mdc"; Dest = ".cursor\rules\spec.mdc" },
+    @{ Src = "templates\.cursor\rules\plan.mdc"; Dest = ".cursor\rules\plan.mdc" },
+    @{ Src = "templates\.cursor\rules\code.mdc"; Dest = ".cursor\rules\code.mdc" },
+    @{ Src = "templates\.cursor\rules\review.mdc"; Dest = ".cursor\rules\review.mdc" },
+    @{ Src = "templates\.cursor\rules\adr.mdc"; Dest = ".cursor\rules\adr.mdc" },
+    @{ Src = "templates\.cursor\rules\caveman.mdc"; Dest = ".cursor\rules\caveman.mdc" },
+    @{ Src = "templates\.cursor\rules\handoff.mdc"; Dest = ".cursor\rules\handoff.mdc" },
+    @{ Src = "templates\.cursor\rules\qa.mdc"; Dest = ".cursor\rules\qa.mdc" },
     @{ Src = "templates\.agents\skills\init-ai-workflow\SKILL.md"; Dest = ".agents\skills\init-ai-workflow\SKILL.md" },
     @{ Src = "templates\.agents\skills\grill-me\SKILL.md"; Dest = ".agents\skills\grill-me\SKILL.md" },
     @{ Src = "templates\.agents\skills\spec\SKILL.md"; Dest = ".agents\skills\spec\SKILL.md" },
@@ -291,6 +290,6 @@ Write-Host "Skipped:      $($Stats.Skipped)"
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host "Claude Code: use /grill-me, /spec, /plan, /code, /review, or native skills under .claude/skills."
 Write-Host "Gemini CLI:   use custom commands from .gemini/commands/*.toml."
-Write-Host "Cursor:       project rules are installed under .cursor/rules/alex-workflow.mdc."
+Write-Host "Cursor:       project rules are installed under .cursor/rules/ai-workflow.mdc."
 Write-Host "Generic:      AGENTS.md + .agents/skills are installed as the portable source of truth."
 Write-Host "=============================================" -ForegroundColor Cyan

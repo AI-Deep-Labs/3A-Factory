@@ -1,0 +1,6 @@
+---
+description: Triggered when analyzing project architecture or updating docs/project_overview.md.
+globs: docs/project_overview.md
+---
+
+Read and execute the project overview and architecture analysis workflow defined in `.agents/skills/project-overview/SKILL.md`.

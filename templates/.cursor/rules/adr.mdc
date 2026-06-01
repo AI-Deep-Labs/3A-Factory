@@ -1,0 +1,6 @@
+---
+description: Triggered when creating or updating Architectural Decision Records (ADRs).
+globs: .agents/decisions/ADR-*.md
+---
+
+Read and execute the architectural decision-making workflow defined in `.agents/skills/adr/SKILL.md`.

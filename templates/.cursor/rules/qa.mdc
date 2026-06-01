@@ -1,0 +1,6 @@
+---
+description: Triggered when running an interactive QA session and documenting bugs under .agents/issues/.
+globs: .agents/issues/ISSUE-*.md
+---
+
+Read and execute the interactive QA and issue filing workflow defined in `.agents/skills/qa/SKILL.md`.

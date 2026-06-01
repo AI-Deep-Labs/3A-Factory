@@ -1,0 +1,6 @@
+---
+description: Triggered when the user invokes ultra-compressed, token-saving caveman mode.
+globs: *
+---
+
+Read and apply the compressed communication behavior defined in `.agents/skills/caveman/SKILL.md`.

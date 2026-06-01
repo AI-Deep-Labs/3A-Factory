@@ -1,0 +1,6 @@
+---
+description: Triggered when initializing the AI workflow and setting up project environment context.
+globs: *
+---
+
+Read and execute the project initialization workflow defined in `.agents/skills/init-ai-workflow/SKILL.md`.

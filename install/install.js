@@ -76,8 +76,7 @@ const targetDirs = [
   '.claude/commands',
   '.gemini/commands',
   '.gemini/prompts',
-  '.cursor/rules',
-  '.cursor/prompts'
+  '.cursor/rules'
 ];
 
 const requiredFiles = [
@@ -109,18 +108,18 @@ const requiredFiles = [
   { src: 'templates/.gemini/commands/caveman.toml', dest: '.gemini/commands/caveman.toml' },
   { src: 'templates/.gemini/commands/handoff.toml', dest: '.gemini/commands/handoff.toml' },
   { src: 'templates/.gemini/commands/qa.toml', dest: '.gemini/commands/qa.toml' },
-  { src: 'templates/.cursor/rules/alex-workflow.mdc', dest: '.cursor/rules/alex-workflow.mdc' },
-  { src: 'templates/.cursor/prompts/grill-me.md', dest: '.cursor/prompts/grill-me.md' },
-  { src: 'templates/.cursor/prompts/spec.md', dest: '.cursor/prompts/spec.md' },
-  { src: 'templates/.cursor/prompts/plan.md', dest: '.cursor/prompts/plan.md' },
-  { src: 'templates/.cursor/prompts/code.md', dest: '.cursor/prompts/code.md' },
-  { src: 'templates/.cursor/prompts/review.md', dest: '.cursor/prompts/review.md' },
-  { src: 'templates/.cursor/prompts/init-ai-workflow.md', dest: '.cursor/prompts/init-ai-workflow.md' },
-  { src: 'templates/.cursor/prompts/project-overview.md', dest: '.cursor/prompts/project-overview.md' },
-  { src: 'templates/.cursor/prompts/adr.md', dest: '.cursor/prompts/adr.md' },
-  { src: 'templates/.cursor/prompts/caveman.md', dest: '.cursor/prompts/caveman.md' },
-  { src: 'templates/.cursor/prompts/handoff.md', dest: '.cursor/prompts/handoff.md' },
-  { src: 'templates/.cursor/prompts/qa.md', dest: '.cursor/prompts/qa.md' },
+  { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' },
+  { src: 'templates/.cursor/rules/init-ai-workflow.mdc', dest: '.cursor/rules/init-ai-workflow.mdc' },
+  { src: 'templates/.cursor/rules/project-overview.mdc', dest: '.cursor/rules/project-overview.mdc' },
+  { src: 'templates/.cursor/rules/grill-me.mdc', dest: '.cursor/rules/grill-me.mdc' },
+  { src: 'templates/.cursor/rules/spec.mdc', dest: '.cursor/rules/spec.mdc' },
+  { src: 'templates/.cursor/rules/plan.mdc', dest: '.cursor/rules/plan.mdc' },
+  { src: 'templates/.cursor/rules/code.mdc', dest: '.cursor/rules/code.mdc' },
+  { src: 'templates/.cursor/rules/review.mdc', dest: '.cursor/rules/review.mdc' },
+  { src: 'templates/.cursor/rules/adr.mdc', dest: '.cursor/rules/adr.mdc' },
+  { src: 'templates/.cursor/rules/caveman.mdc', dest: '.cursor/rules/caveman.mdc' },
+  { src: 'templates/.cursor/rules/handoff.mdc', dest: '.cursor/rules/handoff.mdc' },
+  { src: 'templates/.cursor/rules/qa.mdc', dest: '.cursor/rules/qa.mdc' },
   { src: 'templates/.agents/skills/init-ai-workflow/SKILL.md', dest: '.agents/skills/init-ai-workflow/SKILL.md' },
   { src: 'templates/.agents/skills/grill-me/SKILL.md', dest: '.agents/skills/grill-me/SKILL.md' },
   { src: 'templates/.agents/skills/spec/SKILL.md', dest: '.agents/skills/spec/SKILL.md' },
@@ -286,7 +285,7 @@ try {
   console.log(`${colors.cyan}=============================================${colors.reset}`);
   console.log(`Claude Code: use /grill-me, /spec, /plan, /code, /review, or native skills under .claude/skills.`);
   console.log(`Gemini CLI:   use custom commands from .gemini/commands/*.toml.`);
-  console.log(`Cursor:       project rules are installed under .cursor/rules/alex-workflow.mdc.`);
+  console.log(`Cursor:       project rules are installed under .cursor/rules/ai-workflow.mdc.`);
   console.log(`Generic:      AGENTS.md + .agents/skills are installed as the portable source of truth.`);
   console.log(`${colors.cyan}=============================================${colors.reset}`);
 } catch (err) {

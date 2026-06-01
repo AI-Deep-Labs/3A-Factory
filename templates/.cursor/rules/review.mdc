@@ -1,0 +1,6 @@
+---
+description: Triggered when auditing code changes, logging runs, and compiling review reports during the REVIEW phase.
+globs: .agents/reviews/REVIEW-*.md, .agents/runs/RUN-*.md
+---
+
+Read and execute the post-implementation review and testing workflow defined in `.agents/skills/review/SKILL.md`.

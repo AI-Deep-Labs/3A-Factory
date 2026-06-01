@@ -1,0 +1,6 @@
+---
+description: Triggered when clarifying requirements interactively during the GRILL-ME phase.
+globs: .agents/requirements/REQ-*.md
+---
+
+Read and execute the requirements clarification workflow defined in `.agents/skills/grill-me/SKILL.md`. Ask questions one at a time.

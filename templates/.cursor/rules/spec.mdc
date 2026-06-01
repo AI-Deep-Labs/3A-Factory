@@ -1,0 +1,6 @@
+---
+description: Triggered when creating or refining technical specifications during the SPEC phase.
+globs: .agents/specs/SPEC-*.md
+---
+
+Read and execute the technical specification generation workflow defined in `.agents/skills/spec/SKILL.md`.

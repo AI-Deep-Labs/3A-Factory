@@ -1,0 +1,6 @@
+---
+description: Triggered when documenting the progress of the current session for the next agent.
+globs: *
+---
+
+Read and execute the session handoff and compact summary workflow defined in `.agents/skills/handoff/SKILL.md`.
