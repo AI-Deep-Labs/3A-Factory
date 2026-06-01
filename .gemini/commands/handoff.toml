@@ -1,0 +1,5 @@
+description = "Compact the current conversation into a handoff document for the next session"
+prompt = """
+Read .agents/skills/handoff/SKILL.md and execute that workflow.
+Arguments: {{args}}
+"""

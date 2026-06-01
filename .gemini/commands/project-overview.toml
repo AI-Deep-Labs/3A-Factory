@@ -1,0 +1,5 @@
+description = "Analyze and document the entire project architecture"
+prompt = """
+Read AGENTS.md first, then read .agents/skills/project-overview/SKILL.md and execute that workflow.
+Arguments: {{args}}
+"""

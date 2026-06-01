@@ -60,8 +60,10 @@ $TargetDirs = @(
     ".agents\skills\code",
     ".agents\skills\review",
     ".agents\skills\project-overview",
+    ".agents\compact",
     ".agents\skills\adr",
     ".agents\skills\caveman",
+    ".agents\skills\handoff",
     ".claude\skills\init-ai-workflow",
     ".claude\skills\grill-me",
     ".claude\skills\spec",
@@ -71,6 +73,7 @@ $TargetDirs = @(
     ".claude\skills\project-overview",
     ".claude\skills\adr",
     ".claude\skills\caveman",
+    ".claude\skills\handoff",
     ".claude\commands",
     ".gemini\commands",
     ".gemini\prompts",
@@ -94,6 +97,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.claude\commands\init-ai-workflow.md"; Dest = ".claude\commands\init-ai-workflow.md" },
     @{ Src = "templates\.claude\commands\adr.md"; Dest = ".claude\commands\adr.md" },
     @{ Src = "templates\.claude\commands\caveman.md"; Dest = ".claude\commands\caveman.md" },
+    @{ Src = "templates\.claude\commands\handoff.md"; Dest = ".claude\commands\handoff.md" },
     @{ Src = "templates\.gemini\commands\grill-me.toml"; Dest = ".gemini\commands\grill-me.toml" },
     @{ Src = "templates\.gemini\commands\spec.toml"; Dest = ".gemini\commands\spec.toml" },
     @{ Src = "templates\.gemini\commands\plan.toml"; Dest = ".gemini\commands\plan.toml" },
@@ -103,6 +107,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.gemini\commands\project-overview.toml"; Dest = ".gemini\commands\project-overview.toml" },
     @{ Src = "templates\.gemini\commands\adr.toml"; Dest = ".gemini\commands\adr.toml" },
     @{ Src = "templates\.gemini\commands\caveman.toml"; Dest = ".gemini\commands\caveman.toml" },
+    @{ Src = "templates\.gemini\commands\handoff.toml"; Dest = ".gemini\commands\handoff.toml" },
     @{ Src = "templates\.cursor\rules\alex-workflow.mdc"; Dest = ".cursor\rules\alex-workflow.mdc" },
     @{ Src = "templates\.cursor\prompts\grill-me.md"; Dest = ".cursor\prompts\grill-me.md" },
     @{ Src = "templates\.cursor\prompts\spec.md"; Dest = ".cursor\prompts\spec.md" },
@@ -113,6 +118,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.cursor\prompts\project-overview.md"; Dest = ".cursor\prompts\project-overview.md" },
     @{ Src = "templates\.cursor\prompts\adr.md"; Dest = ".cursor\prompts\adr.md" },
     @{ Src = "templates\.cursor\prompts\caveman.md"; Dest = ".cursor\prompts\caveman.md" },
+    @{ Src = "templates\.cursor\prompts\handoff.md"; Dest = ".cursor\prompts\handoff.md" },
     @{ Src = "templates\.agents\skills\init-ai-workflow\SKILL.md"; Dest = ".agents\skills\init-ai-workflow\SKILL.md" },
     @{ Src = "templates\.agents\skills\grill-me\SKILL.md"; Dest = ".agents\skills\grill-me\SKILL.md" },
     @{ Src = "templates\.agents\skills\spec\SKILL.md"; Dest = ".agents\skills\spec\SKILL.md" },
@@ -122,6 +128,7 @@ $RequiredFiles = @(
     @{ Src = "templates\.agents\skills\project-overview\SKILL.md"; Dest = ".agents\skills\project-overview\SKILL.md" },
     @{ Src = "templates\.agents\skills\adr\SKILL.md"; Dest = ".agents\skills\adr\SKILL.md" },
     @{ Src = "templates\.agents\skills\caveman\SKILL.md"; Dest = ".agents\skills\caveman\SKILL.md" },
+    @{ Src = "templates\.agents\skills\handoff\SKILL.md"; Dest = ".agents\skills\handoff\SKILL.md" },
     @{ Src = "templates\.claude\skills\init-ai-workflow\SKILL.md"; Dest = ".claude\skills\init-ai-workflow\SKILL.md" },
     @{ Src = "templates\.claude\skills\grill-me\SKILL.md"; Dest = ".claude\skills\grill-me\SKILL.md" },
     @{ Src = "templates\.claude\skills\spec\SKILL.md"; Dest = ".claude\skills\spec\SKILL.md" },
@@ -130,7 +137,8 @@ $RequiredFiles = @(
     @{ Src = "templates\.claude\skills\review\SKILL.md"; Dest = ".claude\skills\review\SKILL.md" },
     @{ Src = "templates\.claude\skills\project-overview\SKILL.md"; Dest = ".claude\skills\project-overview\SKILL.md" },
     @{ Src = "templates\.claude\skills\adr\SKILL.md"; Dest = ".claude\skills\adr\SKILL.md" },
-    @{ Src = "templates\.claude\skills\caveman\SKILL.md"; Dest = ".claude\skills\caveman\SKILL.md" }
+    @{ Src = "templates\.claude\skills\caveman\SKILL.md"; Dest = ".claude\skills\caveman\SKILL.md" },
+    @{ Src = "templates\.claude\skills\handoff\SKILL.md"; Dest = ".claude\skills\handoff\SKILL.md" }
 )
 
 $OptionalFiles = @(

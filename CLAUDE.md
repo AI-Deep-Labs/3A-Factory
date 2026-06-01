@@ -5,7 +5,7 @@ Read `AGENTS.md` first. Follow ALEX workflow: GRILL-ME -> SPEC -> PLAN -> CODE -
 Claude-specific usage:
 - Prefer project skills in `.claude/skills/<skill-name>/SKILL.md`.
 - Compatibility slash command wrappers may live in `.claude/commands/*.md`.
-- Use `/grill-me`, `/spec`, `/plan`, `/code`, `/review`, `/init-ai-workflow`, `/project-overview`, `/adr`, `/caveman` when available.
+- Use `/grill-me`, `/spec`, `/plan`, `/code`, `/review`, `/init-ai-workflow`, `/project-overview`, `/adr`, `/caveman`, `/handoff` when available.
 
 Project context is filled by `/init-ai-workflow`:
 - Project type: `[DETECTED_PROJECT_TYPE]`

@@ -1,0 +1,5 @@
+description = "Execute ALEX ADR (Architectural Decision Record) workflow"
+prompt = """
+Read AGENTS.md first, then read .agents/skills/adr/SKILL.md and execute that workflow to analyze options and draft an ADR.
+Arguments: {{args}}
+"""
