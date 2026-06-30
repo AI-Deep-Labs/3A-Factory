@@ -1341,7 +1341,6 @@ Status: needs inspection
 ### Configuration Files
 
 | File / Setting | Purpose | Notes | Status |
-|---|---|---|---|
 
 ### Common Commands
 

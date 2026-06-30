@@ -49,34 +49,8 @@ const targetDirs = [
   '.agents/reviews',
   '.agents/runs',
   '.agents/templates',
-  '.agents/skills/init-ai-workflow',
-  '.agents/skills/grill-me',
-  '.agents/skills/spec',
-  '.agents/skills/plan',
-  '.agents/skills/code',
-  '.agents/skills/review',
-  '.agents/skills/project-overview',
   '.agents/compact',
   '.agents/issues',
-  '.agents/skills/adr',
-  '.agents/skills/caveman',
-  '.agents/skills/handoff',
-  '.agents/skills/qa',
-  '.agents/skills/synthesize-design-doc',
-  '.agents/skills/onboarding',
-  '.claude/skills/init-ai-workflow',
-  '.claude/skills/grill-me',
-  '.claude/skills/spec',
-  '.claude/skills/plan',
-  '.claude/skills/code',
-  '.claude/skills/review',
-  '.claude/skills/project-overview',
-  '.claude/skills/adr',
-  '.claude/skills/caveman',
-  '.claude/skills/handoff',
-  '.claude/skills/qa',
-  '.claude/skills/synthesize-design-doc',
-  '.claude/skills/onboarding',
   '.claude/commands',
   '.gemini/commands',
   '.gemini/prompts',
@@ -91,82 +65,11 @@ const requiredFiles = [
   { src: 'templates/.agents/templates/SPEC-template.md', dest: '.agents/templates/SPEC-template.md' },
   { src: 'templates/.agents/templates/PLAN-template.md', dest: '.agents/templates/PLAN-template.md' },
   { src: 'templates/.agents/templates/ADR-template.md', dest: '.agents/templates/ADR-template.md' },
-  { src: 'templates/.claude/commands/grill-me.md', dest: '.claude/commands/grill-me.md' },
-  { src: 'templates/.claude/commands/spec.md', dest: '.claude/commands/spec.md' },
-  { src: 'templates/.claude/commands/plan.md', dest: '.claude/commands/plan.md' },
-  { src: 'templates/.claude/commands/code.md', dest: '.claude/commands/code.md' },
-  { src: 'templates/.claude/commands/review.md', dest: '.claude/commands/review.md' },
-  { src: 'templates/.claude/commands/init-ai-workflow.md', dest: '.claude/commands/init-ai-workflow.md' },
-  { src: 'templates/.claude/commands/adr.md', dest: '.claude/commands/adr.md' },
-  { src: 'templates/.claude/commands/caveman.md', dest: '.claude/commands/caveman.md' },
-  { src: 'templates/.claude/commands/handoff.md', dest: '.claude/commands/handoff.md' },
-  { src: 'templates/.claude/commands/qa.md', dest: '.claude/commands/qa.md' },
-  { src: 'templates/.claude/commands/synthesize-design-doc.md', dest: '.claude/commands/synthesize-design-doc.md' },
-  { src: 'templates/.claude/commands/onboarding.md', dest: '.claude/commands/onboarding.md' },
-  { src: 'templates/.gemini/commands/grill-me.toml', dest: '.gemini/commands/grill-me.toml' },
-  { src: 'templates/.gemini/commands/spec.toml', dest: '.gemini/commands/spec.toml' },
-  { src: 'templates/.gemini/commands/plan.toml', dest: '.gemini/commands/plan.toml' },
-  { src: 'templates/.gemini/commands/code.toml', dest: '.gemini/commands/code.toml' },
-  { src: 'templates/.gemini/commands/review.toml', dest: '.gemini/commands/review.toml' },
-  { src: 'templates/.gemini/commands/init-ai-workflow.toml', dest: '.gemini/commands/init-ai-workflow.toml' },
-  { src: 'templates/.gemini/commands/project-overview.toml', dest: '.gemini/commands/project-overview.toml' },
-  { src: 'templates/.gemini/commands/adr.toml', dest: '.gemini/commands/adr.toml' },
-  { src: 'templates/.gemini/commands/caveman.toml', dest: '.gemini/commands/caveman.toml' },
-  { src: 'templates/.gemini/commands/handoff.toml', dest: '.gemini/commands/handoff.toml' },
-  { src: 'templates/.gemini/commands/qa.toml', dest: '.gemini/commands/qa.toml' },
-  { src: 'templates/.gemini/commands/synthesize-design-doc.toml', dest: '.gemini/commands/synthesize-design-doc.toml' },
-  { src: 'templates/.gemini/commands/onboarding.toml', dest: '.gemini/commands/onboarding.toml' },
-  { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' },
-  { src: 'templates/.cursor/rules/init-ai-workflow.mdc', dest: '.cursor/rules/init-ai-workflow.mdc' },
-  { src: 'templates/.cursor/rules/project-overview.mdc', dest: '.cursor/rules/project-overview.mdc' },
-  { src: 'templates/.cursor/rules/grill-me.mdc', dest: '.cursor/rules/grill-me.mdc' },
-  { src: 'templates/.cursor/rules/spec.mdc', dest: '.cursor/rules/spec.mdc' },
-  { src: 'templates/.cursor/rules/plan.mdc', dest: '.cursor/rules/plan.mdc' },
-  { src: 'templates/.cursor/rules/code.mdc', dest: '.cursor/rules/code.mdc' },
-  { src: 'templates/.cursor/rules/review.mdc', dest: '.cursor/rules/review.mdc' },
-  { src: 'templates/.cursor/rules/adr.mdc', dest: '.cursor/rules/adr.mdc' },
-  { src: 'templates/.cursor/rules/caveman.mdc', dest: '.cursor/rules/caveman.mdc' },
-  { src: 'templates/.cursor/rules/handoff.mdc', dest: '.cursor/rules/handoff.mdc' },
-  { src: 'templates/.cursor/rules/qa.mdc', dest: '.cursor/rules/qa.mdc' },
-  { src: 'templates/.cursor/rules/synthesize-design-doc.mdc', dest: '.cursor/rules/synthesize-design-doc.mdc' },
-  { src: 'templates/.cursor/rules/onboarding.mdc', dest: '.cursor/rules/onboarding.mdc' },
-  { src: 'templates/.agents/skills/init-ai-workflow/SKILL.md', dest: '.agents/skills/init-ai-workflow/SKILL.md' },
-  { src: 'templates/.agents/skills/grill-me/SKILL.md', dest: '.agents/skills/grill-me/SKILL.md' },
-  { src: 'templates/.agents/skills/spec/SKILL.md', dest: '.agents/skills/spec/SKILL.md' },
-  { src: 'templates/.agents/skills/plan/SKILL.md', dest: '.agents/skills/plan/SKILL.md' },
-  { src: 'templates/.agents/skills/code/SKILL.md', dest: '.agents/skills/code/SKILL.md' },
-  { src: 'templates/.agents/skills/review/SKILL.md', dest: '.agents/skills/review/SKILL.md' },
-  { src: 'templates/.agents/skills/project-overview/SKILL.md', dest: '.agents/skills/project-overview/SKILL.md' },
-  { src: 'templates/.agents/skills/adr/SKILL.md', dest: '.agents/skills/adr/SKILL.md' },
-  { src: 'templates/.agents/skills/caveman/SKILL.md', dest: '.agents/skills/caveman/SKILL.md' },
-  { src: 'templates/.agents/skills/handoff/SKILL.md', dest: '.agents/skills/handoff/SKILL.md' },
-  { src: 'templates/.agents/skills/qa/SKILL.md', dest: '.agents/skills/qa/SKILL.md' },
-  { src: 'templates/.agents/skills/synthesize-design-doc/SKILL.md', dest: '.agents/skills/synthesize-design-doc/SKILL.md' },
-  { src: 'templates/.agents/skills/onboarding/SKILL.md', dest: '.agents/skills/onboarding/SKILL.md' },
-  { src: 'templates/.claude/skills/init-ai-workflow/SKILL.md', dest: '.claude/skills/init-ai-workflow/SKILL.md' },
-  { src: 'templates/.claude/skills/grill-me/SKILL.md', dest: '.claude/skills/grill-me/SKILL.md' },
-  { src: 'templates/.claude/skills/spec/SKILL.md', dest: '.claude/skills/spec/SKILL.md' },
-  { src: 'templates/.claude/skills/plan/SKILL.md', dest: '.claude/skills/plan/SKILL.md' },
-  { src: 'templates/.claude/skills/code/SKILL.md', dest: '.claude/skills/code/SKILL.md' },
-  { src: 'templates/.claude/skills/review/SKILL.md', dest: '.claude/skills/review/SKILL.md' },
-  { src: 'templates/.claude/skills/project-overview/SKILL.md', dest: '.claude/skills/project-overview/SKILL.md' },
-  { src: 'templates/.claude/skills/adr/SKILL.md', dest: '.claude/skills/adr/SKILL.md' },
-  { src: 'templates/.claude/skills/caveman/SKILL.md', dest: '.claude/skills/caveman/SKILL.md' },
-  { src: 'templates/.claude/skills/handoff/SKILL.md', dest: '.claude/skills/handoff/SKILL.md' },
-  { src: 'templates/.claude/skills/qa/SKILL.md', dest: '.claude/skills/qa/SKILL.md' },
-  { src: 'templates/.claude/skills/synthesize-design-doc/SKILL.md', dest: '.claude/skills/synthesize-design-doc/SKILL.md' },
-  { src: 'templates/.claude/skills/onboarding/SKILL.md', dest: '.claude/skills/onboarding/SKILL.md' }
+  { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' }
 ];
 
 const optionalFiles = [
-  { src: '.cursorrules', dest: '.cursorrules' },
-  { src: 'templates/.gemini/prompts/grill-me.md', dest: '.gemini/prompts/grill-me.md' },
-  { src: 'templates/.gemini/prompts/spec.md', dest: '.gemini/prompts/spec.md' },
-  { src: 'templates/.gemini/prompts/plan.md', dest: '.gemini/prompts/plan.md' },
-  { src: 'templates/.gemini/prompts/code.md', dest: '.gemini/prompts/code.md' },
-  { src: 'templates/.gemini/prompts/review.md', dest: '.gemini/prompts/review.md' },
-  { src: 'templates/.gemini/prompts/init-ai-workflow.md', dest: '.gemini/prompts/init-ai-workflow.md' },
-  { src: 'templates/.gemini/prompts/adr.md', dest: '.gemini/prompts/adr.md' }
+  { src: '.cursorrules', dest: '.cursorrules' }
 ];
 
 const stats = {
@@ -184,6 +87,16 @@ function sameFileContent(src, dest) {
     const srcBuf = fs.readFileSync(src);
     const destBuf = fs.readFileSync(dest);
     return srcBuf.equals(destBuf);
+  } catch (err) {
+    return false;
+  }
+}
+
+function sameStringContent(destPath, content) {
+  if (!fs.existsSync(destPath)) return false;
+  try {
+    const destContent = fs.readFileSync(destPath, 'utf8');
+    return destContent.replace(/\r\n/g, '\n') === content.replace(/\r\n/g, '\n');
   } catch (err) {
     return false;
   }
@@ -268,6 +181,168 @@ function copyWorkflowFile(item, required) {
   }
 }
 
+function writeGeneratedFile(destRelativePath, content) {
+  const destFile = path.join(targetRoot, destRelativePath);
+  const destDir = path.dirname(destFile);
+
+  if (!fs.existsSync(destDir)) {
+    if (isDryRun) {
+      console.log(`[DRY-RUN][MKDIR] ${path.relative(targetRoot, destDir)}`);
+    } else {
+      fs.mkdirSync(destDir, { recursive: true });
+    }
+    stats.createdDirs++;
+  }
+
+  if (fs.existsSync(destFile)) {
+    if (sameStringContent(destFile, content)) {
+      stats.unchanged++;
+      if (isVerbose) {
+        console.log(`${colors.gray}[UNCHANGED] ${destRelativePath}${colors.reset}`);
+      }
+      return;
+    }
+
+    if (!isForce) {
+      stats.skipped++;
+      logWarn(`Exists, skipped: ${destRelativePath} (use --force to overwrite)`);
+      return;
+    }
+
+    if (!isNoBackup) {
+      const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
+      const backupFile = `${destFile}.bak.${timestamp}`;
+      if (isDryRun) {
+        console.log(`[DRY-RUN][BACKUP] ${destRelativePath} -> ${path.basename(backupFile)}`);
+      } else {
+        fs.writeFileSync(backupFile, fs.readFileSync(destFile, 'utf8'), 'utf8');
+      }
+      stats.backups++;
+    }
+
+    if (isDryRun) {
+      console.log(`[DRY-RUN][UPDATE] ${destRelativePath}`);
+    } else {
+      fs.writeFileSync(destFile, content, 'utf8');
+    }
+    stats.updatedFiles++;
+  } else {
+    if (isDryRun) {
+      console.log(`[DRY-RUN][NEW] ${destRelativePath}`);
+    } else {
+      fs.writeFileSync(destFile, content, 'utf8');
+    }
+    stats.newFiles++;
+  }
+}
+
+function scanDirectory(dir, fileList = []) {
+  if (!fs.existsSync(dir)) return fileList;
+  const files = fs.readdirSync(dir);
+  for (const file of files) {
+    const filePath = path.join(dir, file);
+    const stat = fs.statSync(filePath);
+    if (stat.isDirectory()) {
+      scanDirectory(filePath, fileList);
+    } else if (stat.isFile() && file.endsWith('.md')) {
+      fileList.push(filePath);
+    }
+  }
+  return fileList;
+}
+
+function parseMarkdownWithFrontmatter(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  const normalized = content.replace(/\r\n/g, '\n');
+  if (!normalized.startsWith('---\n')) {
+    throw new Error(`File does not start with frontmatter: ${filePath}`);
+  }
+  const endIdx = normalized.indexOf('\n---\n', 4);
+  if (endIdx === -1) {
+    throw new Error(`Invalid frontmatter in file: ${filePath}`);
+  }
+  const frontmatterText = normalized.substring(4, endIdx);
+  const body = normalized.substring(endIdx + 5);
+
+  const lines = frontmatterText.split('\n');
+  const metadata = {};
+  for (const line of lines) {
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) continue;
+    const key = line.substring(0, colonIdx).trim();
+    let val = line.substring(colonIdx + 1).trim();
+    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
+      val = val.substring(1, val.length - 1);
+    }
+    metadata[key] = val;
+  }
+
+  if (!metadata.name) {
+    metadata.name = path.basename(filePath, '.md');
+  }
+  if (!metadata.description) {
+    metadata.description = '';
+  }
+
+  return { metadata, body };
+}
+
+function processSkills() {
+  const skillsDir = path.join(templateRoot, 'templates', 'skills');
+  if (!fs.existsSync(skillsDir)) {
+    logWarn(`Source skills directory not found: ${skillsDir}`);
+    return;
+  }
+
+  const skillFiles = scanDirectory(skillsDir);
+  for (const file of skillFiles) {
+    try {
+      const { metadata, body } = parseMarkdownWithFrontmatter(file);
+      const name = metadata.name;
+      const desc = metadata.description;
+
+      if (isVerbose) {
+        logInfo(`Processing skill: ${name}`);
+      }
+
+      // 1. Generic Agent Skill: .agents/skills/[name]/SKILL.md
+      let genericFM = `---\nname: ${name}\ndescription: ${desc}\n`;
+      if (metadata['disable-model-invocation'] !== undefined) {
+        genericFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
+      }
+      if (metadata['argument-hint'] !== undefined) {
+        genericFM += `argument-hint: ${metadata['argument-hint']}\n`;
+      }
+      genericFM += `---\n`;
+      writeGeneratedFile(`.agents/skills/${name}/SKILL.md`, `${genericFM}${body}`);
+
+      // 2. Claude Agent Skill: .claude/skills/[name]/SKILL.md
+      writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, `${genericFM}${body}`);
+
+      // 3. Cursor Rule: .cursor/rules/[name].mdc
+      let cursorFM = `---\ndescription: ${desc}\nglobs: *\n`;
+      if (metadata.alwaysApply !== undefined) {
+        cursorFM += `alwaysApply: ${metadata.alwaysApply}\n`;
+      } else {
+        cursorFM += `alwaysApply: false\n`;
+      }
+      cursorFM += `---\n`;
+      writeGeneratedFile(`.cursor/rules/${name}.mdc`, `${cursorFM}${body}`);
+
+      // 4. Claude Command: .claude/commands/[name].md
+      const claudeCmd = `---\ndescription: ${desc}\n---\n\nRead and execute .claude/skills/${name}/SKILL.md. Arguments: $ARGUMENTS\n`;
+      writeGeneratedFile(`.claude/commands/${name}.md`, claudeCmd);
+
+      // 5. Gemini Command: .gemini/commands/[name].toml
+      const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .agents/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+      writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
+
+    } catch (err) {
+      logWarn(`Failed to parse or convert skill file ${file}: ${err.message}`);
+    }
+  }
+}
+
 console.log(`${colors.cyan}=============================================${colors.reset}`);
 console.log(`${colors.cyan}  3A-Factory NPM Installer${colors.reset}`);
 console.log(`${colors.cyan}=============================================${colors.reset}`);
@@ -288,6 +363,9 @@ try {
   // Copy Optional Files
   optionalFiles.forEach(item => copyWorkflowFile(item, false));
 
+  // Process and Generate Skills dynamically
+  processSkills();
+
   console.log(`${colors.cyan}---------------------------------------------${colors.reset}`);
   logOk('Installation completed.');
   console.log(`Created dirs: ${stats.createdDirs}`);
@@ -306,3 +384,4 @@ try {
   logErr(`Installation failed: ${err.message}`);
   process.exit(1);
 }
+

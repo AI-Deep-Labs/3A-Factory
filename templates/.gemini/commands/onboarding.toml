@@ -1,5 +1,0 @@
-description = "Execute codebase onboarding analysis"
-prompt = """
-Read AGENTS.md first, then read .agents/skills/onboarding/SKILL.md and execute that workflow.
-Arguments: {{args}}
-"""

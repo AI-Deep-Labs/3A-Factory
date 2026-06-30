@@ -78,7 +78,6 @@ if [[ ! -d "$TEMPLATES_DIR" ]]; then
   exit 1
 fi
 
-# Required source files for v2. If any of these are missing, the installer should stop.
 REQUIRED_FILES=(
   "AGENTS.md:AGENTS.md"
   "CLAUDE.md:CLAUDE.md"
@@ -87,83 +86,11 @@ REQUIRED_FILES=(
   "templates/.agents/templates/SPEC-template.md:.agents/templates/SPEC-template.md"
   "templates/.agents/templates/PLAN-template.md:.agents/templates/PLAN-template.md"
   "templates/.agents/templates/ADR-template.md:.agents/templates/ADR-template.md"
-  "templates/.claude/commands/grill-me.md:.claude/commands/grill-me.md"
-  "templates/.claude/commands/spec.md:.claude/commands/spec.md"
-  "templates/.claude/commands/plan.md:.claude/commands/plan.md"
-  "templates/.claude/commands/code.md:.claude/commands/code.md"
-  "templates/.claude/commands/review.md:.claude/commands/review.md"
-  "templates/.claude/commands/init-ai-workflow.md:.claude/commands/init-ai-workflow.md"
-  "templates/.claude/commands/adr.md:.claude/commands/adr.md"
-  "templates/.claude/commands/caveman.md:.claude/commands/caveman.md"
-  "templates/.claude/commands/handoff.md:.claude/commands/handoff.md"
-  "templates/.claude/commands/qa.md:.claude/commands/qa.md"
-  "templates/.claude/commands/synthesize-design-doc.md:.claude/commands/synthesize-design-doc.md"
-  "templates/.claude/commands/onboarding.md:.claude/commands/onboarding.md"
-  "templates/.gemini/commands/grill-me.toml:.gemini/commands/grill-me.toml"
-  "templates/.gemini/commands/spec.toml:.gemini/commands/spec.toml"
-  "templates/.gemini/commands/plan.toml:.gemini/commands/plan.toml"
-  "templates/.gemini/commands/code.toml:.gemini/commands/code.toml"
-  "templates/.gemini/commands/review.toml:.gemini/commands/review.toml"
-  "templates/.gemini/commands/init-ai-workflow.toml:.gemini/commands/init-ai-workflow.toml"
-  "templates/.gemini/commands/project-overview.toml:.gemini/commands/project-overview.toml"
-  "templates/.gemini/commands/adr.toml:.gemini/commands/adr.toml"
-  "templates/.gemini/commands/caveman.toml:.gemini/commands/caveman.toml"
-  "templates/.gemini/commands/handoff.toml:.gemini/commands/handoff.toml"
-  "templates/.gemini/commands/qa.toml:.gemini/commands/qa.toml"
-  "templates/.gemini/commands/synthesize-design-doc.toml:.gemini/commands/synthesize-design-doc.toml"
-  "templates/.gemini/commands/onboarding.toml:.gemini/commands/onboarding.toml"
   "templates/.cursor/rules/ai-workflow.mdc:.cursor/rules/ai-workflow.mdc"
-  "templates/.cursor/rules/init-ai-workflow.mdc:.cursor/rules/init-ai-workflow.mdc"
-  "templates/.cursor/rules/project-overview.mdc:.cursor/rules/project-overview.mdc"
-  "templates/.cursor/rules/grill-me.mdc:.cursor/rules/grill-me.mdc"
-  "templates/.cursor/rules/spec.mdc:.cursor/rules/spec.mdc"
-  "templates/.cursor/rules/plan.mdc:.cursor/rules/plan.mdc"
-  "templates/.cursor/rules/code.mdc:.cursor/rules/code.mdc"
-  "templates/.cursor/rules/review.mdc:.cursor/rules/review.mdc"
-  "templates/.cursor/rules/adr.mdc:.cursor/rules/adr.mdc"
-  "templates/.cursor/rules/caveman.mdc:.cursor/rules/caveman.mdc"
-  "templates/.cursor/rules/handoff.mdc:.cursor/rules/handoff.mdc"
-  "templates/.cursor/rules/qa.mdc:.cursor/rules/qa.mdc"
-  "templates/.cursor/rules/synthesize-design-doc.mdc:.cursor/rules/synthesize-design-doc.mdc"
-  "templates/.cursor/rules/onboarding.mdc:.cursor/rules/onboarding.mdc"
-  "templates/.agents/skills/init-ai-workflow/SKILL.md:.agents/skills/init-ai-workflow/SKILL.md"
-  "templates/.agents/skills/grill-me/SKILL.md:.agents/skills/grill-me/SKILL.md"
-  "templates/.agents/skills/spec/SKILL.md:.agents/skills/spec/SKILL.md"
-  "templates/.agents/skills/plan/SKILL.md:.agents/skills/plan/SKILL.md"
-  "templates/.agents/skills/code/SKILL.md:.agents/skills/code/SKILL.md"
-  "templates/.agents/skills/review/SKILL.md:.agents/skills/review/SKILL.md"
-  "templates/.agents/skills/project-overview/SKILL.md:.agents/skills/project-overview/SKILL.md"
-  "templates/.agents/skills/adr/SKILL.md:.agents/skills/adr/SKILL.md"
-  "templates/.agents/skills/caveman/SKILL.md:.agents/skills/caveman/SKILL.md"
-  "templates/.agents/skills/handoff/SKILL.md:.agents/skills/handoff/SKILL.md"
-  "templates/.agents/skills/qa/SKILL.md:.agents/skills/qa/SKILL.md"
-  "templates/.agents/skills/synthesize-design-doc/SKILL.md:.agents/skills/synthesize-design-doc/SKILL.md"
-  "templates/.agents/skills/onboarding/SKILL.md:.agents/skills/onboarding/SKILL.md"
-  "templates/.claude/skills/init-ai-workflow/SKILL.md:.claude/skills/init-ai-workflow/SKILL.md"
-  "templates/.claude/skills/grill-me/SKILL.md:.claude/skills/grill-me/SKILL.md"
-  "templates/.claude/skills/spec/SKILL.md:.claude/skills/spec/SKILL.md"
-  "templates/.claude/skills/plan/SKILL.md:.claude/skills/plan/SKILL.md"
-  "templates/.claude/skills/code/SKILL.md:.claude/skills/code/SKILL.md"
-  "templates/.claude/skills/review/SKILL.md:.claude/skills/review/SKILL.md"
-  "templates/.claude/skills/project-overview/SKILL.md:.claude/skills/project-overview/SKILL.md"
-  "templates/.claude/skills/adr/SKILL.md:.claude/skills/adr/SKILL.md"
-  "templates/.claude/skills/caveman/SKILL.md:.claude/skills/caveman/SKILL.md"
-  "templates/.claude/skills/handoff/SKILL.md:.claude/skills/handoff/SKILL.md"
-  "templates/.claude/skills/qa/SKILL.md:.claude/skills/qa/SKILL.md"
-  "templates/.claude/skills/synthesize-design-doc/SKILL.md:.claude/skills/synthesize-design-doc/SKILL.md"
-  "templates/.claude/skills/onboarding/SKILL.md:.claude/skills/onboarding/SKILL.md"
 )
 
-# Optional legacy/fallback files. Missing files are skipped.
 OPTIONAL_FILES=(
   ".cursorrules:.cursorrules"
-  "templates/.gemini/prompts/grill-me.md:.gemini/prompts/grill-me.md"
-  "templates/.gemini/prompts/spec.md:.gemini/prompts/spec.md"
-  "templates/.gemini/prompts/plan.md:.gemini/prompts/plan.md"
-  "templates/.gemini/prompts/code.md:.gemini/prompts/code.md"
-  "templates/.gemini/prompts/review.md:.gemini/prompts/review.md"
-  "templates/.gemini/prompts/init-ai-workflow.md:.gemini/prompts/init-ai-workflow.md"
-  "templates/.gemini/prompts/adr.md:.gemini/prompts/adr.md"
 )
 
 TARGET_DIRS=(
@@ -174,34 +101,8 @@ TARGET_DIRS=(
   ".agents/reviews"
   ".agents/runs"
   ".agents/templates"
-  ".agents/skills/init-ai-workflow"
-  ".agents/skills/grill-me"
-  ".agents/skills/spec"
-  ".agents/skills/plan"
-  ".agents/skills/code"
-  ".agents/skills/review"
-  ".agents/skills/project-overview"
   ".agents/compact"
   ".agents/issues"
-  ".agents/skills/adr"
-  ".agents/skills/caveman"
-  ".agents/skills/handoff"
-  ".agents/skills/qa"
-  ".agents/skills/synthesize-design-doc"
-  ".agents/skills/onboarding"
-  ".claude/skills/init-ai-workflow"
-  ".claude/skills/grill-me"
-  ".claude/skills/spec"
-  ".claude/skills/plan"
-  ".claude/skills/code"
-  ".claude/skills/review"
-  ".claude/skills/project-overview"
-  ".claude/skills/adr"
-  ".claude/skills/caveman"
-  ".claude/skills/handoff"
-  ".claude/skills/qa"
-  ".claude/skills/synthesize-design-doc"
-  ".claude/skills/onboarding"
   ".claude/commands"
   ".gemini/commands"
   ".gemini/prompts"
@@ -296,6 +197,194 @@ copy_one() {
   fi
 }
 
+same_string_content() {
+  local dest="$1"
+  local content="$2"
+  if [[ ! -f "$dest" ]]; then
+    return 1
+  fi
+  local dest_content clean_content
+  dest_content=$(tr -d '\r' < "$dest")
+  clean_content=$(printf '%s' "$content" | tr -d '\r')
+  if [[ "$dest_content" == "$clean_content" ]]; then
+    return 0
+  else
+    return 1
+  fi
+}
+
+write_generated_file() {
+  local dest_rel="$1"
+  local file_content="$2"
+  local dest_file="$TARGET_ROOT/$dest_rel"
+  local dest_dir
+  dest_dir="$(dirname "$dest_file")"
+
+  if [[ ! -d "$dest_dir" ]]; then
+    if [[ $DRY_RUN -eq 1 ]]; then
+      log "[DRY-RUN][MKDIR] ${dest_dir#$TARGET_ROOT/}"
+    else
+      mkdir -p "$dest_dir"
+    fi
+    created_dirs=$((created_dirs + 1))
+  fi
+
+  if [[ -f "$dest_file" ]]; then
+    if same_string_content "$dest_file" "$file_content"; then
+      identical_files=$((identical_files + 1))
+      [[ $VERBOSE -eq 1 ]] && log "[UNCHANGED] $dest_rel"
+      return
+    fi
+
+    if [[ $FORCE -ne 1 ]]; then
+      skipped_files=$((skipped_files + 1))
+      warn "Exists, skipped: $dest_rel (use --force to overwrite)"
+      return
+    fi
+
+    if [[ $NO_BACKUP -ne 1 ]]; then
+      local timestamp backup_file
+      timestamp="$(date +"%Y%m%d%H%M%S")"
+      backup_file="$dest_file.bak.$timestamp"
+      if [[ $DRY_RUN -eq 1 ]]; then
+        log "[DRY-RUN][BACKUP] $dest_rel -> $(basename "$backup_file")"
+      else
+        cp -p "$dest_file" "$backup_file"
+      fi
+      backups=$((backups + 1))
+    fi
+
+    if [[ $DRY_RUN -eq 1 ]]; then
+      log "[DRY-RUN][UPDATE] $dest_rel"
+    else
+      printf '%s' "$file_content" > "$dest_file"
+    fi
+    updated_files=$((updated_files + 1))
+  else
+    if [[ $DRY_RUN -eq 1 ]]; then
+      log "[DRY-RUN][NEW] $dest_rel"
+    else
+      printf '%s' "$file_content" > "$dest_file"
+    fi
+    new_files=$((new_files + 1))
+  fi
+}
+
+process_skills() {
+  local skills_dir="$TEMPLATES_DIR/skills"
+  if [[ ! -d "$skills_dir" ]]; then
+    warn "Source skills directory not found: $skills_dir"
+    return
+  fi
+
+  local file
+  while IFS= read -r -d '' file; do
+    [[ -f "$file" ]] || continue
+
+    if ! head -n 1 "$file" | grep -q '^---$'; then
+      warn "File does not start with frontmatter: $file"
+      continue
+    fi
+
+    local name
+    name=$(awk '/^name:/ {print $2; exit}' "$file")
+    if [[ -z "$name" ]]; then
+      name=$(basename "$file" .md)
+    fi
+
+    local description
+    description=$(awk -F': ' '/^description:/ {print $2; exit}' "$file")
+    description="${description%\"}"
+    description="${description#\"}"
+    description="${description%\'}"
+    description="${description#\'}"
+
+    local disable_model_invocation
+    disable_model_invocation=$(awk '/^disable-model-invocation:/ {print $2; exit}' "$file")
+
+    local argument_hint
+    argument_hint=$(awk -F': ' '/^argument-hint:/ {print $2; exit}' "$file")
+    argument_hint="${argument_hint%\"}"
+    argument_hint="${argument_hint#\"}"
+
+    local always_apply
+    always_apply=$(awk '/^alwaysApply:/ {print $2; exit}' "$file")
+    if [[ -z "$always_apply" ]]; then
+      always_apply="false"
+    fi
+
+    local body
+    body=$(awk '
+      BEGIN { fm_count = 0 }
+      /^---$/ {
+        fm_count++
+        next
+      }
+      fm_count >= 2 {
+        print $0
+      }
+    ' "$file")
+
+    if [[ $VERBOSE -eq 1 ]]; then
+      info "Processing skill: $name"
+    fi
+
+    # 1. Generic Agent Skill
+    local generic_fm
+    generic_fm="---
+name: $name
+description: $description
+"
+    if [[ -n "$disable_model_invocation" ]]; then
+      generic_fm="${generic_fm}disable-model-invocation: $disable_model_invocation
+"
+    fi
+    if [[ -n "$argument_hint" ]]; then
+      generic_fm="${generic_fm}argument-hint: $argument_hint
+"
+    fi
+    generic_fm="${generic_fm}---
+"
+    write_generated_file ".agents/skills/$name/SKILL.md" "${generic_fm}${body}"
+
+    # 2. Claude Agent Skill
+    write_generated_file ".claude/skills/$name/SKILL.md" "${generic_fm}${body}"
+
+    # 3. Cursor Rule
+    local cursor_fm
+    cursor_fm="---
+description: $description
+globs: *
+alwaysApply: $always_apply
+---
+"
+    write_generated_file ".cursor/rules/${name}.mdc" "${cursor_fm}${body}"
+
+    # 4. Claude Command
+    local claude_cmd
+    claude_cmd="---
+description: $description
+---
+
+Read and execute .claude/skills/$name/SKILL.md. Arguments: \$ARGUMENTS
+"
+    write_generated_file ".claude/commands/${name}.md" "$claude_cmd"
+
+    # 5. Gemini Command
+    local escaped_desc
+    escaped_desc="${description//\"/\\\"}"
+    local gemini_cmd
+    gemini_cmd="description = \"$escaped_desc\"
+prompt = \"\"\"
+Read AGENTS.md first, then read .agents/skills/$name/SKILL.md and execute that workflow.
+Arguments: {{args}}
+\"\"\"
+"
+    write_generated_file ".gemini/commands/${name}.toml" "$gemini_cmd"
+
+  done < <(find "$skills_dir" -type f -name "*.md" -print0)
+}
+
 print_header() {
   log "============================================="
   log "  3A Factory Installer"
@@ -338,5 +427,7 @@ done
 for item in "${OPTIONAL_FILES[@]}"; do
   copy_one "${item%%:*}" "${item#*:}" "optional"
 done
+
+process_skills
 
 print_footer

@@ -60,34 +60,8 @@ $TargetDirs = @(
     ".agents\reviews",
     ".agents\runs",
     ".agents\templates",
-    ".agents\skills\init-ai-workflow",
-    ".agents\skills\grill-me",
-    ".agents\skills\spec",
-    ".agents\skills\plan",
-    ".agents\skills\code",
-    ".agents\skills\review",
-    ".agents\skills\project-overview",
     ".agents\compact",
     ".agents\issues",
-    ".agents\skills\adr",
-    ".agents\skills\caveman",
-    ".agents\skills\handoff",
-    ".agents\skills\qa",
-    ".agents\skills\synthesize-design-doc",
-    ".agents\skills\onboarding",
-    ".claude\skills\init-ai-workflow",
-    ".claude\skills\grill-me",
-    ".claude\skills\spec",
-    ".claude\skills\plan",
-    ".claude\skills\code",
-    ".claude\skills\review",
-    ".claude\skills\project-overview",
-    ".claude\skills\adr",
-    ".claude\skills\caveman",
-    ".claude\skills\handoff",
-    ".claude\skills\qa",
-    ".claude\skills\synthesize-design-doc",
-    ".claude\skills\onboarding",
     ".claude\commands",
     ".gemini\commands",
     ".gemini\prompts",
@@ -102,82 +76,11 @@ $RequiredFiles = @(
     @{ Src = "templates\.agents\templates\SPEC-template.md"; Dest = ".agents\templates\SPEC-template.md" },
     @{ Src = "templates\.agents\templates\PLAN-template.md"; Dest = ".agents\templates\PLAN-template.md" },
     @{ Src = "templates\.agents\templates\ADR-template.md"; Dest = ".agents\templates\ADR-template.md" },
-    @{ Src = "templates\.claude\commands\grill-me.md"; Dest = ".claude\commands\grill-me.md" },
-    @{ Src = "templates\.claude\commands\spec.md"; Dest = ".claude\commands\spec.md" },
-    @{ Src = "templates\.claude\commands\plan.md"; Dest = ".claude\commands\plan.md" },
-    @{ Src = "templates\.claude\commands\code.md"; Dest = ".claude\commands\code.md" },
-    @{ Src = "templates\.claude\commands\review.md"; Dest = ".claude\commands\review.md" },
-    @{ Src = "templates\.claude\commands\init-ai-workflow.md"; Dest = ".claude\commands\init-ai-workflow.md" },
-    @{ Src = "templates\.claude\commands\adr.md"; Dest = ".claude\commands\adr.md" },
-    @{ Src = "templates\.claude\commands\caveman.md"; Dest = ".claude\commands\caveman.md" },
-    @{ Src = "templates\.claude\commands\handoff.md"; Dest = ".claude\commands\handoff.md" },
-    @{ Src = "templates\.claude\commands\qa.md"; Dest = ".claude\commands\qa.md" },
-    @{ Src = "templates\.claude\commands\synthesize-design-doc.md"; Dest = ".claude\commands\synthesize-design-doc.md" },
-    @{ Src = "templates\.claude\commands\onboarding.md"; Dest = ".claude\commands\onboarding.md" },
-    @{ Src = "templates\.gemini\commands\grill-me.toml"; Dest = ".gemini\commands\grill-me.toml" },
-    @{ Src = "templates\.gemini\commands\spec.toml"; Dest = ".gemini\commands\spec.toml" },
-    @{ Src = "templates\.gemini\commands\plan.toml"; Dest = ".gemini\commands\plan.toml" },
-    @{ Src = "templates\.gemini\commands\code.toml"; Dest = ".gemini\commands\code.toml" },
-    @{ Src = "templates\.gemini\commands\review.toml"; Dest = ".gemini\commands\review.toml" },
-    @{ Src = "templates\.gemini\commands\init-ai-workflow.toml"; Dest = ".gemini\commands\init-ai-workflow.toml" },
-    @{ Src = "templates\.gemini\commands\project-overview.toml"; Dest = ".gemini\commands\project-overview.toml" },
-    @{ Src = "templates\.gemini\commands\adr.toml"; Dest = ".gemini\commands\adr.toml" },
-    @{ Src = "templates\.gemini\commands\caveman.toml"; Dest = ".gemini\commands\caveman.toml" },
-    @{ Src = "templates\.gemini\commands\handoff.toml"; Dest = ".gemini\commands\handoff.toml" },
-    @{ Src = "templates\.gemini\commands\qa.toml"; Dest = ".gemini\commands\qa.toml" },
-    @{ Src = "templates\.gemini\commands\synthesize-design-doc.toml"; Dest = ".gemini\commands\synthesize-design-doc.toml" },
-    @{ Src = "templates\.gemini\commands\onboarding.toml"; Dest = ".gemini\commands\onboarding.toml" },
-    @{ Src = "templates\.cursor\rules\ai-workflow.mdc"; Dest = ".cursor\rules\ai-workflow.mdc" },
-    @{ Src = "templates\.cursor\rules\init-ai-workflow.mdc"; Dest = ".cursor\rules\init-ai-workflow.mdc" },
-    @{ Src = "templates\.cursor\rules\project-overview.mdc"; Dest = ".cursor\rules\project-overview.mdc" },
-    @{ Src = "templates\.cursor\rules\grill-me.mdc"; Dest = ".cursor\rules\grill-me.mdc" },
-    @{ Src = "templates\.cursor\rules\spec.mdc"; Dest = ".cursor\rules\spec.mdc" },
-    @{ Src = "templates\.cursor\rules\plan.mdc"; Dest = ".cursor\rules\plan.mdc" },
-    @{ Src = "templates\.cursor\rules\code.mdc"; Dest = ".cursor\rules\code.mdc" },
-    @{ Src = "templates\.cursor\rules\review.mdc"; Dest = ".cursor\rules\review.mdc" },
-    @{ Src = "templates\.cursor\rules\adr.mdc"; Dest = ".cursor\rules\adr.mdc" },
-    @{ Src = "templates\.cursor\rules\caveman.mdc"; Dest = ".cursor\rules\caveman.mdc" },
-    @{ Src = "templates\.cursor\rules\handoff.mdc"; Dest = ".cursor\rules\handoff.mdc" },
-    @{ Src = "templates\.cursor\rules\qa.mdc"; Dest = ".cursor\rules\qa.mdc" },
-    @{ Src = "templates\.cursor\rules\synthesize-design-doc.mdc"; Dest = ".cursor\rules\synthesize-design-doc.mdc" },
-    @{ Src = "templates\.cursor\rules\onboarding.mdc"; Dest = ".cursor\rules\onboarding.mdc" },
-    @{ Src = "templates\.agents\skills\init-ai-workflow\SKILL.md"; Dest = ".agents\skills\init-ai-workflow\SKILL.md" },
-    @{ Src = "templates\.agents\skills\grill-me\SKILL.md"; Dest = ".agents\skills\grill-me\SKILL.md" },
-    @{ Src = "templates\.agents\skills\spec\SKILL.md"; Dest = ".agents\skills\spec\SKILL.md" },
-    @{ Src = "templates\.agents\skills\plan\SKILL.md"; Dest = ".agents\skills\plan\SKILL.md" },
-    @{ Src = "templates\.agents\skills\code\SKILL.md"; Dest = ".agents\skills\code\SKILL.md" },
-    @{ Src = "templates\.agents\skills\review\SKILL.md"; Dest = ".agents\skills\review\SKILL.md" },
-    @{ Src = "templates\.agents\skills\project-overview\SKILL.md"; Dest = ".agents\skills\project-overview\SKILL.md" },
-    @{ Src = "templates\.agents\skills\adr\SKILL.md"; Dest = ".agents\skills\adr\SKILL.md" },
-    @{ Src = "templates\.agents\skills\caveman\SKILL.md"; Dest = ".agents\skills\caveman\SKILL.md" },
-    @{ Src = "templates\.agents\skills\handoff\SKILL.md"; Dest = ".agents\skills\handoff\SKILL.md" },
-    @{ Src = "templates\.agents\skills\qa\SKILL.md"; Dest = ".agents\skills\qa\SKILL.md" },
-    @{ Src = "templates\.agents\skills\synthesize-design-doc\SKILL.md"; Dest = ".agents\skills\synthesize-design-doc\SKILL.md" },
-    @{ Src = "templates\.agents\skills\onboarding\SKILL.md"; Dest = ".agents\skills\onboarding\SKILL.md" },
-    @{ Src = "templates\.claude\skills\init-ai-workflow\SKILL.md"; Dest = ".claude\skills\init-ai-workflow\SKILL.md" },
-    @{ Src = "templates\.claude\skills\grill-me\SKILL.md"; Dest = ".claude\skills\grill-me\SKILL.md" },
-    @{ Src = "templates\.claude\skills\spec\SKILL.md"; Dest = ".claude\skills\spec\SKILL.md" },
-    @{ Src = "templates\.claude\skills\plan\SKILL.md"; Dest = ".claude\skills\plan\SKILL.md" },
-    @{ Src = "templates\.claude\skills\code\SKILL.md"; Dest = ".claude\skills\code\SKILL.md" },
-    @{ Src = "templates\.claude\skills\review\SKILL.md"; Dest = ".claude\skills\review\SKILL.md" },
-    @{ Src = "templates\.claude\skills\project-overview\SKILL.md"; Dest = ".claude\skills\project-overview\SKILL.md" },
-    @{ Src = "templates\.claude\skills\adr\SKILL.md"; Dest = ".claude\skills\adr\SKILL.md" },
-    @{ Src = "templates\.claude\skills\caveman\SKILL.md"; Dest = ".claude\skills\caveman\SKILL.md" },
-    @{ Src = "templates\.claude\skills\handoff\SKILL.md"; Dest = ".claude\skills\handoff\SKILL.md" },
-    @{ Src = "templates\.claude\skills\qa\SKILL.md"; Dest = ".claude\skills\qa\SKILL.md" },
-    @{ Src = "templates\.claude\skills\synthesize-design-doc\SKILL.md"; Dest = ".claude\skills\synthesize-design-doc\SKILL.md" },
-    @{ Src = "templates\.claude\skills\onboarding\SKILL.md"; Dest = ".claude\skills\onboarding\SKILL.md" }
+    @{ Src = "templates\.cursor\rules\ai-workflow.mdc"; Dest = ".cursor\rules\ai-workflow.mdc" }
 )
 
 $OptionalFiles = @(
-    @{ Src = ".cursorrules"; Dest = ".cursorrules" },
-    @{ Src = "templates\.gemini\prompts\grill-me.md"; Dest = ".gemini\prompts\grill-me.md" },
-    @{ Src = "templates\.gemini\prompts\spec.md"; Dest = ".gemini\prompts\spec.md" },
-    @{ Src = "templates\.gemini\prompts\plan.md"; Dest = ".gemini\prompts\plan.md" },
-    @{ Src = "templates\.gemini\prompts\code.md"; Dest = ".gemini\prompts\code.md" },
-    @{ Src = "templates\.gemini\prompts\review.md"; Dest = ".gemini\prompts\review.md" },
-    @{ Src = "templates\.gemini\prompts\init-ai-workflow.md"; Dest = ".gemini\prompts\init-ai-workflow.md" },
-    @{ Src = "templates\.gemini\prompts\adr.md"; Dest = ".gemini\prompts\adr.md" }
+    @{ Src = ".cursorrules"; Dest = ".cursorrules" }
 )
 
 $Stats = [ordered]@{
@@ -206,6 +109,14 @@ function Same-FileContent([string]$Source, [string]$Destination) {
     $srcHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $Source).Hash
     $dstHash = (Get-FileHash -Algorithm SHA256 -LiteralPath $Destination).Hash
     return $srcHash -eq $dstHash
+}
+
+function Same-StringContent([string]$DestPath, [string]$Content) {
+    if (-not (Test-Path -LiteralPath $DestPath -PathType Leaf)) { return $false }
+    $DestContent = [System.IO.File]::ReadAllText($DestPath)
+    $NormDest = $DestContent -replace "\r\n", "`n"
+    $NormContent = $Content -replace "\r\n", "`n"
+    return $NormDest -eq $NormContent
 }
 
 function Copy-WorkflowFile([hashtable]$Item, [bool]$Required) {
@@ -271,6 +182,146 @@ function Copy-WorkflowFile([hashtable]$Item, [bool]$Required) {
     }
 }
 
+function Write-GeneratedFile([string]$DestRelativePath, [string]$FileContent) {
+    $DestFile = Join-Path $TargetRoot $DestRelativePath
+    $DestDir = Split-Path -Parent $DestFile
+
+    if (-not (Test-Path -LiteralPath $DestDir -PathType Container)) {
+        if ($DryRun) {
+            Write-Host "[DRY-RUN][MKDIR] $($DestDir.Replace($TargetRoot, '').TrimStart('\'))"
+        } else {
+            New-Item -ItemType Directory -Force -Path $DestDir | Out-Null
+        }
+        $Stats.CreatedDirs++
+    }
+
+    if (Test-Path -LiteralPath $DestFile -PathType Leaf) {
+        if (Same-StringContent -DestPath $DestFile -Content $FileContent) {
+            $Stats.Unchanged++
+            if ($VerboseOutput) { Write-Host "[UNCHANGED] $DestRelativePath" -ForegroundColor DarkGray }
+            return
+        }
+
+        if (-not $Force) {
+            $Stats.Skipped++
+            Write-WarnLine "Exists, skipped: $DestRelativePath (use -Force to overwrite)"
+            return
+        }
+
+        if (-not $NoBackup) {
+            $Timestamp = Get-Date -Format "yyyyMMddHHmmss"
+            $BackupFile = "$DestFile.bak.$Timestamp"
+            if ($DryRun) {
+                Write-Host "[DRY-RUN][BACKUP] $DestRelativePath -> $(Split-Path -Leaf $BackupFile)"
+            } else {
+                Copy-Item -LiteralPath $DestFile -Destination $BackupFile -Force
+            }
+            $Stats.Backups++
+        }
+
+        if ($DryRun) {
+            Write-Host "[DRY-RUN][UPDATE] $DestRelativePath"
+        } else {
+            [System.IO.File]::WriteAllText($DestFile, $FileContent)
+        }
+        $Stats.UpdatedFiles++
+    } else {
+        if ($DryRun) {
+            Write-Host "[DRY-RUN][NEW] $DestRelativePath"
+        } else {
+            [System.IO.File]::WriteAllText($DestFile, $FileContent)
+        }
+        $Stats.NewFiles++
+    }
+}
+
+function Process-Skills {
+    $SkillsDir = Join-Path $TemplatesDir "skills"
+    if (-not (Test-Path -LiteralPath $SkillsDir -PathType Container)) {
+        Write-WarnLine "Source skills directory not found: $SkillsDir"
+        return
+    }
+
+    $SkillFiles = Get-ChildItem -Path $SkillsDir -Filter "*.md" -Recurse -File
+    foreach ($File in $SkillFiles) {
+        try {
+            $Content = [System.IO.File]::ReadAllText($File.FullName)
+            $Normalized = $Content -replace "\r\n", "`n"
+            if (-not $Normalized.StartsWith("---`n")) {
+                throw "File does not start with frontmatter: $($File.FullName)"
+            }
+            $EndIdx = $Normalized.IndexOf("`n---`n", 4)
+            if ($EndIdx -eq -1) {
+                throw "Invalid frontmatter in file: $($File.FullName)"
+            }
+            $FrontmatterText = $Normalized.Substring(4, $EndIdx - 4)
+            $Body = $Normalized.Substring($EndIdx + 5)
+
+            $Metadata = @{}
+            $Lines = $FrontmatterText -split "`n"
+            foreach ($Line in $Lines) {
+                $ColonIdx = $Line.IndexOf(':')
+                if ($ColonIdx -eq -1) { continue }
+                $Key = $Line.Substring(0, $ColonIdx).Trim()
+                $Val = $Line.Substring($ColonIdx + 1).Trim()
+                if (($Val.StartsWith('"') -and $Val.EndsWith('"')) -or ($Val.StartsWith("'") -and $Val.EndsWith("'"))) {
+                    $Val = $Val.Substring(1, $Val.Length - 2)
+                }
+                $Metadata[$Key] = $Val
+            }
+
+            $Name = $Metadata["name"]
+            if ([string]::IsNullOrEmpty($Name)) {
+                $Name = $File.BaseName
+            }
+            $Desc = $Metadata["description"]
+            if ($null -eq $Desc) {
+                $Desc = ""
+            }
+
+            if ($VerboseOutput) {
+                Write-Info "Processing skill: $Name"
+            }
+
+            # 1. Generic Agent Skill
+            $GenericFM = "---`nname: $Name`ndescription: $Desc`n"
+            if ($Metadata.ContainsKey("disable-model-invocation")) {
+                $GenericFM += "disable-model-invocation: $($Metadata['disable-model-invocation'])`n"
+            }
+            if ($Metadata.ContainsKey("argument-hint")) {
+                $GenericFM += "argument-hint: $($Metadata['argument-hint'])`n"
+            }
+            $GenericFM += "---`n"
+            Write-GeneratedFile -DestRelativePath ".agents\skills\$Name\SKILL.md" -FileContent "$GenericFM$Body"
+
+            # 2. Claude Agent Skill
+            Write-GeneratedFile -DestRelativePath ".claude\skills\$Name\SKILL.md" -FileContent "$GenericFM$Body"
+
+            # 3. Cursor Rule
+            $CursorFM = "---`ndescription: $Desc`nglobs: *`n"
+            if ($Metadata.ContainsKey("alwaysApply")) {
+                $CursorFM += "alwaysApply: $($Metadata['alwaysApply'])`n"
+            } else {
+                $CursorFM += "alwaysApply: false`n"
+            }
+            $CursorFM += "---`n"
+            Write-GeneratedFile -DestRelativePath ".cursor\rules\$Name.mdc" -FileContent "$CursorFM$Body"
+
+            # 4. Claude Command
+            $ClaudeCmd = "---`ndescription: $Desc`n---`n`nRead and execute .claude\skills\$Name\SKILL.md. Arguments: `$ARGUMENTS`n"
+            Write-GeneratedFile -DestRelativePath ".claude\commands\$Name.md" -FileContent $ClaudeCmd
+
+            # 5. Gemini Command
+            $EscapedDesc = $Desc -replace '"', '\"'
+            $GeminiCmd = "description = `"$EscapedDesc`"`nprompt = `"`"`"`nRead AGENTS.md first, then read .agents/skills/$Name/SKILL.md and execute that workflow.`nArguments: {{args}}`n`"`"`"`n"
+            Write-GeneratedFile -DestRelativePath ".gemini\commands\$Name.toml" -FileContent $GeminiCmd
+
+        } catch {
+            Write-WarnLine "Failed to parse or convert skill file $($File.FullName): $($_.Exception.Message)"
+        }
+    }
+}
+
 Write-Host "=============================================" -ForegroundColor Cyan
 Write-Host "  3A Factory Installer" -ForegroundColor Cyan
 Write-Host "=============================================" -ForegroundColor Cyan
@@ -292,6 +343,8 @@ foreach ($item in $RequiredFiles) {
 foreach ($item in $OptionalFiles) {
     Copy-WorkflowFile -Item $item -Required $false
 }
+
+Process-Skills
 
 Write-Host "---------------------------------------------" -ForegroundColor Cyan
 Write-Ok "Installation completed."
