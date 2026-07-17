@@ -223,26 +223,37 @@ jobs:
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           
-          echo "Verifying publish of $PACKAGE_NAME@$PACKAGE_VERSION on npm Registry..."
+          echo "Verifying publish of $PACKAGE_NAME@$PACKAGE_VERSION on npm Registry (with cache-busting)..."
           
-          # Retry loop: 3 attempts, waiting 5 seconds between each
-          for attempt in {1..3}; do
-            echo "Verification attempt $attempt..."
-            VERIFIED_VERSION=$(npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null || true)
+          node -e '
+            const https = require("https");
+            const name = process.argv[1];
+            const version = process.argv[2];
+            const url = `https://registry.npmjs.org/${name}/${version}?t=${Date.now()}`;
             
-            if [ "$VERIFIED_VERSION" = "$PACKAGE_VERSION" ]; then
-              echo "Verified! Version $PACKAGE_VERSION of $PACKAGE_NAME is now live on npm."
-              exit 0
-            fi
+            function check(attemptsLeft) {
+              if (attemptsLeft <= 0) {
+                console.error(`Error: Published version ${version} of ${name} could not be verified on the registry.`);
+                process.exit(1);
+              }
+              
+              console.log(`Checking registry (${attemptsLeft} attempts left)...`);
+              https.get(url, (res) => {
+                if (res.statusCode === 200) {
+                  console.log(`Verified! Version ${version} of ${name} is live on npm.`);
+                  process.exit(0);
+                } else {
+                  console.log(`Status code: ${res.statusCode}. Not found yet. Waiting 10 seconds...`);
+                  setTimeout(() => check(attemptsLeft - 1), 10000);
+                }
+              }).on("error", (err) => {
+                console.log(`Request error: ${err.message}. Waiting 10 seconds...`);
+                setTimeout(() => check(attemptsLeft - 1), 10000);
+              });
+            }
             
-            if [ $attempt -lt 3 ]; then
-              echo "Not found yet. Waiting 5 seconds..."
-              sleep 5
-            fi
-          done
-          
-          echo "Error: Published version $PACKAGE_VERSION of $PACKAGE_NAME could not be verified on the registry."
-          exit 1
+            check(12);
+          ' "$PACKAGE_NAME" "$PACKAGE_VERSION"
 
       - name: Skip Log
         if: steps.check-version.outputs.skip_publish == 'true'
