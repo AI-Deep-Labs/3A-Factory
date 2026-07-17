@@ -1,9 +1,9 @@
 ---
-description: ALEX AI workflow gates and cross-agent coding rules
+description: 3A-Factory AI workflow gates and cross-agent coding rules
 alwaysApply: true
 ---
 
-# ALEX Workflow for Cursor
+# 3A-Factory Workflow for Cursor
 
 Follow `AGENTS.md`: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
 

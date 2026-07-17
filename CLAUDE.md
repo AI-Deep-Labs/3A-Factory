@@ -1,6 +1,6 @@
 # CLAUDE.md
 
-Read `AGENTS.md` first. Follow ALEX workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
+Read `AGENTS.md` first. Follow 3A-Factory workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
 
 Claude-specific usage:
 - Prefer project skills in `.claude/skills/<skill-name>/SKILL.md`.

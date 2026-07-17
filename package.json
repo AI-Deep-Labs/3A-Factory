@@ -10,8 +10,6 @@
     "postinstall": "node scripts/install.js"
   },
   "keywords": [
-    "alex",
-    "alex-ai-agent",
     "3a-factory",
     "claude",
     "gemini",
@@ -19,7 +17,7 @@
     "ai",
     "copilot"
   ],
-  "author": "Alex Huynh Vinh",
+  "author": "Huynh Vinh",
   "license": "MIT",
   "files": [
     "templates",

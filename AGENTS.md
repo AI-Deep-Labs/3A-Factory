@@ -1,4 +1,4 @@
-# ALEX Agent Operating Rules
+# 3A-Factory Agent Operating Rules
 
 ## Mission
 Use a controlled software delivery workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.

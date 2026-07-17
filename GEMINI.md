@@ -1,6 +1,6 @@
 # GEMINI.md
 
-Read `AGENTS.md` first. Follow ALEX workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
+Read `AGENTS.md` first. Follow 3A-Factory workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
 
 Gemini-specific usage:
 - **Language**: Follow `AGENTS.md` strictly and generate all workspace documents and outputs in Vietnamese (tiếng Việt).

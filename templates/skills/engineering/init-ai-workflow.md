@@ -1,6 +1,6 @@
 ---
 name: init-ai-workflow
-description: Initialize or repair the ALEX workflow files, detect project stack, commands, architecture, and sync cross-agent rules.
+description: Initialize or repair the 3A-Factory workflow files, detect project stack, commands, architecture, and sync cross-agent rules.
 disable-model-invocation: true
 ---
 

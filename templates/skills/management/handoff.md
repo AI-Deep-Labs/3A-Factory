@@ -24,6 +24,6 @@ Produce a beautifully formatted Markdown handoff document inside `.agents/compac
 3. **Session Progress**: High-level summary of achievements in this turn.
 4. **Key Reference Artifacts**: Direct links to plans, ADRs, and modified files in the workspace.
 5. **Next Actions**: Actionable list of steps for the incoming agent.
-6. **Suggested Skills**: Explicit recommendation of which ALEX skills to run next (e.g., `init-ai-workflow`, `project-overview`, `grill-me`, `spec`, `plan`, `code`, `review`).
+6. **Suggested Skills**: Explicit recommendation of which 3A-Factory skills to run next (e.g., `init-ai-workflow`, `project-overview`, `grill-me`, `spec`, `plan`, `code`, `review`).
 
 Confirm the exact file path where the handoff document was saved to the user when finished.
