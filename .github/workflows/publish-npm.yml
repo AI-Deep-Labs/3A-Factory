@@ -1,0 +1,232 @@
+name: Publish Package to npm
+
+on:
+  push:
+    branches:
+      - main
+
+concurrency:
+  group: npm-publish
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+  id-token: write
+
+jobs:
+  publish:
+    name: Publish npm Package
+    runs-on: ubuntu-latest
+    environment: npm-production
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
+
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: 20
+          registry-url: 'https://registry.npmjs.org'
+
+      - name: Install dependencies
+        run: |
+          if [ -f package-lock.json ]; then
+            npm ci
+          else
+            npm install
+          fi
+
+      - name: Run Quality Gates
+        run: |
+          npm run lint --if-present
+          npm test --if-present
+          npm run build --if-present
+
+      - name: Validate Package Metadata and Entry Points
+        run: |
+          echo "=== Validating package.json structure ==="
+          if [ ! -f package.json ]; then
+            echo "Error: package.json does not exist."
+            exit 1
+          fi
+
+          NAME=$(node -p "require('./package.json').name")
+          VERSION=$(node -p "require('./package.json').version")
+          PRIVATE=$(node -p "require('./package.json').private || false")
+
+          if [ -z "$NAME" ] || [ "$NAME" = "undefined" ]; then
+            echo "Error: Missing package name in package.json."
+            exit 1
+          fi
+
+          if [ -z "$VERSION" ] || [ "$VERSION" = "undefined" ]; then
+            echo "Error: Missing package version in package.json."
+            exit 1
+          fi
+
+          if [ "$PRIVATE" = "true" ]; then
+            echo "Error: Package is configured as private ('private': true) and cannot be published."
+            exit 1
+          fi
+
+          # Validating package name format
+          if [[ ! "$NAME" =~ ^(@[a-z0-9-~][a-z0-9-._~]*/)?[a-z0-9-~][a-z0-9-._~]*$ ]]; then
+            echo "Error: Invalid package name format: '$NAME'"
+            exit 1
+          fi
+
+          # Validating package version format (simple regex check for semver)
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?(\+[0-9A-Za-z.-]+)?$ ]]; then
+            echo "Error: Invalid semver version format: '$VERSION'"
+            exit 1
+          fi
+
+          echo "Package name: $NAME"
+          echo "Package version: $VERSION"
+
+          # Check entry points
+          echo "=== Checking entry point files ==="
+          MAIN_FILE=$(node -p "require('./package.json').main || ''")
+          if [ -n "$MAIN_FILE" ] && [ "$MAIN_FILE" != "undefined" ]; then
+            if [ ! -f "$MAIN_FILE" ]; then
+              echo "Error: Entry point 'main' points to '$MAIN_FILE' which does not exist."
+              exit 1
+            fi
+            echo "Main entry point '$MAIN_FILE' verified."
+          fi
+
+          # Check binary entry points if defined
+          BIN_FIELD=$(node -p "const bin = require('./package.json').bin || ''; typeof bin === 'object' ? JSON.stringify(bin) : bin" 2>/dev/null || echo "")
+          if [ -n "$BIN_FIELD" ] && [ "$BIN_FIELD" != "undefined" ] && [ "$BIN_FIELD" != '""' ]; then
+            # If bin is a string
+            if [[ "$BIN_FIELD" != \{* ]]; then
+              if [ ! -f "$BIN_FIELD" ]; then
+                echo "Error: Binary entry point '$BIN_FIELD' does not exist."
+                exit 1
+              fi
+              echo "Binary entry point '$BIN_FIELD' verified."
+            else
+              # If bin is an object, verify each path
+              node -e '
+                const bin = require("./package.json").bin;
+                const fs = require("fs");
+                for (const [key, val] of Object.entries(bin)) {
+                  if (!fs.existsSync(val)) {
+                    console.error(`Error: Binary entry point for "${key}" points to "${val}" which does not exist.`);
+                    process.exit(1);
+                  }
+                  console.log(`Binary entry point "${key}" (${val}) verified.`);
+                }
+              '
+            fi
+          fi
+
+          echo "Metadata validation successful!"
+
+      - name: Perform Pack Dry-Run
+        run: |
+          echo "=== Performing npm pack dry-run ==="
+          npm pack --dry-run
+          
+          echo "Checking for sensitive files..."
+          # List of files we should prevent from publishing
+          SENSITIVE_FILES=(".env" "secret" "credential" ".bak" ".log" "npm-debug.log" "yarn-error.log" "yarn-debug.log")
+          
+          # Run npm pack to get the list of files that will actually be packaged
+          PACK_OUTPUT=$(npm pack --dry-run 2>&1)
+          
+          for file in "${SENSITIVE_FILES[@]}"; do
+            if echo "$PACK_OUTPUT" | grep -i -q "$file"; then
+              echo "Warning: Potentially sensitive file pattern '$file' detected in npm pack output!"
+              # For safety, let's trigger a failure if .env or credentials are found
+              if [ "$file" = ".env" ] || [ "$file" = "secret" ] || [ "$file" = "credential" ]; then
+                echo "Error: Sensitive file '$file' would be packaged. Aborting publish!"
+                exit 1
+              fi
+            fi
+          done
+          echo "Pack dry-run and sensitivity check completed."
+
+      - name: Check package version on npm registry
+        id: check-version
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "Checking if version $PACKAGE_VERSION of $PACKAGE_NAME is already published on npm..."
+          
+          # Fetch version info from npm registry
+          PUBLISHED_VERSION=$(npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null || true)
+          
+          if [ "$PUBLISHED_VERSION" = "$PACKAGE_VERSION" ]; then
+            echo "Version $PACKAGE_VERSION is already published. Skipping."
+            echo "skip_publish=true" >> $GITHUB_OUTPUT
+            echo "skip_publish=true" >> $GITHUB_ENV
+          else
+            echo "Version $PACKAGE_VERSION is NOT published. Will publish."
+            echo "skip_publish=false" >> $GITHUB_OUTPUT
+            echo "skip_publish=false" >> $GITHUB_ENV
+          fi
+
+      - name: Publish Package to npm
+        if: steps.check-version.outputs.skip_publish == 'false'
+        env:
+          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION to npm..."
+          
+          # Check if publishConfig access is defined, otherwise default
+          PUBLISH_ACCESS=$(node -p "require('./package.json').publishConfig?.access || ''")
+          
+          if [ -n "$PUBLISH_ACCESS" ] && [ "$PUBLISH_ACCESS" != "undefined" ]; then
+            npm publish
+          else
+            # Check if it is a scoped package (starts with @)
+            if [[ "$PACKAGE_NAME" =~ ^@[a-z0-9-~] ]]; then
+              echo "Scoped package detected without publishConfig.access, publishing with --access public..."
+              npm publish --access public
+            else
+              npm publish
+            fi
+          fi
+          
+          echo "publish_status=published" >> $GITHUB_ENV
+          echo "Successfully initiated publish process."
+
+      - name: Verify package is live on npm
+        if: steps.check-version.outputs.skip_publish == 'false' && env.publish_status == 'published'
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "Verifying publish of $PACKAGE_NAME@$PACKAGE_VERSION on npm Registry..."
+          
+          # Retry loop: 3 attempts, waiting 5 seconds between each
+          for attempt in {1..3}; do
+            echo "Verification attempt $attempt..."
+            VERIFIED_VERSION=$(npm view "$PACKAGE_NAME@$PACKAGE_VERSION" version 2>/dev/null || true)
+            
+            if [ "$VERIFIED_VERSION" = "$PACKAGE_VERSION" ]; then
+              echo "Verified! Version $PACKAGE_VERSION of $PACKAGE_NAME is now live on npm."
+              exit 0
+            fi
+            
+            if [ $attempt -lt 3 ]; then
+              echo "Not found yet. Waiting 5 seconds..."
+              sleep 5
+            fi
+          done
+          
+          echo "Error: Published version $PACKAGE_VERSION of $PACKAGE_NAME could not be verified on the registry."
+          exit 1
+
+      - name: Skip Log
+        if: steps.check-version.outputs.skip_publish == 'true'
+        run: |
+          PACKAGE_NAME=$(node -p "require('./package.json').name")
+          PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          echo "Status: [SKIPPED]"
+          echo "Log: Package $PACKAGE_NAME version $PACKAGE_VERSION has already been published on npm."
