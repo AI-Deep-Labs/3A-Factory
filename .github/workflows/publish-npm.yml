@@ -179,10 +179,20 @@ jobs:
       - name: Publish Package to npm
         if: steps.check-version.outputs.skip_publish == 'false'
         env:
-          NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+          NPM_TOKEN: ${{ secrets.NPM_TOKEN }}
         run: |
           PACKAGE_NAME=$(node -p "require('./package.json').name")
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
+          
+          echo "=== Setting up registry authentication ==="
+          if [ -z "$NPM_TOKEN" ]; then
+            echo "Error: The NPM_TOKEN secret is empty or not configured."
+            echo "Please ensure you have configured the NPM_TOKEN secret in your GitHub repository or environment secrets."
+            exit 1
+          fi
+          
+          # Configure .npmrc locally
+          echo "//registry.npmjs.org/:_authToken=${NPM_TOKEN}" > .npmrc
           
           echo "Publishing $PACKAGE_NAME@$PACKAGE_VERSION to npm..."
           
@@ -200,6 +210,9 @@ jobs:
               npm publish
             fi
           fi
+          
+          # Clean up .npmrc for safety
+          rm -f .npmrc
           
           echo "publish_status=published" >> $GITHUB_ENV
           echo "Successfully initiated publish process."
