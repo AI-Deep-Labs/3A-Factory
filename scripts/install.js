@@ -78,12 +78,12 @@ Other options:
   -h, --help    Show help
 
 Always installed (shared):
-  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates|skills
+  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates
   (docs includes misc/compact + misc/issues)
 
 Per agent:
   claude  → CLAUDE.md, .claude/skills, .claude/commands
-  gemini  → GEMINI.md, .gemini/commands (skills via .agents/skills)
+  gemini  → GEMINI.md, .gemini/skills, .gemini/commands
   cursor  → .cursor/rules/*.mdc (incl. ai-workflow.mdc)
 `);
 }
@@ -153,7 +153,7 @@ const sharedDirs = [
 
 const agentDirs = {
   claude: ['.claude/commands', '.claude/skills'],
-  gemini: ['.gemini/commands', '.gemini/prompts'],
+  gemini: ['.gemini/commands', '.gemini/prompts', '.gemini/skills'],
   cursor: ['.cursor/rules']
 };
 
@@ -417,9 +417,6 @@ function processSkills() {
       skillFM += `---\n`;
       const skillBody = `${skillFM}${body}`;
 
-      // Shared portable skills — used by Gemini prompts and as source of truth
-      writeGeneratedFile(`.agents/skills/${name}/SKILL.md`, skillBody);
-
       if (wants('claude')) {
         writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, skillBody);
         const claudeCmd = `---\ndescription: ${desc}\n---\n\nRead and execute .claude/skills/${name}/SKILL.md. Arguments: $ARGUMENTS\n`;
@@ -438,7 +435,8 @@ function processSkills() {
       }
 
       if (wants('gemini')) {
-        const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .agents/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+        writeGeneratedFile(`.gemini/skills/${name}/SKILL.md`, skillBody);
+        const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
         writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
       }
     } catch (err) {
@@ -481,12 +479,12 @@ function printFooter() {
   console.log(`${colors.cyan}=============================================${colors.reset}`);
   console.log(`Agents installed: ${[...selectedAgents].join(', ')}`);
   console.log(`Artifacts:        docs/{requirements,designs,reviews,qa,release-notes,misc/...}`);
-  console.log(`Shared skills:    .agents/skills + AGENTS.md`);
+  console.log(`Shared:           docs/*, AGENTS.md, WORKFLOW.md, .agents/templates`);
   if (wants('claude')) {
-    console.log(`Claude Code:      /project-manager, /grill-me, /onboarding, /develop, …`);
+    console.log(`Claude Code:      .claude/skills + .claude/commands`);
   }
   if (wants('gemini')) {
-    console.log(`Gemini CLI:       .gemini/commands/*.toml`);
+    console.log(`Gemini CLI:       .gemini/skills + .gemini/commands`);
   }
   if (wants('cursor')) {
     console.log(`Cursor:           .cursor/rules/*.mdc (incl. ai-workflow.mdc)`);

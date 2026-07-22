@@ -30,5 +30,9 @@ Ids: `REQ-<NNNNNN>-<slug>` / `ADR-<NNNNNN>-<slug>` (6 digits); branch `feature/R
 **Artifact body language: Vietnamese.** Instruction/rules language: English.
 
 ## Skills
-Execute the matching `.cursor/rules/<skill>.mdc` or `.agents/skills/<skill>/SKILL.md`.
+Execute the matching agent-native skill file:
+- Cursor: `.cursor/rules/<skill>.mdc`
+- Claude: `.claude/skills/<skill>/SKILL.md`
+- Gemini: `.gemini/skills/<skill>/SKILL.md`
+
 New repos: run `/onboarding` first.

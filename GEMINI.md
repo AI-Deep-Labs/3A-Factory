@@ -6,7 +6,7 @@ Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
 
 Gemini-specific:
 - Commands: `.gemini/commands/*.toml`
-- Prompt fallback: `.agents/skills/*/SKILL.md`
+- Skills: `.gemini/skills/<skill-name>/SKILL.md`
 - If slash commands are unavailable, invoke phases in natural language (`project-manager`, `grill-me`, …).
 
 **Generated docs under `docs/` must be written in Vietnamese** (see `AGENTS.md` language rules). Chat may follow the user’s language.

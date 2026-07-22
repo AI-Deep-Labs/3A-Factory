@@ -76,14 +76,22 @@ Planning is **mandatory** when risk is high; optional for low/medium if Design a
 - QA Fail → fix code ≤ **2** rounds, then report.
 
 ## Skill loading
-Skill sources live under `templates/skills/` in two groups (installer still emits flat `.agents/skills/<name>/`):
+Package source (templates only — not copied as `.agents/skills`):
 
 | Folder | Skills |
 |---|---|
 | `templates/skills/workflow/` | `project-manager`, `triage`, `grill-me`, `analyze`, `adr`, `design`, `spec`, `plan`, `develop`, `review`, `qa`, `deploy` |
 | `templates/skills/utility/` | `onboarding`, `handoff`, `caveman`, `synthesize-design-doc`, `qa-issues` |
 
-At runtime, read `.agents/skills/<name>/SKILL.md` (and Claude/Gemini/Cursor mirrors).
+**Runtime paths (agent-native — installer writes only what you selected):**
+
+| Agent | Read skills from |
+|---|---|
+| Claude Code | `.claude/skills/<name>/SKILL.md` (+ `/commands`) |
+| Gemini CLI | `.gemini/skills/<name>/SKILL.md` (+ `.gemini/commands/*.toml`) |
+| Cursor | `.cursor/rules/<name>.mdc` (+ `ai-workflow.mdc`) |
+
+Shared always: `AGENTS.md`, `WORKFLOW.md`, `docs/`, `.agents/templates/` (doc templates only — not skills).
 
 ## Language rules
 - **Skill / rule / template instruction files** in this package: **English** (precise, unambiguous for agents).

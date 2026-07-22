@@ -54,7 +54,7 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
    ```
 2. Agent tooling (if not present after package install):
    - Prompt / run 3a-factory install **into this repo** (`npx 3a-factory` or equivalent) for skills/commands/rules — **do not** clone extra repos.
-   - Ensure `.agents/`, `.claude/` / `.gemini/` / `.cursor/` exist for the tools in use (via installer; do not invent a divergent layout).
+   - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/skills|commands`, `.cursor/rules` — plus shared `AGENTS.md` / `.agents/templates` (doc templates only).
 3. Do not create `docs/` or workflow files in parent/sibling directories.
 
 ---
