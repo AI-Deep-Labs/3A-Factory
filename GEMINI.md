@@ -1,17 +1,21 @@
 # GEMINI.md
 
-Read `AGENTS.md` first. Follow 3A-Factory workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
+Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
 
-Gemini-specific usage:
-- **Language**: Follow `AGENTS.md` strictly and generate all workspace documents and outputs in Vietnamese (tiếng Việt).
-- Gemini CLI custom commands should live in `.gemini/commands/*.toml`.
-- For Gemini Advanced / AI Studio, use `.agents/skills/*/SKILL.md` as copy-paste prompts.
-- If slash commands are unavailable, treat `/grill-me`, `/spec`, `/plan`, `/code`, `/review`, `/init-ai-workflow`, `/project-overview`, `/adr`, `/caveman`, `/handoff`, `/qa`, `/synthesize-design-doc` as natural-language phase requests.
+`triage → (grill-me) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop; `/deploy` is separate + requires `APPROVED`.
 
-Project context is filled by `/init-ai-workflow`:
+Gemini-specific:
+- Commands: `.gemini/commands/*.toml`
+- Prompt fallback: `.agents/skills/*/SKILL.md`
+- If slash commands are unavailable, invoke phases in natural language (`project-manager`, `grill-me`, …).
+
+**Generated docs under `docs/` must be written in Vietnamese** (see `AGENTS.md` language rules). Chat may follow the user’s language.
+
+Project context (filled by `/onboarding`):
 - Project type: `[DETECTED_PROJECT_TYPE]`
 - Primary language: `[DETECTED_PRIMARY_LANGUAGE]`
 - Architecture: `[DETECTED_ARCHITECTURE]`
 - Build command: `[BUILD_COMMAND]`
 - Test command: `[TEST_COMMAND]`
 - Run command: `[RUN_COMMAND]`
+- Deploy notes: `[DEPLOY_NOTES]`

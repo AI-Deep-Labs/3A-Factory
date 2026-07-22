@@ -1,18 +1,32 @@
 ---
-description: 3A-Factory AI workflow gates and cross-agent coding rules
+description: 3A-Factory workflow — automated delivery pipeline (Claude/Gemini/Cursor)
+globs: *
 alwaysApply: true
 ---
 
-# 3A-Factory Workflow for Cursor
+# 3A-Factory Workflow (Cursor)
 
-Follow `AGENTS.md`: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
+Read `AGENTS.md` and `WORKFLOW.md` before making changes.
 
-Hard gates:
-- Never modify application source code from raw requirements.
-- A single, case-insensitive `APPROVED` directive approves the current phase and authorizes proceeding to the next steps (including coding after PLAN phase approval).
-- A case-insensitive `REJECTED` directive rejects the current draft. AI stops and asks if you want to re-analyze from scratch (y/n).
-- A case-insensitive `RE-EXECUTE` (or `RE-EXCUTE`) directive requests re-execution and refinement. AI must NOT create a new spec/plan, but instead edit the existing file directly, asking clarifying questions if needed.
-- During CODE, edit only files listed in the approved PLAN.
-- Stop before unapproved public API, database, auth, payment/order, or deployment changes.
+## Pipeline
+`triage → (grill-me) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop.
+Deploy: separate command + always `APPROVED`.
 
-Use `.agents/skills/<phase>/SKILL.md` for phase details.
+## Dual entry
+- `project-manager`: auto-run; if unclear → grill-me; when clear / “execute now” → continue.
+- `grill-me`: deep clarification; write `docs/requirements/REQ-<NNNNNN>-<slug>-discovery.md`.
+
+## Hard gates
+- No coding from raw requirements.
+- High risk → Planning + `APPROVED` before develop.
+- Develop follows plan or design scope.
+- Never auto-deploy; every deploy needs `APPROVED`.
+
+## Artifacts
+Write under `docs/{requirements,designs,reviews,qa,release-notes}` (+ `docs/project_overview.md` from `/onboarding`).
+Ids: `REQ-<NNNNNN>-<slug>` / `ADR-<NNNNNN>-<slug>` (6 digits); branch `feature/REQ-<NNNNNN>-<slug>`.
+**Artifact body language: Vietnamese.** Instruction/rules language: English.
+
+## Skills
+Execute the matching `.cursor/rules/<skill>.mdc` or `.agents/skills/<skill>/SKILL.md`.
+New repos: run `/onboarding` first.

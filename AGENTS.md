@@ -1,43 +1,89 @@
 # 3A-Factory Agent Operating Rules
 
 ## Mission
-Use a controlled software delivery workflow: GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW.
+Run an automated software-delivery pipeline:
+
+`triage → (grill-me if unclear) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop; deploy is separate.
+
+Supported tools: **Claude Code**, **Gemini**, **Cursor**.
 
 ## Hard gates
-1. Do not create or modify application source code during GRILL-ME, SPEC, or PLAN.
-2. A single, case-insensitive `APPROVED` directive from the user is sufficient to approve the current phase and authorize proceeding to the next steps (including coding after PLAN phase approval).
-3. During CODE, modify only files listed in the approved PLAN unless the user explicitly expands scope.
-4. Stop and report before changing public API contracts, database schema, authentication/authorization logic, payment/order logic, or deployment configuration unless already approved in SPEC and PLAN.
+1. Do not modify application source code from a raw requirement. Develop only after `analyze` + `design` + `spec` (and `plan` when risk is high).
+2. **High** risk → Planning is mandatory + wait for `APPROVED` before develop.
+3. During develop, change only files/scope listed in Planning (if present) or Design; if scope drifts → stop and update design/plan first.
+4. Stop and report before changing shared public API/contracts, DB schema with real data, auth/authorization, or production deploy/infra config — unless risk was classified and the matching gate was cleared.
+5. **Never auto-deploy.** Every deploy requires an explicit deploy command + `APPROVED`.
 
-## Workflow Feedback & Controls
-To navigate and give feedback between design phases, the user can issue the following directives (case-insensitive):
-- **`APPROVED`**: Approves the current document/artifact (SPEC, PLAN, etc.) and transitions to the next phase.
-- **`REJECTED`**: Rejects the current draft. AI stops, halts execution, and asks if the user wants to re-analyze from scratch (requiring a simple `yes`/`y` or `no`/`n` response).
-- **`RE-EXECUTE`** (also accepts `re-excute`): Requests re-execution of the current phase with a more polished and refined approach. AI **must NOT create a new SPEC or PLAN file**, but rather edit and refine the existing file directly. AI should ask clarifying questions if needed to gather deeper context.
+## Dual entry
+- **`project-manager`**: take a requirement → run the pipeline; if unclear → switch to `grill-me` automatically.
+- **`grill-me`**: deep clarification (one question at a time). When clear enough, or the user says “execute now” / equivalent → write `REQ-<NNNNNN>-<slug>-discovery.md` and continue the pipeline (do **not** ask “run the pipeline?”).
 
-## Canonical artifacts
-- Requirements: `.agents/requirements/REQ-[short-name].md`
-- Specification: `.agents/specs/SPEC-[short-name].md`
-- Plan: `.agents/plans/PLAN-[short-name].md`
-- Decision records: `.agents/decisions/ADR-[short-name].md`
-- Review reports: `.agents/reviews/REVIEW-[short-name].md`
-- Build/test run logs: `.agents/runs/RUN-[short-name]-YYYYMMDD-HHMM.md`
+## Risk levels (analyze)
+- **High**: shared public API/contract change; DB schema change with real data; auth/authorization change; production deploy/infra change; (multi-repo) ≥3 repos impacted or shared-library breaking change.
+- **Medium**: change existing business logic not in the high set.
+- **Low**: localized addition that does not touch contract/schema/auth/deploy.
+
+Payment/order changes are **not** high-risk by default.
+
+## Workflow directives
+- **`APPROVED`**: required before develop when risk is high; required before **every** deploy; also used when waiting on artifact approval.
+- **`REJECTED`**: reject the draft; stop and ask whether to re-analyze from scratch (y/n).
+- **`RE-EXECUTE`** (or `re-excute`): refine the **current** artifact in place; do not create a parallel file for the same phase.
+
+## Canonical artifacts (`docs/` inside the target project)
+
+### REQ / ADR identifiers (required for new files)
+- **REQ id**: `REQ-<NNNNNN>-<slug>` — **6-digit** zero-padded number + short kebab-case slug (e.g. `REQ-000013-login-throttle`).
+- **ADR id**: `ADR-<NNNNNN>-<slug>` — **separate** number series from REQ, also 6-digit padded (e.g. `ADR-000005-outbox-pattern`).
+- **One shared id** for all REQ artifacts and the git branch: `feature/REQ-<NNNNNN>-<slug>`.
+
+### File naming (shared id prefix)
+| Kind | Example path |
+|---|---|
+| Raw | `docs/requirements/REQ-000013-login-throttle-raw.md` |
+| Discovery | `docs/requirements/REQ-000013-login-throttle-discovery.md` |
+| Spec | `docs/requirements/REQ-000013-login-throttle-spec.md` |
+| Analysis | `docs/designs/REQ-000013-login-throttle-analysis.md` |
+| Design | `docs/designs/REQ-000013-login-throttle-design.md` |
+| Plan | `docs/designs/REQ-000013-login-throttle-plan.md` |
+| ADR | `docs/designs/ADR-000005-outbox-pattern.md` |
+| Review | `docs/reviews/REQ-000013-login-throttle-review.md` |
+| QA | `docs/qa/REQ-000013-login-throttle-qa.md` |
+| Run log | `docs/qa/REQ-000013-login-throttle-run-YYYYMMDD-HHMM.md` |
+| Release | `docs/release-notes/REQ-000013-login-throttle-release.md` |
+
+### Number allocation (backward-compatible)
+1. Scan all `REQ-*-*.md` / `REQ-*.md` under `docs/` (and `ADR-*` under `docs/designs/`).
+2. Parse the numeric part after `REQ-` / `ADR-` (accept legacy unpadded / slug-less names, e.g. `REQ-013-raw.md`, `REQ-13.md`, `ADR-5.md`).
+3. `next = max + 1`; format as **6 digits**. **Do not rename** existing files.
+4. Choose the slug once at triage (or when creating an ADR); lowercase ASCII kebab-case; reuse verbatim for every file + branch of that id.
+
+In skill text, `REQ-…` / `ADR-…` means `REQ-<NNNNNN>-<slug>` unless explicitly reading a legacy file.
+
+## Phase meanings
+| Phase | Question | Output |
+|---|---|---|
+| Design | How will we build it? | Solution design |
+| Spec | What must be done? | Specification (AC, What-scope) |
+| Planning | In what technical order? | Repo/module/file order, dependencies, milestones (**not** people assignment) |
+
+Planning is **mandatory** when risk is high; optional for low/medium if Design already lists files/order.
+
+## Review / QA loops
+- Review “needs fixes” → auto-fix ≤ **2** rounds.
+- QA Fail → fix code ≤ **2** rounds, then report.
 
 ## Skill loading
-For each workflow phase, read the corresponding skill:
-- GRILL-ME: `.agents/skills/grill-me/SKILL.md`
-- SPEC: `.agents/skills/spec/SKILL.md`
-- PLAN: `.agents/skills/plan/SKILL.md`
-- CODE: `.agents/skills/code/SKILL.md`
-- REVIEW: `.agents/skills/review/SKILL.md`
-- INIT: `.agents/skills/init-ai-workflow/SKILL.md`
-- PROJECT-OVERVIEW: `.agents/skills/project-overview/SKILL.md`
-- ADR: `.agents/skills/adr/SKILL.md`
-- CAVEMAN: `.agents/skills/caveman/SKILL.md`
-- HANDOFF: `.agents/skills/handoff/SKILL.md`
-- QA: `.agents/skills/qa/SKILL.md`
-- SYNTHESIZE-DESIGN-DOC: `.agents/skills/synthesize-design-doc/SKILL.md`
+Skill sources live under `templates/skills/` in two groups (installer still emits flat `.agents/skills/<name>/`):
 
-## Language & Output Rules
-- **Communication Language**: Default to the user's language (tiếng Việt). Keep outputs structured and action-oriented.
-- **Generated Documents**: All workspace files and canonical artifacts generated by the agent (such as Requirements, Specifications, Plans, Decisions, Review Reports, Run Logs, and `docs/project_overview.md`) **must be written in Vietnamese (tiếng Việt)**, unless explicitly requested otherwise by the user. Technical terms can remain in English when appropriate for clarity.
+| Folder | Skills |
+|---|---|
+| `templates/skills/workflow/` | `project-manager`, `triage`, `grill-me`, `analyze`, `adr`, `design`, `spec`, `plan`, `develop`, `review`, `qa`, `deploy` |
+| `templates/skills/utility/` | `onboarding`, `handoff`, `caveman`, `synthesize-design-doc`, `qa-issues` |
+
+At runtime, read `.agents/skills/<name>/SKILL.md` (and Claude/Gemini/Cursor mirrors).
+
+## Language rules
+- **Skill / rule / template instruction files** in this package: **English** (precise, unambiguous for agents).
+- **Chat with the user**: prefer the user’s language when they write in that language.
+- **Generated workspace artifacts** under `docs/` (REQ/ADR/QA/release/`project_overview.md`, etc.): **Vietnamese**. Keep technical terms in English when clearer.

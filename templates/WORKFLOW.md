@@ -3,25 +3,50 @@
 ## Lifecycle
 ```mermaid
 flowchart TD
-  R[Raw requirement] --> A[GRILL-ME]
-  A --> S[SPEC]
-  S -->|APPROVED| P[PLAN]
-  P -->|APPROVED| C[CODE]
-  C --> V[REVIEW]
-  V -->|fix required| C
-  V -->|clean| M[Merge]
+  R[Raw requirement] --> E{Entry}
+  E -->|project-manager| I[triage]
+  E -->|grill-me| G[grill-me]
+  I --> V{Clear enough?}
+  V -->|No| G
+  V -->|Yes| A[analyze]
+  G --> D[discovery + continue pipeline]
+  D --> A
+  A --> ADR{ADR?}
+  ADR -->|optional| AD[ADR]
+  ADR --> DES[design How]
+  AD --> DES
+  DES --> S[spec What]
+  S --> P{Planning?}
+  P -->|high risk: required| PL[plan]
+  P -->|low/med: optional| CG{High risk?}
+  PL --> CG
+  CG -->|Yes| AP[Wait APPROVED]
+  CG -->|No| C[develop]
+  AP -->|APPROVED| C
+  C --> Vw[review ≤2]
+  Vw --> Q[qa ≤2]
+  Q -->|Pass| Stop[Stop]
+  Stop --> Dep[User /deploy + APPROVED]
 ```
 
-## Workflow Feedback & Controls
-To navigate and give feedback between design phases, the user can issue the following directives (case-insensitive):
-- **`APPROVED`**: Approves the current document/artifact (SPEC, PLAN, etc.) and transitions to the next phase (including coding after PLAN phase approval).
-- **`REJECTED`**: Rejects the current draft. AI stops, halts execution, and asks if the user wants to re-analyze from scratch (y/n).
-- **`RE-EXECUTE`** (also accepts `re-excute`): Requests re-execution and refinement. AI must not create a new SPEC or PLAN file, but instead edit and refine the existing file directly, asking clarifying questions if needed.
+## Dual mode
+- **`/project-manager`**: auto-run pipeline; if unclear → `grill-me`; when clear or “execute now” → continue without asking again.
+- **`/grill-me`**: deep clarification; same handoff rules into the pipeline.
+
+## Deploy
+Always separate from PM. After QA Pass, user runs `/deploy <env>` and must **`APPROVED`** before execution.
+
+## Directives
+- **`APPROVED`**: before develop (high risk) and before every deploy.
+- **`REJECTED`** / **`RE-EXECUTE`**: approval gate / refine current artifact.
+
+## Artifacts
+`docs/requirements|designs|reviews|qa|release-notes` — see `AGENTS.md`.  
+Generated artifact **content** must be **Vietnamese**; this workflow file stays English.
 
 ## Tool mapping
 | Tool | Native files | Notes |
 |---|---|---|
-| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills are first-class. Commands are compatibility wrappers. |
-| Gemini CLI | `.gemini/commands/*.toml`, `GEMINI.md` | TOML custom commands become slash commands. |
-| Cursor | `.cursor/rules/*.mdc`, `.cursor/prompts/*.md` | Rules are persistent; prompts are fallback command templates. |
-| Generic agents | `AGENTS.md`, `.agents/skills/**/SKILL.md` | Portable source of truth. |
+| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills first-class; commands are wrappers |
+| Gemini CLI | `.gemini/commands/*.toml`, `GEMINI.md` | TOML slash commands |
+| Cursor | `.cursor/rules/*.mdc` | Rules from installer |

@@ -1,24 +1,28 @@
-# PLAN-[short-name]
+# PLAN — REQ-<NNNNNN>-<slug> (Technical planning)
+
+> When filled: write the body in **Vietnamese**.
 
 ## 1. Metadata
-- Status: Draft | Approved for Code | Superseded
-- Reference SPEC:
-- Created:
+- Status: Draft | Ready for Code
+- REQ: REQ-000001-example-slug
+- Related spec: `docs/requirements/REQ-000001-example-slug-spec.md`
+- Related design: `docs/designs/REQ-000001-example-slug-design.md`
+- Risk level:
+- Suggested branch: `feature/REQ-000001-example-slug`
 
 ## 2. Scope
 
 ## 3. Files Inspected
 
 ## 4. Files Expected To Change
-This is the coding boundary.
-- [ ] `path/to/file` - Create/Modify - reason
+(Develop boundary — technical order, not people assignment)
+- [ ] `path` - Create/Modify - reason
 
 ## 5. Current Architecture Understanding
 
 ## 6. Design Approach
 
 ## 7. Step-by-step Implementation
-Use atomic steps that can be verified independently.
 
 ## 8. Data Model Changes
 
@@ -35,5 +39,6 @@ Use atomic steps that can be verified independently.
 
 ## 13. Rollback Plan
 
-## 14. Code Approval
-Reply APPROVED to authorize implementation.
+## 14. Code gate
+- High risk: `APPROVED` required before develop
+- Low/medium: PM may continue per AGENTS.md

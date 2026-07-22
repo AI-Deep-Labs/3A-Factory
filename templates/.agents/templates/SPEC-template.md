@@ -1,11 +1,12 @@
-# SPEC-[short-name]
+# SPEC — REQ-<NNNNNN>-<slug> (What)
+
+> When filled: write the body in **Vietnamese**.
 
 ## 1. Metadata
 - Status: Draft | Approved | Superseded
-- Owner:
+- REQ: REQ-000001-example-slug
 - Created:
-- Related requirement:
-- Related plan:
+- Related design: `docs/designs/REQ-000001-example-slug-design.md`
 
 ## 2. Goal
 
@@ -18,11 +19,6 @@
 ## 6. Business Rules
 
 ## 7. System Flow
-```mermaid
-flowchart TD
-  A[Start] --> B[Process]
-  B --> C[End]
-```
 
 ## 8. Input / Output Contract
 
@@ -36,11 +32,8 @@ flowchart TD
 ## 11. Edge Cases
 
 ## 12. Acceptance Criteria
-Use testable Given/When/Then criteria.
+(Given/When/Then — at least happy path + edge + existing-data/state case)
 
 ## 13. Out of Scope
 
 ## 14. Open Questions
-
-## 15. Approval
-Reply `APPROVED` to approve this SPEC and continue to PLAN.

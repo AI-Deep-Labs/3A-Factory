@@ -42,12 +42,11 @@ function logWarn(msg) { console.warn(`${colors.yellow}[WARN]${colors.reset} ${ms
 function logErr(msg) { console.error(`${colors.red}[ERROR]${colors.reset} ${msg}`); }
 
 const targetDirs = [
-  '.agents/requirements',
-  '.agents/specs',
-  '.agents/plans',
-  '.agents/decisions',
-  '.agents/reviews',
-  '.agents/runs',
+  'docs/requirements',
+  'docs/designs',
+  'docs/reviews',
+  'docs/qa',
+  'docs/release-notes',
   '.agents/templates',
   '.agents/compact',
   '.agents/issues',
@@ -65,6 +64,13 @@ const requiredFiles = [
   { src: 'templates/.agents/templates/SPEC-template.md', dest: '.agents/templates/SPEC-template.md' },
   { src: 'templates/.agents/templates/PLAN-template.md', dest: '.agents/templates/PLAN-template.md' },
   { src: 'templates/.agents/templates/ADR-template.md', dest: '.agents/templates/ADR-template.md' },
+  { src: 'templates/.agents/templates/RAW-REQ-template.md', dest: '.agents/templates/RAW-REQ-template.md' },
+  { src: 'templates/.agents/templates/DISCOVERY-template.md', dest: '.agents/templates/DISCOVERY-template.md' },
+  { src: 'templates/.agents/templates/ANALYSIS-template.md', dest: '.agents/templates/ANALYSIS-template.md' },
+  { src: 'templates/.agents/templates/DESIGN-template.md', dest: '.agents/templates/DESIGN-template.md' },
+  { src: 'templates/.agents/templates/REVIEW-template.md', dest: '.agents/templates/REVIEW-template.md' },
+  { src: 'templates/.agents/templates/QA-REPORT-template.md', dest: '.agents/templates/QA-REPORT-template.md' },
+  { src: 'templates/.agents/templates/RELEASE-template.md', dest: '.agents/templates/RELEASE-template.md' },
   { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' }
 ];
 
@@ -375,10 +381,11 @@ try {
   console.log(`Unchanged:    ${stats.unchanged}`);
   console.log(`Skipped:      ${stats.skipped}`);
   console.log(`${colors.cyan}=============================================${colors.reset}`);
-  console.log(`Claude Code: use /grill-me, /spec, /plan, /code, /review, or native skills under .claude/skills.`);
+  console.log(`Claude Code: use /project-manager, /grill-me, /triage, /analyze, /design, /spec, /plan, /develop, /review, /qa, /deploy, …`);
   console.log(`Gemini CLI:   use custom commands from .gemini/commands/*.toml.`);
-  console.log(`Cursor:       project rules are installed under .cursor/rules/ai-workflow.mdc.`);
-  console.log(`Generic:      AGENTS.md + .agents/skills are installed as the portable source of truth.`);
+  console.log(`Cursor:       project rules under .cursor/rules/ (incl. ai-workflow.mdc).`);
+  console.log(`Artifacts:    docs/{requirements,designs,reviews,qa,release-notes}`);
+  console.log(`Source of truth sync: AGENTS.md + .agents/skills (Claude/Gemini/Cursor).`);
   console.log(`${colors.cyan}=============================================${colors.reset}`);
 } catch (err) {
   logErr(`Installation failed: ${err.message}`);

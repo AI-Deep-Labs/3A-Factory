@@ -1,7 +1,7 @@
 {
   "name": "3a-factory",
-  "version": "1.0.9",
-  "description": "Controlled software delivery workflow template for AI agents",
+  "version": "2.0.0",
+  "description": "Automated-dev-team AI workflow template for Claude, Gemini, and Cursor (English instructions; Vietnamese docs output)",
   "main": "scripts/install.js",
   "bin": {
     "3a-factory": "scripts/install.js"

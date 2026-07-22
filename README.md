@@ -1,78 +1,71 @@
 # 3a-factory
 
-A cross-agent development workflow template for Claude Code, Gemini CLI/AI Studio, Cursor, and other agentic coding tools.
+AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
 
-## Core lifecycle
+Instruction files in this package are **English**. Generated project artifacts under `docs/` must be **Vietnamese**.
 
-GRILL-ME -> SPEC -> PLAN -> CODE -> REVIEW
-
-The model must not modify application source code from a raw requirement. Coding is allowed only after an approved SPEC and PLAN phase, authorized by a single, case-insensitive `APPROVED` directive.
-
-## Recommended target-project structure
+## Pipeline (v1.1+)
 
 ```text
-project-root/
-├── AGENTS.md
-├── CLAUDE.md
-├── GEMINI.md
-├── .agents/
-│   ├── requirements/
-│   ├── specs/
-│   ├── plans/
-│   ├── decisions/
-│   ├── reviews/
-│   ├── runs/
-│   ├── templates/
-│   └── skills/
-│       ├── grill-me/SKILL.md
-│       ├── spec/SKILL.md
-│       ├── plan/SKILL.md
-│       ├── code/SKILL.md
-│       ├── review/SKILL.md
-│       ├── init-ai-workflow/SKILL.md
-│       ├── project-overview/SKILL.md
-│       └── adr/SKILL.md
-├── .claude/
-│   ├── skills/              # Claude-native skills; can mirror .agents/skills
-│   └── commands/            # Optional compatibility wrappers
-├── .gemini/
-│   └── commands/            # Gemini CLI custom slash commands in TOML
-├── .cursor/
-│   ├── rules/               # Cursor modern project rules in MDC
-│   └── prompts/             # Copy-paste prompt fallbacks
-└── WORKFLOW.md
+triage → (grill-me if unclear) → analyze → ADR? → design → spec → Planning? → develop → review → qa
 ```
 
-## Compatibility notes
+Deploy is **separate**: `/deploy <env>` only after QA Pass and always requires **`APPROVED`**.
 
-- Claude Code: use `.claude/skills/<skill-name>/SKILL.md`. Optional `.claude/commands/*.md` wrappers can call skills for backward compatibility.
-- Gemini CLI: use `.gemini/commands/*.toml` for slash commands. Plain markdown prompts remain useful for Gemini Advanced / AI Studio.
-- Cursor: prefer `.cursor/rules/*.mdc` project rules. `.cursorrules` may be generated only as legacy fallback.
-- Generic agents: read `AGENTS.md` and `.agents/skills/**/SKILL.md` as the portable source of truth.
+### Two entry points
+- **`/project-manager "<requirement>"`** — auto-run the pipeline.
+- **`/grill-me`** — deep clarification; when clear or user says “execute now” → write discovery and continue.
 
-## Installation
+### Artifacts
+Inside the target project:
 
-You have multiple cross-platform installation methods available:
+```text
+docs/
+├── requirements/   # REQ-<NNNNNN>-<slug>-{raw,discovery,spec}.md
+├── designs/        # …-analysis|design|plan.md ; ADR-<NNNNNN>-<slug>.md
+├── reviews/
+├── qa/
+├── release-notes/
+└── project_overview.md   # from /onboarding
+```
 
-### Method 1: Using NPM (Recommended & Automatic)
-Add the package to your development dependencies. The installation triggers a `postinstall` hook that automatically populates the directory structures and templates in your project root:
+Shared id with branch: `feature/REQ-<NNNNNN>-<slug>` (6-digit zero-padded; legacy unpadded/slug-less files still count when allocating the next number).
+
+## Install
+
+### NPM
 ```bash
 npm install --save-dev 3a-factory
 ```
 
-### Method 2: Zero-Dependency Run (`npx`)
-If you want to initialize the workspace without adding it to `package.json`:
+### npx
 ```bash
 npx 3a-factory
 ```
 
-### Method 3: Shell Scripts (Fallback)
-Run the script from your project root:
-*   **Windows**:
-    ```powershell
-    powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1
-    ```
-*   **macOS / Linux**:
-    ```bash
-    bash ./scripts/install.sh
-    ```
+### Scripts
+- Windows: `powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1`
+- macOS/Linux: `bash ./scripts/install.sh`
+
+Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).
+
+## Onboarding one repo
+From the target repo, install the template then run **`/onboarding`**: scaffold `docs/`, fill `CLAUDE.md` / `GEMINI.md` / `AGENTS.md` context, explore the codebase, write `docs/project_overview.md`. Create nothing outside the current repo.
+
+## Breaking changes (1.0.x → 1.1.0)
+- Lifecycle artifacts move from `.agents/{specs,plans,...}` → `docs/...`.
+- Phase order changes (design before spec); adds analyze / deploy / project-manager.
+- `APPROVED` is not required for every SPEC/PLAN before develop — only for **high** risk (and every deploy).
+- `/qa` = pipeline QA testing; conversational issue filing → `/qa-issues`.
+
+## Skill layout (package source)
+```text
+templates/skills/
+├── workflow/     # pipeline skills (triage → … → qa, plus project-manager)
+└── utility/      # onboarding, handoff, caveman, synthesize-design-doc, qa-issues
+```
+
+Installer still generates flat runtime paths: `.agents/skills/<name>/`, `.claude/skills/<name>/`, etc.
+
+## Internal docs
+Read `AGENTS.md` and `WORKFLOW.md` after install.

@@ -2,7 +2,7 @@
 
 # 3A Factory Installer
 # For macOS, Linux, WSL, and Git Bash
-# Installs portable + native agent workflow files for Claude, Gemini, Cursor, and generic agents.
+# Installs workflow files for Claude, Gemini, and Cursor.
 
 set -Eeuo pipefail
 IFS=$'\n\t'
@@ -86,6 +86,13 @@ REQUIRED_FILES=(
   "templates/.agents/templates/SPEC-template.md:.agents/templates/SPEC-template.md"
   "templates/.agents/templates/PLAN-template.md:.agents/templates/PLAN-template.md"
   "templates/.agents/templates/ADR-template.md:.agents/templates/ADR-template.md"
+  "templates/.agents/templates/RAW-REQ-template.md:.agents/templates/RAW-REQ-template.md"
+  "templates/.agents/templates/DISCOVERY-template.md:.agents/templates/DISCOVERY-template.md"
+  "templates/.agents/templates/ANALYSIS-template.md:.agents/templates/ANALYSIS-template.md"
+  "templates/.agents/templates/DESIGN-template.md:.agents/templates/DESIGN-template.md"
+  "templates/.agents/templates/REVIEW-template.md:.agents/templates/REVIEW-template.md"
+  "templates/.agents/templates/QA-REPORT-template.md:.agents/templates/QA-REPORT-template.md"
+  "templates/.agents/templates/RELEASE-template.md:.agents/templates/RELEASE-template.md"
   "templates/.cursor/rules/ai-workflow.mdc:.cursor/rules/ai-workflow.mdc"
 )
 
@@ -94,12 +101,11 @@ OPTIONAL_FILES=(
 )
 
 TARGET_DIRS=(
-  ".agents/requirements"
-  ".agents/specs"
-  ".agents/plans"
-  ".agents/decisions"
-  ".agents/reviews"
-  ".agents/runs"
+  "docs/requirements"
+  "docs/designs"
+  "docs/reviews"
+  "docs/qa"
+  "docs/release-notes"
   ".agents/templates"
   ".agents/compact"
   ".agents/issues"
@@ -407,10 +413,11 @@ print_footer() {
   log "Unchanged:    $identical_files"
   log "Skipped:      $skipped_files"
   log "============================================="
-  log "Claude Code: use /grill-me, /spec, /plan, /code, /review, or native skills under .claude/skills."
+  log "Claude Code: use /project-manager, /grill-me, /analyze, /design, /spec, /develop, /review, /qa, /deploy, …"
   log "Gemini CLI:   use custom commands from .gemini/commands/*.toml."
-  log "Cursor:       project rules are installed under .cursor/rules/ai-workflow.mdc."
-  log "Generic:      AGENTS.md + .agents/skills are installed as the portable source of truth."
+  log "Cursor:       project rules under .cursor/rules/ (incl. ai-workflow.mdc)."
+  log "Artifacts:    docs/{requirements,designs,reviews,qa,release-notes}"
+  log "Source of truth sync: AGENTS.md + .agents/skills (Claude/Gemini/Cursor)."
   log "============================================="
 }
 

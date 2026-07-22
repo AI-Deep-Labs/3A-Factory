@@ -1,6 +1,6 @@
 # 3A-Factory Windows PowerShell Installer
 # For Windows PowerShell 5.1+ and PowerShell 7+
-# Installs portable + native agent workflow files for Claude, Gemini, Cursor, and generic agents.
+# Installs workflow files for Claude, Gemini, and Cursor.
 
 [CmdletBinding()]
 param(
@@ -53,12 +53,11 @@ if (-not (Test-Path -LiteralPath $TemplatesDir -PathType Container)) {
 }
 
 $TargetDirs = @(
-    ".agents\requirements",
-    ".agents\specs",
-    ".agents\plans",
-    ".agents\decisions",
-    ".agents\reviews",
-    ".agents\runs",
+    "docs\requirements",
+    "docs\designs",
+    "docs\reviews",
+    "docs\qa",
+    "docs\release-notes",
     ".agents\templates",
     ".agents\compact",
     ".agents\issues",
@@ -76,6 +75,13 @@ $RequiredFiles = @(
     @{ Src = "templates\.agents\templates\SPEC-template.md"; Dest = ".agents\templates\SPEC-template.md" },
     @{ Src = "templates\.agents\templates\PLAN-template.md"; Dest = ".agents\templates\PLAN-template.md" },
     @{ Src = "templates\.agents\templates\ADR-template.md"; Dest = ".agents\templates\ADR-template.md" },
+    @{ Src = "templates\.agents\templates\RAW-REQ-template.md"; Dest = ".agents\templates\RAW-REQ-template.md" },
+    @{ Src = "templates\.agents\templates\DISCOVERY-template.md"; Dest = ".agents\templates\DISCOVERY-template.md" },
+    @{ Src = "templates\.agents\templates\ANALYSIS-template.md"; Dest = ".agents\templates\ANALYSIS-template.md" },
+    @{ Src = "templates\.agents\templates\DESIGN-template.md"; Dest = ".agents\templates\DESIGN-template.md" },
+    @{ Src = "templates\.agents\templates\REVIEW-template.md"; Dest = ".agents\templates\REVIEW-template.md" },
+    @{ Src = "templates\.agents\templates\QA-REPORT-template.md"; Dest = ".agents\templates\QA-REPORT-template.md" },
+    @{ Src = "templates\.agents\templates\RELEASE-template.md"; Dest = ".agents\templates\RELEASE-template.md" },
     @{ Src = "templates\.cursor\rules\ai-workflow.mdc"; Dest = ".cursor\rules\ai-workflow.mdc" }
 )
 
@@ -355,8 +361,9 @@ Write-Host "Backups:      $($Stats.Backups)"
 Write-Host "Unchanged:    $($Stats.Unchanged)"
 Write-Host "Skipped:      $($Stats.Skipped)"
 Write-Host "=============================================" -ForegroundColor Cyan
-Write-Host "Claude Code: use /grill-me, /spec, /plan, /code, /review, or native skills under .claude/skills."
+Write-Host "Claude Code: use /project-manager, /grill-me, /analyze, /design, /spec, /develop, /review, /qa, /deploy, …"
 Write-Host "Gemini CLI:   use custom commands from .gemini/commands/*.toml."
-Write-Host "Cursor:       project rules are installed under .cursor/rules/ai-workflow.mdc."
-Write-Host "Generic:      AGENTS.md + .agents/skills are installed as the portable source of truth."
+Write-Host "Cursor:       project rules under .cursor/rules/ (incl. ai-workflow.mdc)."
+Write-Host "Artifacts:    docs/{requirements,designs,reviews,qa,release-notes}"
+Write-Host "Source of truth sync: AGENTS.md + .agents/skills (Claude/Gemini/Cursor)."
 Write-Host "=============================================" -ForegroundColor Cyan
