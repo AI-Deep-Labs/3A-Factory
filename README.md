@@ -1,5 +1,8 @@
 # 3a-factory
 
+[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](package.json)
+
 AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
 ## Pipeline
 
@@ -112,3 +115,6 @@ Installer emits **agent-native** skill paths only:
 
 ## Internal docs
 Read `AGENTS.md` and `WORKFLOW.md` after install.
+
+## License
+MIT — see [LICENSE](LICENSE).
