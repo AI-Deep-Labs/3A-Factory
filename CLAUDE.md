@@ -6,7 +6,7 @@ Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
 
 Claude-specific:
 - Skills: `.claude/skills/<skill-name>/SKILL.md`
-- Commands: `.claude/commands/*.md`
+- Commands: `.claude/commands/*.md` (slash: `/project-manager`, `/grill-me`, …)
 - Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/design`, `/spec`, `/plan`, `/develop`, `/review`, `/qa`, `/deploy`, `/qa-issues`, …
 
 **Generated docs under `docs/` must be written in Vietnamese** (see `AGENTS.md` language rules).

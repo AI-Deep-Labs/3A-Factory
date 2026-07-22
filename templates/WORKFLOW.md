@@ -48,5 +48,5 @@ Generated artifact **content** must be **Vietnamese**; this workflow file stays 
 | Tool | Native files | Notes |
 |---|---|---|
 | Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills first-class; commands are wrappers |
-| Gemini CLI | `.gemini/commands/*.toml`, `GEMINI.md` | TOML slash commands |
-| Cursor | `.cursor/rules/*.mdc` | Rules from installer |
+| Gemini CLI | `.gemini/skills`, `.gemini/commands/*.toml`, `GEMINI.md` | Skills + TOML slash commands |
+| Cursor | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` | Skills = slash commands (`/project-manager`, …); `ai-workflow` rule always applies |

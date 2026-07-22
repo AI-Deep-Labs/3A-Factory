@@ -31,7 +31,7 @@ Ids: `REQ-<NNNNNN>-<slug>` / `ADR-<NNNNNN>-<slug>` (6 digits); branch `feature/R
 
 ## Skills
 Execute the matching agent-native skill file:
-- Cursor: `.cursor/rules/<skill>.mdc`
+- Cursor: `.cursor/skills/<skill>/SKILL.md` (slash: `/project-manager`, `/grill-me`, …)
 - Claude: `.claude/skills/<skill>/SKILL.md`
 - Gemini: `.gemini/skills/<skill>/SKILL.md`
 

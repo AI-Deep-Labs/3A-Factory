@@ -89,7 +89,7 @@ Package source (templates only — not copied as `.agents/skills`):
 |---|---|
 | Claude Code | `.claude/skills/<name>/SKILL.md` (+ `/commands`) |
 | Gemini CLI | `.gemini/skills/<name>/SKILL.md` (+ `.gemini/commands/*.toml`) |
-| Cursor | `.cursor/rules/<name>.mdc` (+ `ai-workflow.mdc`) |
+| Cursor | `.cursor/skills/<name>/SKILL.md` (slash commands) + `.cursor/rules/ai-workflow.mdc` (always-on pipeline) |
 
 Shared always: `AGENTS.md`, `WORKFLOW.md`, `docs/`, `.agents/templates/` (doc templates only — not skills).
 

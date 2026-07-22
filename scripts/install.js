@@ -84,7 +84,7 @@ Always installed (shared):
 Per agent:
   claude  → CLAUDE.md, .claude/skills, .claude/commands
   gemini  → GEMINI.md, .gemini/skills, .gemini/commands
-  cursor  → .cursor/rules/*.mdc (incl. ai-workflow.mdc)
+  cursor  → .cursor/rules/ai-workflow.mdc + .cursor/skills (slash commands)
 `);
 }
 
@@ -153,8 +153,8 @@ const sharedDirs = [
 
 const agentDirs = {
   claude: ['.claude/commands', '.claude/skills'],
-  gemini: ['.gemini/commands', '.gemini/prompts', '.gemini/skills'],
-  cursor: ['.cursor/rules']
+  gemini: ['.gemini/commands', '.gemini/skills'],
+  cursor: ['.cursor/rules', '.cursor/skills']
 };
 
 const sharedFiles = [
@@ -358,6 +358,70 @@ function scanDirectory(dir, fileList = []) {
   return fileList;
 }
 
+function parseYamlFrontmatter(text) {
+  const metadata = {};
+  const lines = text.split('\n');
+  let i = 0;
+
+  while (i < lines.length) {
+    const line = lines[i];
+    if (!line.trim()) {
+      i++;
+      continue;
+    }
+
+    const colonIdx = line.indexOf(':');
+    if (colonIdx === -1) {
+      i++;
+      continue;
+    }
+
+    const key = line.substring(0, colonIdx).trim();
+    let val = line.substring(colonIdx + 1).trim();
+
+    if (val === '>' || val === '|') {
+      const blockLines = [];
+      i++;
+      while (i < lines.length) {
+        const next = lines[i];
+        if (/^\s/.test(next)) {
+          blockLines.push(next.replace(/^\s{2,}/, '').trimEnd());
+          i++;
+          continue;
+        }
+        if (next.trim() === '') {
+          i++;
+          continue;
+        }
+        break;
+      }
+      metadata[key] = blockLines.join(' ').trim();
+      continue;
+    }
+
+    if (
+      (val.startsWith('"') && val.endsWith('"')) ||
+      (val.startsWith("'") && val.endsWith("'"))
+    ) {
+      val = val.substring(1, val.length - 1);
+    }
+
+    metadata[key] = val;
+    i++;
+  }
+
+  return metadata;
+}
+
+function yamlQuote(value) {
+  const text = String(value || '');
+  return `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+}
+
+function tomlQuote(value) {
+  return String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
+}
+
 function parseMarkdownWithFrontmatter(filePath) {
   const content = fs.readFileSync(filePath, 'utf8');
   const normalized = content.replace(/\r\n/g, '\n');
@@ -371,22 +435,24 @@ function parseMarkdownWithFrontmatter(filePath) {
   const frontmatterText = normalized.substring(4, endIdx);
   const body = normalized.substring(endIdx + 5);
 
-  const metadata = {};
-  for (const line of frontmatterText.split('\n')) {
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) continue;
-    const key = line.substring(0, colonIdx).trim();
-    let val = line.substring(colonIdx + 1).trim();
-    if ((val.startsWith('"') && val.endsWith('"')) || (val.startsWith("'") && val.endsWith("'"))) {
-      val = val.substring(1, val.length - 1);
-    }
-    metadata[key] = val;
-  }
+  const metadata = parseYamlFrontmatter(frontmatterText);
 
   if (!metadata.name) metadata.name = path.basename(filePath, '.md');
   if (!metadata.description) metadata.description = '';
 
   return { metadata, body };
+}
+
+function removeLegacyCursorRule(skillName) {
+  if (skillName === 'ai-workflow') return;
+  const legacyPath = path.join(targetRoot, '.cursor', 'rules', `${skillName}.mdc`);
+  if (!fs.existsSync(legacyPath)) return;
+  if (isDryRun) {
+    logInfo(`[DRY-RUN] Remove legacy rule: .cursor/rules/${skillName}.mdc`);
+    return;
+  }
+  fs.unlinkSync(legacyPath);
+  logOk(`Removed legacy rule: .cursor/rules/${skillName}.mdc (use .cursor/skills/${skillName}/ instead)`);
 }
 
 function processSkills() {
@@ -402,6 +468,10 @@ function processSkills() {
       const { metadata, body } = parseMarkdownWithFrontmatter(file);
       const name = metadata.name;
       const desc = metadata.description;
+
+      if (!desc || desc === '>') {
+        logWarn(`Skill "${name}" has empty description — check frontmatter in ${path.relative(templateRoot, file)}`);
+      }
 
       if (isVerbose) {
         logInfo(`Processing skill: ${name}`);
@@ -419,24 +489,18 @@ function processSkills() {
 
       if (wants('claude')) {
         writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, skillBody);
-        const claudeCmd = `---\ndescription: ${desc}\n---\n\nRead and execute .claude/skills/${name}/SKILL.md. Arguments: $ARGUMENTS\n`;
+        const claudeCmd = `---\ndescription: ${yamlQuote(desc)}\n---\n\nRead AGENTS.md first, then read and execute .claude/skills/${name}/SKILL.md.\nArguments: $ARGUMENTS\n`;
         writeGeneratedFile(`.claude/commands/${name}.md`, claudeCmd);
       }
 
       if (wants('cursor')) {
-        let cursorFM = `---\ndescription: ${desc}\nglobs: *\n`;
-        if (metadata.alwaysApply !== undefined) {
-          cursorFM += `alwaysApply: ${metadata.alwaysApply}\n`;
-        } else {
-          cursorFM += `alwaysApply: false\n`;
-        }
-        cursorFM += `---\n`;
-        writeGeneratedFile(`.cursor/rules/${name}.mdc`, `${cursorFM}${body}`);
+        writeGeneratedFile(`.cursor/skills/${name}/SKILL.md`, skillBody);
+        removeLegacyCursorRule(name);
       }
 
       if (wants('gemini')) {
         writeGeneratedFile(`.gemini/skills/${name}/SKILL.md`, skillBody);
-        const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+        const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
         writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
       }
     } catch (err) {
@@ -487,7 +551,7 @@ function printFooter() {
     console.log(`Gemini CLI:       .gemini/skills + .gemini/commands`);
   }
   if (wants('cursor')) {
-    console.log(`Cursor:           .cursor/rules/*.mdc (incl. ai-workflow.mdc)`);
+    console.log(`Cursor:           .cursor/skills (slash) + .cursor/rules/ai-workflow.mdc`);
   }
   console.log(`${colors.cyan}=============================================${colors.reset}`);
 }

@@ -5,8 +5,8 @@ Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
 `triage → (grill-me) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop; `/deploy` is separate + requires `APPROVED`.
 
 Gemini-specific:
-- Commands: `.gemini/commands/*.toml`
 - Skills: `.gemini/skills/<skill-name>/SKILL.md`
+- Commands: `.gemini/commands/*.toml` (slash: `/project-manager`, `/grill-me`, …)
 - If slash commands are unavailable, invoke phases in natural language (`project-manager`, `grill-me`, …).
 
 **Generated docs under `docs/` must be written in Vietnamese** (see `AGENTS.md` language rules). Chat may follow the user’s language.

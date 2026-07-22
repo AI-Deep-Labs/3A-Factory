@@ -88,7 +88,7 @@ Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).
 | shared (always) | `docs/*` (incl. `misc/compact`, `misc/issues`), `AGENTS.md`, `WORKFLOW.md`, `.agents/templates` |
 | `claude` | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
 | `gemini` | `GEMINI.md`, `.gemini/skills`, `.gemini/commands` |
-| `cursor` | `.cursor/rules/*.mdc` including `ai-workflow.mdc` |
+| `cursor` | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` |
 ## Onboarding one repo
 From the target repo, install the template then run **`/onboarding`**: scaffold `docs/`, fill `CLAUDE.md` / `GEMINI.md` / `AGENTS.md` context, explore the codebase, write `docs/project_overview.md`. Create nothing outside the current repo.
 
@@ -105,10 +105,10 @@ templates/skills/
 └── utility/      # onboarding, handoff, caveman, synthesize-design-doc, qa-issues
 ```
 
-Installer emits **agent-native** skill paths only (no `.agents/skills`):
-- Claude → `.claude/skills/<name>/`
-- Gemini → `.gemini/skills/<name>/`
-- Cursor → `.cursor/rules/<name>.mdc`
+Installer emits **agent-native** skill paths only:
+- Claude → `.claude/skills/<name>/` + `.claude/commands/`
+- Gemini → `.gemini/skills/<name>/` + `.gemini/commands/`
+- Cursor → `.cursor/skills/<name>/` (slash commands) + `.cursor/rules/ai-workflow.mdc`
 
 ## Internal docs
 Read `AGENTS.md` and `WORKFLOW.md` after install.
