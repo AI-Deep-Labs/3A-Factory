@@ -23,3 +23,6 @@ yarn-error.log*
 # Backup/Timestamp files
 *.bak
 *.bak.*
+
+# Build output (generated before npm publish)
+/dist/

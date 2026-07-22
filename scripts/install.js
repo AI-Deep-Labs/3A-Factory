@@ -35,7 +35,57 @@ const isVerbose = args.includes('--verbose');
 const selectedAgents = parseAgents(args);
 
 const targetRoot = process.env.INIT_CWD || process.cwd();
-const templateRoot = path.resolve(__dirname, '..');
+const scriptDir = __dirname;
+const templateRoot = path.resolve(scriptDir, '..');
+const bundlePath = path.join(scriptDir, 'bundle.json');
+
+let bundleFilesCache = null;
+
+function normalizeRel(relativePath) {
+  return String(relativePath || '').replace(/\\/g, '/');
+}
+
+function getBundleFiles() {
+  if (bundleFilesCache !== null) return bundleFilesCache;
+  if (fs.existsSync(bundlePath)) {
+    bundleFilesCache = JSON.parse(fs.readFileSync(bundlePath, 'utf8')).files || {};
+  }
+  return bundleFilesCache;
+}
+
+function readTemplateContent(relativePath) {
+  const rel = normalizeRel(relativePath);
+  const bundle = getBundleFiles();
+  if (bundle && Object.prototype.hasOwnProperty.call(bundle, rel)) {
+    return bundle[rel];
+  }
+  const full = path.join(templateRoot, rel);
+  if (!fs.existsSync(full)) return null;
+  return fs.readFileSync(full, 'utf8');
+}
+
+function templateSourceExists(relativePath) {
+  const rel = normalizeRel(relativePath);
+  const bundle = getBundleFiles();
+  if (bundle) return Object.prototype.hasOwnProperty.call(bundle, rel);
+  return fs.existsSync(path.join(templateRoot, rel));
+}
+
+function listSkillTemplateEntries() {
+  const prefix = 'templates/skills/';
+  const bundle = getBundleFiles();
+  if (bundle) {
+    return Object.keys(bundle)
+      .filter((key) => key.startsWith(prefix) && key.endsWith('.md'))
+      .map((key) => ({ relativePath: key, content: bundle[key] }));
+  }
+
+  const skillsDir = path.join(templateRoot, 'templates', 'skills');
+  return scanDirectory(skillsDir).map((filePath) => ({
+    relativePath: normalizeRel(path.relative(templateRoot, filePath)),
+    content: fs.readFileSync(filePath, 'utf8')
+  }));
+}
 
 if (path.resolve(targetRoot) === path.resolve(templateRoot)) {
   console.log('\x1b[32m%s\x1b[0m', '[OK] Running in development repository. Skipping template installation to avoid root pollution.');
@@ -191,10 +241,11 @@ const stats = {
   skipped: 0
 };
 
-function sameFileContent(src, dest) {
-  if (!fs.existsSync(dest)) return false;
+function sameTemplateContent(srcContent, destFile) {
+  if (!fs.existsSync(destFile)) return false;
   try {
-    return fs.readFileSync(src).equals(fs.readFileSync(dest));
+    const destContent = fs.readFileSync(destFile, 'utf8');
+    return destContent.replace(/\r\n/g, '\n') === String(srcContent).replace(/\r\n/g, '\n');
   } catch (err) {
     return false;
   }
@@ -223,12 +274,12 @@ function ensureDirectory(relativeDir) {
 }
 
 function copyWorkflowFile(item, required) {
-  const srcFile = path.join(templateRoot, item.src);
   const destFile = path.join(targetRoot, item.dest);
+  const srcContent = readTemplateContent(item.src);
 
-  if (!fs.existsSync(srcFile)) {
+  if (srcContent === null) {
     if (required) {
-      throw new Error(`Required template file not found: ${srcFile}`);
+      throw new Error(`Required template file not found: ${item.src}`);
     }
     stats.skipped++;
     if (isVerbose) {
@@ -248,7 +299,7 @@ function copyWorkflowFile(item, required) {
   }
 
   if (fs.existsSync(destFile)) {
-    if (sameFileContent(srcFile, destFile)) {
+    if (sameTemplateContent(srcContent, destFile)) {
       stats.unchanged++;
       if (isVerbose) {
         console.log(`${colors.gray}[UNCHANGED] ${item.dest}${colors.reset}`);
@@ -276,14 +327,14 @@ function copyWorkflowFile(item, required) {
     if (isDryRun) {
       console.log(`[DRY-RUN][UPDATE] ${item.dest}`);
     } else {
-      fs.copyFileSync(srcFile, destFile);
+      fs.writeFileSync(destFile, srcContent, 'utf8');
     }
     stats.updatedFiles++;
   } else {
     if (isDryRun) {
       console.log(`[DRY-RUN][NEW] ${item.dest}`);
     } else {
-      fs.copyFileSync(srcFile, destFile);
+      fs.writeFileSync(destFile, srcContent, 'utf8');
     }
     stats.newFiles++;
   }
@@ -422,25 +473,29 @@ function tomlQuote(value) {
   return String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
-function parseMarkdownWithFrontmatter(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
-  const normalized = content.replace(/\r\n/g, '\n');
+function parseMarkdownContentWithFrontmatter(content, label) {
+  const normalized = String(content).replace(/\r\n/g, '\n');
   if (!normalized.startsWith('---\n')) {
-    throw new Error(`File does not start with frontmatter: ${filePath}`);
+    throw new Error(`File does not start with frontmatter: ${label}`);
   }
   const endIdx = normalized.indexOf('\n---\n', 4);
   if (endIdx === -1) {
-    throw new Error(`Invalid frontmatter in file: ${filePath}`);
+    throw new Error(`Invalid frontmatter in file: ${label}`);
   }
   const frontmatterText = normalized.substring(4, endIdx);
   const body = normalized.substring(endIdx + 5);
 
   const metadata = parseYamlFrontmatter(frontmatterText);
 
-  if (!metadata.name) metadata.name = path.basename(filePath, '.md');
+  if (!metadata.name) metadata.name = path.basename(label, '.md');
   if (!metadata.description) metadata.description = '';
 
   return { metadata, body };
+}
+
+function parseMarkdownWithFrontmatter(filePath) {
+  const content = fs.readFileSync(filePath, 'utf8');
+  return parseMarkdownContentWithFrontmatter(content, filePath);
 }
 
 function removeLegacyCursorRule(skillName) {
@@ -456,21 +511,20 @@ function removeLegacyCursorRule(skillName) {
 }
 
 function processSkills() {
-  const skillsDir = path.join(templateRoot, 'templates', 'skills');
-  if (!fs.existsSync(skillsDir)) {
-    logWarn(`Source skills directory not found: ${skillsDir}`);
+  const skillEntries = listSkillTemplateEntries();
+  if (skillEntries.length === 0) {
+    logWarn('No skill templates found (templates/skills/**/*.md)');
     return;
   }
 
-  const skillFiles = scanDirectory(skillsDir);
-  for (const file of skillFiles) {
+  for (const { relativePath, content } of skillEntries) {
     try {
-      const { metadata, body } = parseMarkdownWithFrontmatter(file);
+      const { metadata, body } = parseMarkdownContentWithFrontmatter(content, relativePath);
       const name = metadata.name;
       const desc = metadata.description;
 
       if (!desc || desc === '>') {
-        logWarn(`Skill "${name}" has empty description — check frontmatter in ${path.relative(templateRoot, file)}`);
+        logWarn(`Skill "${name}" has empty description — check frontmatter in ${relativePath}`);
       }
 
       if (isVerbose) {
@@ -504,7 +558,7 @@ function processSkills() {
         writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
       }
     } catch (err) {
-      logWarn(`Failed to parse or convert skill file ${file}: ${err.message}`);
+      logWarn(`Failed to parse or convert skill file ${relativePath}: ${err.message}`);
     }
   }
 }

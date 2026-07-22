@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.2.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](package.json)
 
 AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
 ## Pipeline
@@ -118,3 +118,6 @@ Read `AGENTS.md` and `WORKFLOW.md` after install.
 
 ## License
 MIT — see [LICENSE](LICENSE).
+
+## Publish note
+npm package ships a **bundled** `dist/` only (`bundle.json` + `install.js`). Source tree (`templates/`, `scripts/`) is not published to the registry Code tab. Run `npm run build` before `npm publish`.

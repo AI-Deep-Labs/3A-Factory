@@ -1,0 +1,16 @@
+# Source — published package ships dist/ bundle only (see npm run build)
+scripts/
+templates/
+AGENTS.md
+CLAUDE.md
+GEMINI.md
+.cursorrules
+
+# Dev / internal
+.agents/
+.github/
+.vs/
+.git/
+*.bak
+*.bak.*
+*.log
