@@ -219,6 +219,7 @@ const sharedFiles = [
   { src: 'templates/.agents/templates/DESIGN-template.md', dest: '.agents/templates/DESIGN-template.md' },
   { src: 'templates/.agents/templates/REVIEW-template.md', dest: '.agents/templates/REVIEW-template.md' },
   { src: 'templates/.agents/templates/QA-REPORT-template.md', dest: '.agents/templates/QA-REPORT-template.md' },
+  { src: 'templates/.agents/templates/UT-REPORT-template.md', dest: '.agents/templates/UT-REPORT-template.md' },
   { src: 'templates/.agents/templates/RELEASE-template.md', dest: '.agents/templates/RELEASE-template.md' }
 ];
 

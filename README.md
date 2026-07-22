@@ -7,12 +7,16 @@ AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
 ## Pipeline
 
 ```text
-triage → (grill-me if unclear) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa
+triage → (grill-me if unclear) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa (UT + System/UAT auto-loop) → user review
 ```
 
-Deploy is **separate**: `/deploy <env>` only after QA Pass and always requires **`APPROVED`**.
+Deploy is **separate**: `/deploy <env>` only after QA Pass + user review and always requires **`APPROVED`**.
 
 After **every** spec, the pipeline **stops** for agent self-review + user `APPROVED` before plan/develop.
+
+Spec must include **Acceptance Criteria**, **System Test Conditions**, and **UAT Conditions**.
+
+After coding, **QA** writes unit tests + `…-UT.md` + `…-qa.md`, runs tests, verifies System Test/UAT from the spec, and **auto-fixes until all Pass**, then stops for user review.
 
 ### Two entry points
 - **`/project-manager "<requirement>"`** — auto-run the pipeline.
@@ -26,7 +30,7 @@ docs/
 ├── requirements/   # REQ-<NNNNNN>-<slug>-{raw,discovery,spec}.md
 ├── designs/        # …-analysis|design|plan.md ; ADR-<NNNNNN>-<slug>.md
 ├── reviews/
-├── qa/
+├── qa/             # …-qa.md, …-UT.md, optional …-run-*.md
 ├── release-notes/
 ├── misc/
 │   ├── compact/    # HANDOFF-*.md
@@ -100,7 +104,8 @@ From the target repo, install the template then run **`/onboarding`**: scaffold 
 ## Breaking changes
 - Lifecycle artifacts move from `.agents/{specs,plans,...}` → `docs/...`.
 - Phase order changes (design before spec); adds analyze / deploy / project-manager.
-- After **every** SPEC: mandatory self-review + user `APPROVED` before plan/develop (all risk levels). High risk still needs Planning + a separate develop `APPROVED`. Every deploy needs `APPROVED`.
+- After **every** SPEC: mandatory self-review + user `APPROVED` before plan/develop (all risk levels). Spec must include System Test + UAT conditions. High risk still needs Planning + a separate develop `APPROVED`. Every deploy needs `APPROVED`.
+- QA writes `…-UT.md` + unit tests, verifies System Test/UAT, auto-loops until Pass, then stops for user review.
 - `/qa` = pipeline QA testing; conversational issue filing → `/qa-issues`.
 
 ## Skill layout (package source)

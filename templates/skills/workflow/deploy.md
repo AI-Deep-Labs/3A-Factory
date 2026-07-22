@@ -9,12 +9,12 @@ argument-hint: [REQ-<NNNNNN>-<slug>] [dev|staging|production]
 
 ## Hard gates
 1. Run only when the user **explicitly** requests deploy — never called automatically by `project-manager`.
-2. `docs/qa/REQ-<NNNNNN>-<slug>-qa.md` must conclude **Ready for release** (Pass).
+2. `docs/qa/REQ-<NNNNNN>-<slug>-qa.md` must conclude **Ready for user review** (all System Test + UAT Pass) and `docs/qa/REQ-<NNNNNN>-<slug>-UT.md` must conclude unit tests Pass.
 3. **`APPROVED`** (case-insensitive) must be present in the current context **for every environment** (including `dev`). If missing → stop and request approval.
 4. Do not invent deploy commands — take them from `CLAUDE.md` / project notes / the user.
 
 ## Steps
-1. Confirm env + REQ id + QA Pass + `APPROVED`.
+1. Confirm env + REQ id + QA Pass (`…-qa.md` + `…-UT.md`) + `APPROVED`.
 2. List deploy order (from plan/design/analysis).
 3. Prepare concrete rollback per step.
 4. Execute via project conventions (or step-by-step guidance if the agent cannot run commands).

@@ -34,6 +34,24 @@
 ## 12. Acceptance Criteria
 (Given/When/Then — at least happy path + edge + existing-data/state case)
 
-## 13. Out of Scope
+| ID | Given | When | Then |
+|---|---|---|---|
+| AC-01 | | | |
 
-## 14. Open Questions
+## 13. System Test Conditions
+(End-to-end / integration checks — setup, steps, expected observable result. Map to AC.)
+
+| ID | Linked AC | Setup / Environment | Steps | Expected result |
+|---|---|---|---|---|
+| ST-01 | AC-01 | | | |
+
+## 14. UAT Conditions
+(User-facing acceptance — role, business scenario, success criteria. Map to AC.)
+
+| ID | Linked AC | Actor / Role | Scenario | Success criteria |
+|---|---|---|---|---|
+| UAT-01 | AC-01 | | | |
+
+## 15. Out of Scope
+
+## 16. Open Questions

@@ -18,9 +18,10 @@ Deploy: separate command + always `APPROVED`.
 
 ## Hard gates
 - No coding from raw requirements.
-- After every `spec`: self-review vs prior docs → stop for user review; update spec + related docs if needed; continue only on `APPROVED` (all risk levels).
+- After every `spec`: must include AC + System Test + UAT; self-review vs prior docs → stop for user review; update spec + related docs if needed; continue only on `APPROVED` (all risk levels).
 - High risk → Planning + `APPROVED` before develop.
 - Develop follows plan or design scope.
+- After QA: unit tests (`…-UT.md`) + System Test/UAT from spec must all Pass (auto-fix loop); then stop for user review.
 - Never auto-deploy; every deploy needs `APPROVED`.
 
 ## Artifacts

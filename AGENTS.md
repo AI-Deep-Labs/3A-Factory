@@ -11,11 +11,12 @@ Supported tools: **Claude Code**, **Gemini**, **Cursor**.
 ## Hard gates
 
 1. Do not modify application source code from a raw requirement. Develop only after `analyze` + `design` + `spec` (and `plan` when risk is high).
-2. **After every `spec`:** the agent must self-review the new spec against all prior collected artifacts (raw / discovery / analysis / design / ADR), then **stop** and ask the user to verify. If the user requests changes → update the spec **and** related prior docs as needed, then stop again. Continue to plan/develop **only** after the user confirms with `APPROVED` (all risk levels).
+2. **After every `spec`:** the agent must self-review the new spec against all prior collected artifacts (raw / discovery / analysis / design / ADR), then **stop** and ask the user to verify. Spec must include **Acceptance Criteria**, **System Test Conditions**, and **UAT Conditions**. If the user requests changes → update the spec **and** related prior docs as needed, then stop again. Continue to plan/develop **only** after the user confirms with `APPROVED` (all risk levels).
 3. **High** risk → Planning is mandatory + wait for `APPROVED` before develop (in addition to the post-spec `APPROVED`).
 4. During develop, change only files/scope listed in Planning (if present) or Design; if scope drifts → stop and update design/plan first.
 5. Stop and report before changing shared public API/contracts, DB schema with real data, auth/authorization, or production deploy/infra config — unless risk was classified and the matching gate was cleared.
-6. **Never auto-deploy.** Every deploy requires an explicit deploy command + `APPROVED`.
+6. **After QA:** write unit tests + `…-UT.md`, run them, verify System Test + UAT from the approved spec, and auto-fix/re-test until all Pass; then **stop for user review**. Never claim Pass with Fail/untested criteria.
+7. **Never auto-deploy.** Every deploy requires an explicit deploy command + `APPROVED`.
 
 
 
@@ -68,6 +69,7 @@ Payment/order changes are **not** high-risk by default.
 | ADR          | `docs/designs/ADR-000005-outbox-pattern.md`                |
 | Review       | `docs/reviews/REQ-000013-login-throttle-review.md`         |
 | QA           | `docs/qa/REQ-000013-login-throttle-qa.md`                  |
+| Unit tests   | `docs/qa/REQ-000013-login-throttle-UT.md`                  |
 | Run log      | `docs/qa/REQ-000013-login-throttle-run-YYYYMMDD-HHMM.md`   |
 | Release      | `docs/release-notes/REQ-000013-login-throttle-release.md`  |
 | Handoff      | `docs/misc/compact/HANDOFF-YYYYMMDD-HHMM.md`               |
@@ -91,7 +93,7 @@ In skill text, `REQ-…` / `ADR-…` means `REQ-<NNNNNN>-<slug>` unless explicit
 | Phase    | Question                 | Output                                                                       |
 | -------- | ------------------------ | ---------------------------------------------------------------------------- |
 | Design   | How will we build it?    | Solution design                                                              |
-| Spec     | What must be done?       | Specification (AC, What-scope)                                               |
+| Spec     | What must be done?       | Specification (AC, System Test Conditions, UAT Conditions) |
 | Planning | In what technical order? | Repo/module/file order, dependencies, milestones (**not** people assignment) |
 
 
@@ -100,7 +102,7 @@ Planning is **mandatory** when risk is high; optional for low/medium if Design a
 ## Review / QA loops
 
 - Review “needs fixes” → auto-fix ≤ **2** rounds.
-- QA Fail → fix code ≤ **2** rounds, then report.
+- **QA** → write unit tests (`…-UT.md` + test sources), run them, and verify **System Test Conditions** + **UAT Conditions** from the approved spec. **Auto-fix and re-test until all Pass** (no fixed round cap). Stop for **user review** when green (or when blocked). Do not mark Pass if any criterion is Fail/untested.
 
 
 
