@@ -31,16 +31,16 @@ jobs:
       - name: Install dependencies
         run: |
           if [ -f package-lock.json ]; then
-            npm ci
+            npm ci --ignore-scripts
           else
-            npm install
+            npm install --ignore-scripts
           fi
 
       - name: Run Quality Gates
         run: |
+          npm run build --if-present
           npm run lint --if-present
           npm test --if-present
-          npm run build --if-present
 
       - name: Validate Package Metadata and Entry Points
         run: |

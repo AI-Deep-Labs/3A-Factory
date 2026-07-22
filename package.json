@@ -8,6 +8,7 @@
   },
   "scripts": {
     "build": "node scripts/build.js",
+    "preinstall": "node -e \"const f=require('fs'),{execSync}=require('child_process');if(!f.existsSync('dist/install.js')&&f.existsSync('scripts/build.js'))execSync('node scripts/build.js',{stdio:'inherit'})\"",
     "prepublishOnly": "npm run build",
     "postinstall": "node dist/install.js"
   },
