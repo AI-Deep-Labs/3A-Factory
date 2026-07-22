@@ -1,10 +1,7 @@
 # 3a-factory
 
 AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
-
-Instruction files in this package are **English**. Generated project artifacts under `docs/` must be **Vietnamese**.
-
-## Pipeline (v1.1+)
+## Pipeline
 
 ```text
 triage → (grill-me if unclear) → analyze → ADR? → design → spec → Planning? → develop → review → qa
@@ -33,26 +30,66 @@ Shared id with branch: `feature/REQ-<NNNNNN>-<slug>` (6-digit zero-padded; legac
 
 ## Install
 
-### NPM
+Shared files always install (`docs/`, `AGENTS.md`, `WORKFLOW.md`, `.agents/…`).  
+Agent adapters install **only for the agent(s) you select**.
+
+### By agent (recommended)
+
 ```bash
-npm install --save-dev 3a-factory
+# Claude Code only
+npx 3a-factory --agent=claude
+
+# Gemini CLI only
+npx 3a-factory --agent=gemini
+
+# Cursor only
+npx 3a-factory --agent=cursor
+
+# Multiple
+npx 3a-factory --agent=claude,cursor --force
+
+# Flags form
+npx 3a-factory --claude
+npx 3a-factory --claude --force
 ```
 
-### npx
+Env (handy for npm scripts / CI):
+
 ```bash
-npx 3a-factory
+THREEA_AGENT=claude npx 3a-factory --force
+# or
+npm_config_3a_agent=gemini npx 3a-factory --force
+```
+
+Default with **no** `--agent` flag: install **all** agents (backward compatible).
+
+### NPM dependency
+
+```bash
+npm install --save-dev 3a-factory
+# postinstall defaults to all agents; re-run selectively:
+npx 3a-factory --agent=cursor --force
 ```
 
 ### Scripts
-- Windows: `powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1`
-- macOS/Linux: `bash ./scripts/install.sh`
+- Windows: `powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 --agent=claude`
+- macOS/Linux: `bash ./scripts/install.sh --agent=gemini`
 
-Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).
+Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).  
+`npx 3a-factory --help` lists all options.
 
+### What each agent gets
+
+| Selection | Extra paths |
+|---|---|
+| shared (always) | `docs/*`, `AGENTS.md`, `WORKFLOW.md`, `.agents/skills`, `.agents/templates` |
+| `claude` | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
+| `gemini` | `GEMINI.md`, `.gemini/commands` (skills via `.agents/skills`) |
+| `cursor` | `.cursor/rules/*.mdc` including `ai-workflow.mdc` |
 ## Onboarding one repo
 From the target repo, install the template then run **`/onboarding`**: scaffold `docs/`, fill `CLAUDE.md` / `GEMINI.md` / `AGENTS.md` context, explore the codebase, write `docs/project_overview.md`. Create nothing outside the current repo.
 
-## Breaking changes (1.0.x → 1.1.0)
+## Breaking changes
 - Lifecycle artifacts move from `.agents/{specs,plans,...}` → `docs/...`.
 - Phase order changes (design before spec); adds analyze / deploy / project-manager.
 - `APPROVED` is not required for every SPEC/PLAN before develop — only for **high** risk (and every deploy).

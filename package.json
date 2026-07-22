@@ -1,7 +1,7 @@
 {
   "name": "3a-factory",
-  "version": "2.0.0",
-  "description": "Automated-dev-team AI workflow template for Claude, Gemini, and Cursor (English instructions; Vietnamese docs output)",
+  "version": "2.1.0",
+  "description": "Automated-dev-team AI workflow template for Claude, Gemini, and/or Cursor (selective agent install)",
   "main": "scripts/install.js",
   "bin": {
     "3a-factory": "scripts/install.js"

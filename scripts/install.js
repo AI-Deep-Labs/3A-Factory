@@ -1,31 +1,47 @@
 #!/usr/bin/env node
 
 /**
- * 3A-Factory
- * Cross-platform Node.js script.
+ * 3A-Factory installer
+ * Install shared workflow files + adapters for selected agent(s) only.
+ *
+ * Usage:
+ *   npx 3a-factory --agent=claude
+ *   npx 3a-factory --agent=gemini,cursor --force
+ *   npx 3a-factory --claude --cursor
+ *   npx 3a-factory --all
+ *
+ * Env (useful with npm postinstall):
+ *   THREEA_AGENT=claude
+ *   npm_config_3a_agent=gemini
  */
 
 const fs = require('fs');
 const path = require('path');
 
-// CLI Arguments
+const VALID_AGENTS = ['claude', 'gemini', 'cursor'];
+
 const args = process.argv.slice(2);
+
+if (args.includes('--help') || args.includes('-h')) {
+  printHelp();
+  process.exit(0);
+}
+
 const isDryRun = args.includes('--dry-run');
 const isForce = args.includes('--force') || process.env.npm_config_force === 'true';
 const isNoBackup = args.includes('--no-backup');
 const isVerbose = args.includes('--verbose');
 
-// Target and Template directories
+const selectedAgents = parseAgents(args);
+
 const targetRoot = process.env.INIT_CWD || process.cwd();
 const templateRoot = path.resolve(__dirname, '..');
 
-// Avoid polluting the template developer's repository root during local package install or run.
 if (path.resolve(targetRoot) === path.resolve(templateRoot)) {
   console.log('\x1b[32m%s\x1b[0m', '[OK] Running in development repository. Skipping template installation to avoid root pollution.');
   process.exit(0);
 }
 
-// ANSI Terminal Colors
 const colors = {
   reset: '\x1b[0m',
   cyan: '\x1b[36m',
@@ -36,12 +52,94 @@ const colors = {
 };
 
 function logInfo(msg) { console.log(`${colors.cyan}[INFO]${colors.reset} ${msg}`); }
-logInfo.toString(); // avoid linting unused warning if not used elsewhere
 function logOk(msg) { console.log(`${colors.green}[OK]${colors.reset} ${msg}`); }
 function logWarn(msg) { console.warn(`${colors.yellow}[WARN]${colors.reset} ${msg}`); }
 function logErr(msg) { console.error(`${colors.red}[ERROR]${colors.reset} ${msg}`); }
 
-const targetDirs = [
+function printHelp() {
+  console.log(`3A-Factory installer
+
+Usage:
+  npx 3a-factory [options]
+  node scripts/install.js [options]
+
+Agent selection (pick one or more; default: all):
+  --agent=<name>[,<name>...]   claude | gemini | cursor | all
+  --claude / --gemini / --cursor
+  --all
+
+  Env: THREEA_AGENT=claude   or   npm_config_3a_agent=gemini
+
+Other options:
+  --force       Overwrite existing files (backup unless --no-backup)
+  --no-backup   Do not write .bak.* when overwriting
+  --dry-run     Print actions only
+  --verbose     Extra logging
+  -h, --help    Show help
+
+Always installed (shared):
+  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates|skills|compact|issues
+
+Per agent:
+  claude  → CLAUDE.md, .claude/skills, .claude/commands
+  gemini  → GEMINI.md, .gemini/commands (skills via .agents/skills)
+  cursor  → .cursor/rules/*.mdc (incl. ai-workflow.mdc)
+`);
+}
+
+function parseAgents(argv) {
+  const selected = new Set();
+
+  function addToken(raw) {
+    const token = String(raw || '').trim().toLowerCase();
+    if (!token) return;
+    if (token === 'all') {
+      VALID_AGENTS.forEach((a) => selected.add(a));
+      return;
+    }
+    if (!VALID_AGENTS.includes(token)) {
+      throw new Error(`Unknown agent "${raw}". Use: ${VALID_AGENTS.join(', ')}, or all`);
+    }
+    selected.add(token);
+  }
+
+  for (const arg of argv) {
+    if (arg === '--all') {
+      VALID_AGENTS.forEach((a) => selected.add(a));
+      continue;
+    }
+    if (arg === '--claude' || arg === '--gemini' || arg === '--cursor') {
+      addToken(arg.slice(2));
+      continue;
+    }
+    const m = arg.match(/^--agents?=(.+)$/i);
+    if (m) {
+      m[1].split(',').forEach(addToken);
+    }
+  }
+
+  if (selected.size === 0) {
+    const envVal =
+      process.env.THREEA_AGENT ||
+      process.env.npm_config_3a_agent ||
+      process.env.npm_config_agent;
+    if (envVal) {
+      String(envVal).split(',').forEach(addToken);
+    }
+  }
+
+  if (selected.size === 0) {
+    VALID_AGENTS.forEach((a) => selected.add(a));
+  }
+
+  return selected;
+}
+
+function wants(agent) {
+  return selectedAgents.has(agent);
+}
+
+const sharedDirs = [
   'docs/requirements',
   'docs/designs',
   'docs/reviews',
@@ -49,17 +147,17 @@ const targetDirs = [
   'docs/release-notes',
   '.agents/templates',
   '.agents/compact',
-  '.agents/issues',
-  '.claude/commands',
-  '.gemini/commands',
-  '.gemini/prompts',
-  '.cursor/rules'
+  '.agents/issues'
 ];
 
-const requiredFiles = [
+const agentDirs = {
+  claude: ['.claude/commands', '.claude/skills'],
+  gemini: ['.gemini/commands', '.gemini/prompts'],
+  cursor: ['.cursor/rules']
+};
+
+const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
-  { src: 'CLAUDE.md', dest: 'CLAUDE.md' },
-  { src: 'GEMINI.md', dest: 'GEMINI.md' },
   { src: 'templates/WORKFLOW.md', dest: 'WORKFLOW.md' },
   { src: 'templates/.agents/templates/SPEC-template.md', dest: '.agents/templates/SPEC-template.md' },
   { src: 'templates/.agents/templates/PLAN-template.md', dest: '.agents/templates/PLAN-template.md' },
@@ -70,13 +168,18 @@ const requiredFiles = [
   { src: 'templates/.agents/templates/DESIGN-template.md', dest: '.agents/templates/DESIGN-template.md' },
   { src: 'templates/.agents/templates/REVIEW-template.md', dest: '.agents/templates/REVIEW-template.md' },
   { src: 'templates/.agents/templates/QA-REPORT-template.md', dest: '.agents/templates/QA-REPORT-template.md' },
-  { src: 'templates/.agents/templates/RELEASE-template.md', dest: '.agents/templates/RELEASE-template.md' },
-  { src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' }
+  { src: 'templates/.agents/templates/RELEASE-template.md', dest: '.agents/templates/RELEASE-template.md' }
 ];
 
-const optionalFiles = [
-  { src: '.cursorrules', dest: '.cursorrules' }
-];
+const agentFiles = {
+  claude: [{ src: 'CLAUDE.md', dest: 'CLAUDE.md' }],
+  gemini: [{ src: 'GEMINI.md', dest: 'GEMINI.md' }],
+  cursor: [{ src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' }]
+};
+
+const optionalAgentFiles = {
+  cursor: [{ src: '.cursorrules', dest: '.cursorrules' }]
+};
 
 const stats = {
   createdDirs: 0,
@@ -90,9 +193,7 @@ const stats = {
 function sameFileContent(src, dest) {
   if (!fs.existsSync(dest)) return false;
   try {
-    const srcBuf = fs.readFileSync(src);
-    const destBuf = fs.readFileSync(dest);
-    return srcBuf.equals(destBuf);
+    return fs.readFileSync(src).equals(fs.readFileSync(dest));
   } catch (err) {
     return false;
   }
@@ -244,8 +345,7 @@ function writeGeneratedFile(destRelativePath, content) {
 
 function scanDirectory(dir, fileList = []) {
   if (!fs.existsSync(dir)) return fileList;
-  const files = fs.readdirSync(dir);
-  for (const file of files) {
+  for (const file of fs.readdirSync(dir)) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
     if (stat.isDirectory()) {
@@ -270,9 +370,8 @@ function parseMarkdownWithFrontmatter(filePath) {
   const frontmatterText = normalized.substring(4, endIdx);
   const body = normalized.substring(endIdx + 5);
 
-  const lines = frontmatterText.split('\n');
   const metadata = {};
-  for (const line of lines) {
+  for (const line of frontmatterText.split('\n')) {
     const colonIdx = line.indexOf(':');
     if (colonIdx === -1) continue;
     const key = line.substring(0, colonIdx).trim();
@@ -283,12 +382,8 @@ function parseMarkdownWithFrontmatter(filePath) {
     metadata[key] = val;
   }
 
-  if (!metadata.name) {
-    metadata.name = path.basename(filePath, '.md');
-  }
-  if (!metadata.description) {
-    metadata.description = '';
-  }
+  if (!metadata.name) metadata.name = path.basename(filePath, '.md');
+  if (!metadata.description) metadata.description = '';
 
   return { metadata, body };
 }
@@ -311,42 +406,91 @@ function processSkills() {
         logInfo(`Processing skill: ${name}`);
       }
 
-      // 1. Generic Agent Skill: .agents/skills/[name]/SKILL.md
-      let genericFM = `---\nname: ${name}\ndescription: ${desc}\n`;
+      let skillFM = `---\nname: ${name}\ndescription: ${desc}\n`;
       if (metadata['disable-model-invocation'] !== undefined) {
-        genericFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
+        skillFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
       }
       if (metadata['argument-hint'] !== undefined) {
-        genericFM += `argument-hint: ${metadata['argument-hint']}\n`;
+        skillFM += `argument-hint: ${metadata['argument-hint']}\n`;
       }
-      genericFM += `---\n`;
-      writeGeneratedFile(`.agents/skills/${name}/SKILL.md`, `${genericFM}${body}`);
+      skillFM += `---\n`;
+      const skillBody = `${skillFM}${body}`;
 
-      // 2. Claude Agent Skill: .claude/skills/[name]/SKILL.md
-      writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, `${genericFM}${body}`);
+      // Shared portable skills — used by Gemini prompts and as source of truth
+      writeGeneratedFile(`.agents/skills/${name}/SKILL.md`, skillBody);
 
-      // 3. Cursor Rule: .cursor/rules/[name].mdc
-      let cursorFM = `---\ndescription: ${desc}\nglobs: *\n`;
-      if (metadata.alwaysApply !== undefined) {
-        cursorFM += `alwaysApply: ${metadata.alwaysApply}\n`;
-      } else {
-        cursorFM += `alwaysApply: false\n`;
+      if (wants('claude')) {
+        writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, skillBody);
+        const claudeCmd = `---\ndescription: ${desc}\n---\n\nRead and execute .claude/skills/${name}/SKILL.md. Arguments: $ARGUMENTS\n`;
+        writeGeneratedFile(`.claude/commands/${name}.md`, claudeCmd);
       }
-      cursorFM += `---\n`;
-      writeGeneratedFile(`.cursor/rules/${name}.mdc`, `${cursorFM}${body}`);
 
-      // 4. Claude Command: .claude/commands/[name].md
-      const claudeCmd = `---\ndescription: ${desc}\n---\n\nRead and execute .claude/skills/${name}/SKILL.md. Arguments: $ARGUMENTS\n`;
-      writeGeneratedFile(`.claude/commands/${name}.md`, claudeCmd);
+      if (wants('cursor')) {
+        let cursorFM = `---\ndescription: ${desc}\nglobs: *\n`;
+        if (metadata.alwaysApply !== undefined) {
+          cursorFM += `alwaysApply: ${metadata.alwaysApply}\n`;
+        } else {
+          cursorFM += `alwaysApply: false\n`;
+        }
+        cursorFM += `---\n`;
+        writeGeneratedFile(`.cursor/rules/${name}.mdc`, `${cursorFM}${body}`);
+      }
 
-      // 5. Gemini Command: .gemini/commands/[name].toml
-      const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .agents/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
-      writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
-
+      if (wants('gemini')) {
+        const geminiCmd = `description = "${desc.replace(/"/g, '\\"')}"\nprompt = """\nRead AGENTS.md first, then read .agents/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+        writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
+      }
     } catch (err) {
       logWarn(`Failed to parse or convert skill file ${file}: ${err.message}`);
     }
   }
+}
+
+function collectTargetDirs() {
+  const dirs = [...sharedDirs];
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) {
+      dirs.push(...(agentDirs[agent] || []));
+    }
+  }
+  return dirs;
+}
+
+function collectRequiredFiles() {
+  const files = [...sharedFiles];
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) {
+      files.push(...(agentFiles[agent] || []));
+    }
+  }
+  return files;
+}
+
+function collectOptionalFiles() {
+  const files = [];
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) {
+      files.push(...(optionalAgentFiles[agent] || []));
+    }
+  }
+  return files;
+}
+
+function printFooter() {
+  console.log(`${colors.cyan}=============================================${colors.reset}`);
+  console.log(`Agents installed: ${[...selectedAgents].join(', ')}`);
+  console.log(`Artifacts:        docs/{requirements,designs,reviews,qa,release-notes}`);
+  console.log(`Shared skills:    .agents/skills + AGENTS.md`);
+  if (wants('claude')) {
+    console.log(`Claude Code:      /project-manager, /grill-me, /onboarding, /develop, …`);
+  }
+  if (wants('gemini')) {
+    console.log(`Gemini CLI:       .gemini/commands/*.toml`);
+  }
+  if (wants('cursor')) {
+    console.log(`Cursor:           .cursor/rules/*.mdc (incl. ai-workflow.mdc)`);
+  }
+  console.log(`${colors.cyan}=============================================${colors.reset}`);
 }
 
 console.log(`${colors.cyan}=============================================${colors.reset}`);
@@ -354,22 +498,16 @@ console.log(`${colors.cyan}  3A-Factory NPM Installer${colors.reset}`);
 console.log(`${colors.cyan}=============================================${colors.reset}`);
 console.log(`Template root: ${templateRoot}`);
 console.log(`Target root:   ${targetRoot}`);
+console.log(`Agents:        ${[...selectedAgents].join(', ')}`);
 console.log(`Mode:          ${isDryRun ? 'dry-run' : 'write'}`);
 console.log(`Overwrite:     ${isForce ? 'yes' : 'no'}`);
 console.log(`Backup:        ${isNoBackup ? 'no' : 'yes'}`);
 console.log(`${colors.cyan}---------------------------------------------${colors.reset}`);
 
 try {
-  // Create Target Directories
-  targetDirs.forEach(dir => ensureDirectory(dir));
-
-  // Copy Required Files
-  requiredFiles.forEach(item => copyWorkflowFile(item, true));
-
-  // Copy Optional Files
-  optionalFiles.forEach(item => copyWorkflowFile(item, false));
-
-  // Process and Generate Skills dynamically
+  collectTargetDirs().forEach((dir) => ensureDirectory(dir));
+  collectRequiredFiles().forEach((item) => copyWorkflowFile(item, true));
+  collectOptionalFiles().forEach((item) => copyWorkflowFile(item, false));
   processSkills();
 
   console.log(`${colors.cyan}---------------------------------------------${colors.reset}`);
@@ -380,15 +518,8 @@ try {
   console.log(`Backups:      ${stats.backups}`);
   console.log(`Unchanged:    ${stats.unchanged}`);
   console.log(`Skipped:      ${stats.skipped}`);
-  console.log(`${colors.cyan}=============================================${colors.reset}`);
-  console.log(`Claude Code: use /project-manager, /grill-me, /triage, /analyze, /design, /spec, /plan, /develop, /review, /qa, /deploy, …`);
-  console.log(`Gemini CLI:   use custom commands from .gemini/commands/*.toml.`);
-  console.log(`Cursor:       project rules under .cursor/rules/ (incl. ai-workflow.mdc).`);
-  console.log(`Artifacts:    docs/{requirements,designs,reviews,qa,release-notes}`);
-  console.log(`Source of truth sync: AGENTS.md + .agents/skills (Claude/Gemini/Cursor).`);
-  console.log(`${colors.cyan}=============================================${colors.reset}`);
+  printFooter();
 } catch (err) {
   logErr(`Installation failed: ${err.message}`);
   process.exit(1);
 }
-
