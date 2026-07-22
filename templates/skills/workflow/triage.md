@@ -11,7 +11,7 @@ argument-hint: [raw requirement text]
 Do not modify source code. Do not invent a solution.
 
 ## Preconditions
-Repo should have standard `docs/` (5 folders). If missing → recommend `/onboarding` first (or create `docs/{requirements,designs,reviews,qa,release-notes}`).
+Repo should have standard `docs/` folders. If missing → recommend `/onboarding` first (or create `docs/{requirements,designs,reviews,qa,release-notes,misc/compact,misc/issues}`).
 
 ## Naming & numbering (see AGENTS.md)
 1. **Next number**: scan `docs/**/REQ-*.md`. Parse the number after `REQ-` — support legacy unpadded / slug-less names. `next = max+1`, format **6 digits**. Do not rename old files. If none → `000001`.

@@ -1,6 +1,6 @@
 ---
 name: synthesize-design-doc
-description: Convert conversation context into BRD/TDD/spec/handoff under docs/ (or .agents/compact for handoff). Use when the user asks to summarize or synthesize design docs.
+description: Convert conversation context into BRD/TDD/spec/handoff under docs/ (handoff → docs/misc/compact). Use when the user asks to summarize or synthesize design docs.
 disable-model-invocation: false
 ---
 
@@ -18,7 +18,7 @@ Save Markdown files in the project so later agents can reuse them.
   - Analysis / design / plan: `docs/designs/REQ-<NNNNNN>-<slug>-*.md`
   - ADR: `docs/designs/ADR-<NNNNNN>-<slug>.md`
   - Review / QA / release: `docs/reviews/`, `docs/qa/`, `docs/release-notes/`
-  - Compact handoff: `.agents/compact/HANDOFF-*.md`
+  - Compact handoff: `docs/misc/compact/HANDOFF-*.md`
 
 ## Document modes
 

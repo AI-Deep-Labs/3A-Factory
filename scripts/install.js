@@ -78,7 +78,8 @@ Other options:
   -h, --help    Show help
 
 Always installed (shared):
-  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates|skills|compact|issues
+  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates|skills
+  (docs includes misc/compact + misc/issues)
 
 Per agent:
   claude  → CLAUDE.md, .claude/skills, .claude/commands
@@ -145,9 +146,9 @@ const sharedDirs = [
   'docs/reviews',
   'docs/qa',
   'docs/release-notes',
-  '.agents/templates',
-  '.agents/compact',
-  '.agents/issues'
+  'docs/misc/compact',
+  'docs/misc/issues',
+  '.agents/templates'
 ];
 
 const agentDirs = {
@@ -479,7 +480,7 @@ function collectOptionalFiles() {
 function printFooter() {
   console.log(`${colors.cyan}=============================================${colors.reset}`);
   console.log(`Agents installed: ${[...selectedAgents].join(', ')}`);
-  console.log(`Artifacts:        docs/{requirements,designs,reviews,qa,release-notes}`);
+  console.log(`Artifacts:        docs/{requirements,designs,reviews,qa,release-notes,misc/...}`);
   console.log(`Shared skills:    .agents/skills + AGENTS.md`);
   if (wants('claude')) {
     console.log(`Claude Code:      /project-manager, /grill-me, /onboarding, /develop, …`);

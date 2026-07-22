@@ -51,6 +51,8 @@ Payment/order changes are **not** high-risk by default.
 | QA | `docs/qa/REQ-000013-login-throttle-qa.md` |
 | Run log | `docs/qa/REQ-000013-login-throttle-run-YYYYMMDD-HHMM.md` |
 | Release | `docs/release-notes/REQ-000013-login-throttle-release.md` |
+| Handoff | `docs/misc/compact/HANDOFF-YYYYMMDD-HHMM.md` |
+| Filed issues | `docs/misc/issues/ISSUE-[short-name].md` |
 
 ### Number allocation (backward-compatible)
 1. Scan all `REQ-*-*.md` / `REQ-*.md` under `docs/` (and `ADR-*` under `docs/designs/`).

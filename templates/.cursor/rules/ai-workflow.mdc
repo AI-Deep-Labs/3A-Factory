@@ -23,7 +23,9 @@ Deploy: separate command + always `APPROVED`.
 - Never auto-deploy; every deploy needs `APPROVED`.
 
 ## Artifacts
-Write under `docs/{requirements,designs,reviews,qa,release-notes}` (+ `docs/project_overview.md` from `/onboarding`).
+Write under `docs/{requirements,designs,reviews,qa,release-notes,misc/...}` (+ `docs/project_overview.md` from `/onboarding`).
+- Handoff → `docs/misc/compact/`
+- Filed issues → `docs/misc/issues/`
 Ids: `REQ-<NNNNNN>-<slug>` / `ADR-<NNNNNN>-<slug>` (6 digits); branch `feature/REQ-<NNNNNN>-<slug>`.
 **Artifact body language: Vietnamese.** Instruction/rules language: English.
 

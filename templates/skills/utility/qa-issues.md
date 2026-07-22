@@ -1,6 +1,6 @@
 ---
 name: qa-issues
-description: Conversational QA session — file ISSUE markdown under .agents/issues. Utility outside the pipeline (does not replace qa-testing).
+description: Conversational QA session — file ISSUE markdown under docs/misc/issues. Utility outside the pipeline (does not replace qa-testing).
 disable-model-invocation: false
 argument-hint: [bug description]
 ---
@@ -14,7 +14,7 @@ Does not replace pipeline `qa`. Use when the user wants conversational issue fil
 1. Listen; ask at most 2–3 questions (expected vs actual, repro steps, frequency).
 2. Explore the codebase for domain language — **do not** put paths/line numbers in the issue body.
 3. One issue or split into multiple ISSUE files if independent.
-4. Write `.agents/issues/ISSUE-[short-name].md`.
+4. Write `docs/misc/issues/ISSUE-[short-name].md`.
 
 ### Single-issue template
 ```markdown

@@ -23,6 +23,9 @@ docs/
 ├── reviews/
 ├── qa/
 ├── release-notes/
+├── misc/
+│   ├── compact/    # HANDOFF-*.md
+│   └── issues/     # ISSUE-*.md
 └── project_overview.md   # from /onboarding
 ```
 
@@ -82,7 +85,7 @@ Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).
 
 | Selection | Extra paths |
 |---|---|
-| shared (always) | `docs/*`, `AGENTS.md`, `WORKFLOW.md`, `.agents/skills`, `.agents/templates` |
+| shared (always) | `docs/*` (incl. `misc/compact`, `misc/issues`), `AGENTS.md`, `WORKFLOW.md`, `.agents/skills`, `.agents/templates` |
 | `claude` | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
 | `gemini` | `GEMINI.md`, `.gemini/commands` (skills via `.agents/skills`) |
 | `cursor` | `.cursor/rules/*.mdc` including `ai-workflow.mdc` |
