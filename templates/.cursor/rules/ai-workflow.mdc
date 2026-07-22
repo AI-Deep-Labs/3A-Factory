@@ -18,6 +18,7 @@ Deploy: separate command + always `APPROVED`.
 
 ## Hard gates
 - No coding from raw requirements.
+- After every `spec`: self-review vs prior docs → stop for user review; update spec + related docs if needed; continue only on `APPROVED` (all risk levels).
 - High risk → Planning + `APPROVED` before develop.
 - Develop follows plan or design scope.
 - Never auto-deploy; every deploy needs `APPROVED`.

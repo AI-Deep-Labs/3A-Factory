@@ -20,9 +20,10 @@ Do not modify source code. Only create/update `docs/designs/REQ-<NNNNNN>-<slug>-
 ## Inputs
 - `…-spec.md`, `…-design.md`, `…-analysis.md` (same `REQ-<NNNNNN>-<slug>`)
 - Template: `.agents/templates/PLAN-template.md`
+- Spec must already be **user-approved** (`APPROVED` after the post-spec review gate). If not → stop and wait.
 
 ## Process
-1. Read spec/design/analysis + survey code.
+1. Confirm post-spec `APPROVED`. Read spec/design/analysis + survey code.
 2. List **Files Expected To Change** (develop boundary).
 3. Data/API/Config impact, test plan, rollback.
 4. Write `docs/designs/REQ-<NNNNNN>-<slug>-plan.md`.

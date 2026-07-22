@@ -4,17 +4,18 @@
 
 Run an automated software-delivery pipeline:
 
-`triage → (grill-me if unclear) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop; deploy is separate.
+`triage → (grill-me if unclear) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa` → stop; deploy is separate.
 
 Supported tools: **Claude Code**, **Gemini**, **Cursor**.
 
 ## Hard gates
 
 1. Do not modify application source code from a raw requirement. Develop only after `analyze` + `design` + `spec` (and `plan` when risk is high).
-2. **High** risk → Planning is mandatory + wait for `APPROVED` before develop.
-3. During develop, change only files/scope listed in Planning (if present) or Design; if scope drifts → stop and update design/plan first.
-4. Stop and report before changing shared public API/contracts, DB schema with real data, auth/authorization, or production deploy/infra config — unless risk was classified and the matching gate was cleared.
-5. **Never auto-deploy.** Every deploy requires an explicit deploy command + `APPROVED`.
+2. **After every `spec`:** the agent must self-review the new spec against all prior collected artifacts (raw / discovery / analysis / design / ADR), then **stop** and ask the user to verify. If the user requests changes → update the spec **and** related prior docs as needed, then stop again. Continue to plan/develop **only** after the user confirms with `APPROVED` (all risk levels).
+3. **High** risk → Planning is mandatory + wait for `APPROVED` before develop (in addition to the post-spec `APPROVED`).
+4. During develop, change only files/scope listed in Planning (if present) or Design; if scope drifts → stop and update design/plan first.
+5. Stop and report before changing shared public API/contracts, DB schema with real data, auth/authorization, or production deploy/infra config — unless risk was classified and the matching gate was cleared.
+6. **Never auto-deploy.** Every deploy requires an explicit deploy command + `APPROVED`.
 
 
 
@@ -35,9 +36,9 @@ Payment/order changes are **not** high-risk by default.
 
 ## Workflow directives
 
-- `APPROVED`: required before develop when risk is high; required before **every** deploy; also used when waiting on artifact approval.
+- `APPROVED`: required after **every** spec before continuing; required before develop when risk is high; required before **every** deploy; also used when waiting on other artifact approval.
 - `REJECTED`: reject the draft; stop and ask whether to re-analyze from scratch (y/n).
-- `RE-EXECUTE` (or `re-excute`): refine the **current** artifact in place; do not create a parallel file for the same phase.
+- `RE-EXECUTE` (or `re-excute`): refine the **current** artifact in place; do not create a parallel file for the same phase. After a post-spec change request, also update related prior docs so they stay consistent, then self-review and wait for `APPROVED` again.
 
 
 

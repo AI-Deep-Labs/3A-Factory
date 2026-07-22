@@ -1,6 +1,6 @@
 ---
 name: develop
-description: Implement per existing design/plan. High risk requires APPROVED before source changes. Boundary from plan or design. Suggested branch feature/REQ-<NNNNNN>-<slug>.
+description: Implement per existing design/plan. Requires post-spec user APPROVED; high risk also requires plan + develop APPROVED. Boundary from plan or design. Suggested branch feature/REQ-<NNNNNN>-<slug>.
 disable-model-invocation: true
 argument-hint: [REQ-<NNNNNN>-<slug>]
 ---
@@ -9,8 +9,9 @@ argument-hint: [REQ-<NNNNNN>-<slug>]
 
 ## Hard gate
 1. Required: `…-analysis.md`, `…-design.md`, `…-spec.md` (same `REQ-<NNNNNN>-<slug>`).
-2. If risk is **high**: `…-plan.md` **and** `APPROVED` in the current context are required. Otherwise stop.
-3. If risk is low/medium: `APPROVED` before develop is not required (unless in manual approval mode).
+2. Spec must already be user-approved (`APPROVED` after the post-spec review gate). If not → stop.
+3. If risk is **high**: `…-plan.md` **and** a separate develop `APPROVED` in the current context are required. Otherwise stop.
+4. If risk is low/medium: develop `APPROVED` is not required beyond the post-spec `APPROVED`.
 
 ## Boundaries
 - With plan → only edit **Files Expected To Change**.

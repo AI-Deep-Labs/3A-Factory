@@ -23,7 +23,7 @@ Do not modify source code. Do not write a full implementation plan (that is Plan
 
 ## Pipeline handoff
 - Clear enough (agent judgment) **or** “execute now” → **do not** ask “run the pipeline?”; continue analyze→… (or return to `project-manager`).
-- “Execute now” does **not** bypass `APPROVED` for high-risk develop / any deploy.
+- “Execute now” does **not** bypass post-spec user `APPROVED`, nor `APPROVED` for high-risk develop / any deploy.
 - If critical info is still missing so design/spec cannot be written → ask one more question, then stop.
 
 ## Output each turn

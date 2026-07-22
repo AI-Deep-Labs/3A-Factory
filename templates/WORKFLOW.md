@@ -16,7 +16,11 @@ flowchart TD
   ADR --> DES[design How]
   AD --> DES
   DES --> S[spec What]
-  S --> P{Planning?}
+  S --> SR[Self-review vs prior docs]
+  SR --> UR[User review — stop]
+  UR -->|changes requested| FIX[Update spec + related docs]
+  FIX --> SR
+  UR -->|APPROVED| P{Planning?}
   P -->|high risk: required| PL[plan]
   P -->|low/med: optional| CG{High risk?}
   PL --> CG
@@ -30,15 +34,22 @@ flowchart TD
 ```
 
 ## Dual mode
-- **`/project-manager`**: auto-run pipeline; if unclear → `grill-me`; when clear or “execute now” → continue without asking again.
+- **`/project-manager`**: auto-run pipeline; if unclear → `grill-me`; when clear or “execute now” → continue without asking again. **Exception:** always stop after spec for user `APPROVED`.
 - **`/grill-me`**: deep clarification; same handoff rules into the pipeline.
 
 ## Deploy
 Always separate from PM. After QA Pass, user runs `/deploy <env>` and must **`APPROVED`** before execution.
 
 ## Directives
-- **`APPROVED`**: before develop (high risk) and before every deploy.
-- **`REJECTED`** / **`RE-EXECUTE`**: approval gate / refine current artifact.
+- **`APPROVED`**: after **every** spec (all risk levels) before plan/develop; before develop when risk is **high**; before every deploy.
+- **`REJECTED`** / **`RE-EXECUTE`**: approval gate / refine current artifact (and related prior docs when adjusting after spec review).
+
+## Spec review gate
+After writing `…-spec.md`, the agent must:
+1. Self-evaluate the spec against raw / discovery / analysis / design / ADR.
+2. Ask the user to verify and point out adjustments if needed.
+3. Apply updates to the spec and related prior documents when requested.
+4. Continue only after explicit `APPROVED`.
 
 ## Artifacts
 `docs/requirements|designs|reviews|qa|release-notes` — see `AGENTS.md`.  

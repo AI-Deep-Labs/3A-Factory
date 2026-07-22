@@ -2,7 +2,7 @@
 
 Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
 
-`triage → (grill-me) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop; `/deploy` is separate + requires `APPROVED`.
+`triage → (grill-me) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa` → stop; `/deploy` is separate + requires `APPROVED`.
 
 Claude-specific:
 - Skills: `.claude/skills/<skill-name>/SKILL.md`

@@ -1,16 +1,18 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.2.1-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](package.json)
 
 AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
 ## Pipeline
 
 ```text
-triage → (grill-me if unclear) → analyze → ADR? → design → spec → Planning? → develop → review → qa
+triage → (grill-me if unclear) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa
 ```
 
 Deploy is **separate**: `/deploy <env>` only after QA Pass and always requires **`APPROVED`**.
+
+After **every** spec, the pipeline **stops** for agent self-review + user `APPROVED` before plan/develop.
 
 ### Two entry points
 - **`/project-manager "<requirement>"`** — auto-run the pipeline.
@@ -98,7 +100,7 @@ From the target repo, install the template then run **`/onboarding`**: scaffold 
 ## Breaking changes
 - Lifecycle artifacts move from `.agents/{specs,plans,...}` → `docs/...`.
 - Phase order changes (design before spec); adds analyze / deploy / project-manager.
-- `APPROVED` is not required for every SPEC/PLAN before develop — only for **high** risk (and every deploy).
+- After **every** SPEC: mandatory self-review + user `APPROVED` before plan/develop (all risk levels). High risk still needs Planning + a separate develop `APPROVED`. Every deploy needs `APPROVED`.
 - `/qa` = pipeline QA testing; conversational issue filing → `/qa-issues`.
 
 ## Skill layout (package source)
