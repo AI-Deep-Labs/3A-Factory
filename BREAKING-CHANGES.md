@@ -1,8 +1,8 @@
-# Breaking Changes — 3.0.0 (pre-release: 3.0.0-rc.2)
+# Breaking Changes — 3.0.0 (pre-release: 3.0.0-rc.3)
 
 Kiến trúc **Feature-local Spec Package** (greenfield). Không có migration path từ 2.x.
 
-Áp dụng cho dòng **3.0.0**, bao gồm pre-release **`3.0.0-rc.2`** (và rc.1).
+Áp dụng cho dòng **3.0.0**, bao gồm pre-release **`3.0.0-rc.3`** (và rc.1–rc.2).
 
 ## Breaking
 
@@ -15,7 +15,7 @@ Kiến trúc **Feature-local Spec Package** (greenfield). Không có migration p
 - QA dựa trên `acceptance.md` (AC/UT/ST/UAT), không thay bằng “smoke tự do”.
 - **Converge** bắt buộc trước user review; không auto-`done`.
 - Deploy approval **tách biệt** (`APPROVED_DEPLOY` ≠ `APPROVED_USER_REVIEW`).
-- Version major line: **3.0.0** (current package: **3.0.0-rc.2**).
+- Version major line: **3.0.0** (current package: **3.0.0-rc.3**).
 
 ## Removed
 

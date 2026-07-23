@@ -1,8 +1,8 @@
 ---
 name: qa-issues
 description: Conversational QA session — file ISSUE markdown under docs/misc/issues. Utility outside the pipeline (does not replace qa-testing).
-disable-model-invocation: false
-argument-hint: [bug description]
+disable-model-invocation: true
+argument-hint: "[bug description]"
 ---
 
 # QA Issues (utility)

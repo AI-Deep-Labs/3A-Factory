@@ -1,8 +1,8 @@
 ---
 name: onboarding
 description: Onboard ONE repo into 3A-Factory — create docs/, agent context (CLAUDE/GEMINI/AGENTS), explore codebase, write docs/project_overview.md. Create nothing outside the current repo.
-disable-model-invocation: false
-argument-hint: [optional hints about stack/repo role]
+disable-model-invocation: true
+argument-hint: "[optional hints about stack/repo role]"
 ---
 
 # Onboarding (repo → 3A-Factory)
@@ -63,7 +63,7 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
    Do **not** create legacy feature lifecycle folders (`docs/requirements|designs|reviews|qa`). Feature work uses `.specs/` via triage — installer must not pre-create `.specs/`.
 2. Agent tooling (if not present after package install):
   - Prompt / run 3a-factory install **into this repo** (`npx 3a-factory` or equivalent) for skills/commands/rules — **do not** clone extra repos.
-  - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/skills|commands`, `.cursor/skills` + `.cursor/rules/ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/{templates,contracts,schemas}` / `docs/`.
+  - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/commands` → `.agents/skills`, `.cursor/rules/*.mdc` + `ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/{templates,contracts,schemas,skills}` / `docs/`. Do not expect `.cursor/skills` or `.gemini/skills` mirrors.
 3. Do not create `docs/` or workflow files in parent/sibling directories.
 
 ---

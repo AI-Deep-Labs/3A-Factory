@@ -1,8 +1,8 @@
 ---
 name: project-manager
 description: Spec Package state-machine orchestrator — routes triage→spec→APPROVED_SPEC_PACKAGE→task-by-task develop/review→qa→converge→APPROVED_USER_REVIEW. Never auto-deploy.
-disable-model-invocation: false
-argument-hint: [requirement text or REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[requirement text or REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # Project Manager

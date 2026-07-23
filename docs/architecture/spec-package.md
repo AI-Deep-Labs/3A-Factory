@@ -2,7 +2,7 @@
 
 ## Context
 
-3A-Factory **3.0.0-rc.2** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `.specs/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
+3A-Factory **3.0.0-rc.3** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `.specs/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
 
 ## Problem statement
 
@@ -31,7 +31,7 @@
 
 ## Greenfield decision
 
-Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.2`). Không hỗ trợ migration từ layout cũ.
+Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.3`). Không hỗ trợ migration từ layout cũ.
 
 ## Package structure
 
@@ -106,8 +106,8 @@ Cùng skill semantic; path khác nhau:
 | Target | Skills / commands |
 |---|---|
 | Claude | `.claude/skills`, `.claude/commands` |
-| Gemini | `.gemini/skills`, `.gemini/commands` |
-| Cursor | `.cursor/skills`, rule `ai-workflow.mdc` |
+| Gemini | `.gemini/commands` → `.agents/skills` |
+| Cursor | `.cursor/rules/*.mdc` + `ai-workflow.mdc`; body in `.agents/skills` |
 
 Shared: `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`.
 

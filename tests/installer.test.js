@@ -41,11 +41,28 @@ describe('installer smoke', () => {
         assert.ok(!fs.existsSync(path.join(tmp, '.claude/skills/plan')));
       }
       if (agent === 'gemini') {
-        assert.ok(fs.existsSync(path.join(tmp, '.gemini/skills/converge/SKILL.md')));
+        assert.ok(fs.existsSync(path.join(tmp, '.gemini/commands/converge.toml')));
+        assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/converge/SKILL.md')));
+        assert.ok(!fs.existsSync(path.join(tmp, '.gemini/skills')));
+        const toml = fs.readFileSync(path.join(tmp, '.gemini/commands/triage.toml'), 'utf8');
+        assert.match(toml, /^description = "/);
+        assert.match(toml, /\.agents\/skills\/triage\/SKILL\.md/);
       }
       if (agent === 'cursor') {
         assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc')));
-        assert.ok(fs.existsSync(path.join(tmp, '.cursor/skills/tasks/SKILL.md')));
+        assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/triage.mdc')));
+        assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/tasks/SKILL.md')));
+        assert.ok(!fs.existsSync(path.join(tmp, '.cursor/skills')));
+        assert.ok(!fs.existsSync(path.join(tmp, '.cursor/commands')));
+        const rule = fs.readFileSync(path.join(tmp, '.cursor/rules/triage.mdc'), 'utf8');
+        assert.match(rule, /description: "/);
+        assert.match(rule, /globs: \*/);
+        assert.match(rule, /alwaysApply: false/);
+        assert.match(rule, /# Triage/);
+        assert.doesNotMatch(rule, /^name: triage$/m);
+        const shared = fs.readFileSync(path.join(tmp, '.agents/skills/triage/SKILL.md'), 'utf8');
+        assert.match(shared, /^---\nname: triage\n/);
+        assert.match(shared, /disable-model-invocation: true/);
       }
     });
   }

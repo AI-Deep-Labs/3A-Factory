@@ -1,8 +1,8 @@
 ---
 name: qa
 description: Acceptance-driven QA for Spec Packages — unit/system/UAT(+PERF/SEC) with evidence under .specs/.../qa/; bounded auto-loop (max 3); routes implementation vs spec defects. Does not deploy.
-disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # QA (acceptance-driven)

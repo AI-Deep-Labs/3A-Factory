@@ -5,23 +5,34 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-rc.2] - Unreleased
+## [3.0.0-rc.3] - Unreleased
 
 Pre-release (release candidate) of the 3.0.0 greenfield Feature-local Spec Package line. Final GA will be `3.0.0` after RC validation.
+
+### Changed
+
+- Package version set to **3.0.0-rc.3**.
+- Installer slim skill layout: skill body only in `.agents/skills/`; Cursor `.cursor/rules/<skill>.mdc`; Gemini `.gemini/commands/*.toml` → `.agents/skills/` (no `.cursor/skills` / `.gemini/skills` mirrors).
+
+### Documentation
+
+- README, WORKFLOW, AGENTS, GEMINI, architecture, onboarding, and release notes updated for slim installer paths and **3.0.0-rc.3**.
+
+## [3.0.0-rc.2]
+
+Pre-release candidate with installer/CI hardening after rc.1.
 
 ### Changed
 
 - Package version set to **3.0.0-rc.2**.
 - Installer no longer writes `.3a-factory/install-manifest.json` (report remains on stdout / `--json` only).
 - Installer scaffolds `docs/` only; does not pre-create `docs/decisions` or `docs/misc` (skills create those paths when writing files).
+- Restored Cursor `.cursor/rules/<skill>.mdc` slash/Rules UX; Gemini commands point at `.agents/skills/`.
 
 ### Fixed
 
 - `npm test` on Linux CI: replace fragile `tests/**/*.test.js` glob with explicit test file list and `--test-concurrency=1`.
-
-### Documentation
-
-- README, architecture, onboarding/ADR/handoff/qa-issues skills, contract, and release notes updated for installer behavior and **3.0.0-rc.2**.
+- Skill frontmatter: quote `argument-hint` / `description` so YAML is valid (invalid hints previously caused Cursor to skip skills).
 
 ## [3.0.0-rc.1]
 
@@ -62,4 +73,4 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ## [2.3.1] - Prior
 
-See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.2`).
+See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.3`).

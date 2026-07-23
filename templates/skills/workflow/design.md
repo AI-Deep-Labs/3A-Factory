@@ -1,8 +1,8 @@
 ---
 name: design
 description: Write Technical Truth design.md inside a Spec Package with Design IDs and requirement/ADR traceability. No tasks or code.
-disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # Design (How)

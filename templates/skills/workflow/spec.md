@@ -1,8 +1,8 @@
 ---
 name: spec
 description: Spec Package orchestrator — coordinates requirements, ADR, design, tasks, acceptance, and spec-review under .specs/; stops for APPROVED_SPEC_PACKAGE. Does not write *-spec.md or application code.
-disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # Spec (Package Orchestrator)

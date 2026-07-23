@@ -2,7 +2,7 @@
 name: deploy
 description: Deploy only after Spec Package status done + APPROVED_DEPLOY. Never called by project-manager. Writes release notes under package release/.
 disable-model-invocation: true
-argument-hint: [REQ-<NNNNNN>-<slug> or package path] [dev|staging|production]
+argument-hint: "[REQ-<NNNNNN>-<slug> or package path] [dev|staging|production]"
 ---
 
 # Deploy

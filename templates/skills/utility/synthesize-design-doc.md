@@ -1,7 +1,7 @@
 ---
 name: synthesize-design-doc
 description: Convert conversation context into BRD/TDD/spec/handoff under docs/ (handoff → docs/misc/compact). Use when the user asks to summarize or synthesize design docs.
-disable-model-invocation: false
+disable-model-invocation: true
 ---
 
 # Synthesize Design Document

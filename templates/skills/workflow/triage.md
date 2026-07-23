@@ -1,8 +1,8 @@
 ---
 name: triage
 description: Classify a request, allocate REQ id, and initialize a Feature-local Spec Package under .specs/ with manifest.yaml and raw.md.
-disable-model-invocation: false
-argument-hint: [raw requirement text]
+disable-model-invocation: true
+argument-hint: "[raw requirement text]"
 ---
 
 # Triage

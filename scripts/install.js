@@ -172,10 +172,16 @@ Modes:
   -h, --help
 
 Always installs (shared):
-  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}, docs/
+  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/
+
+Per agent:
+  claude  → CLAUDE.md, .claude/skills, .claude/commands
+  gemini  → GEMINI.md, .gemini/commands/*.toml → .agents/skills
+  cursor  → .cursor/rules/*.mdc (requestable skill rules) + ai-workflow.mdc
 
 Never:
   create .specs/, pre-create docs/decisions or docs/misc, run workflow, approve, commit, push, deploy
+  create .cursor/skills/ or .gemini/skills/ (content lives in .agents/skills only)
 `);
 }
 
@@ -228,13 +234,14 @@ const sharedDirs = [
   '.agents/templates',
   '.agents/contracts',
   '.agents/schemas',
+  '.agents/skills',
   'docs'
 ];
 
 const agentDirs = {
   claude: ['.claude/commands', '.claude/skills'],
-  gemini: ['.gemini/commands', '.gemini/skills'],
-  cursor: ['.cursor/rules', '.cursor/skills']
+  gemini: ['.gemini/commands'],
+  cursor: ['.cursor/rules']
 };
 
 const SPEC_PACKAGE_TEMPLATES = [
@@ -433,6 +440,25 @@ function tomlQuote(value) {
   return String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
+function formatSkillFrontmatter(metadata) {
+  const name = metadata.name;
+  const lines = [
+    '---',
+    `name: ${name}`,
+    `description: ${yamlQuote(metadata.description || '')}`
+  ];
+  // Slash-style invocation: only load when user types /name (Cursor + Agent Skills UX).
+  lines.push('disable-model-invocation: true');
+  if (metadata['argument-hint'] !== undefined && metadata['argument-hint'] !== '') {
+    const hint = Array.isArray(metadata['argument-hint'])
+      ? metadata['argument-hint'].join(' ')
+      : String(metadata['argument-hint']);
+    lines.push(`argument-hint: ${yamlQuote(hint)}`);
+  }
+  lines.push('---', '');
+  return lines.join('\n');
+}
+
 function parseMarkdownContentWithFrontmatter(content, label) {
   const normalized = String(content).replace(/\r\n/g, '\n');
   if (!normalized.startsWith('---\n')) throw new Error(`File does not start with frontmatter: ${label}`);
@@ -455,29 +481,36 @@ function processSkills() {
     const { metadata, body } = parseMarkdownContentWithFrontmatter(content, relativePath);
     const name = metadata.name;
     if (SKIP_SKILL_NAMES.has(name)) continue;
-    const desc = metadata.description;
+    const desc = metadata.description || '';
+    const bodyText = body.replace(/^\n/, '');
+    const skillBody = `${formatSkillFrontmatter(metadata)}${bodyText}`;
 
-    let skillFM = `---\nname: ${name}\ndescription: ${desc}\n`;
-    if (metadata['disable-model-invocation'] !== undefined) {
-      skillFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
-    }
-    if (metadata['argument-hint'] !== undefined) {
-      skillFM += `argument-hint: ${metadata['argument-hint']}\n`;
-    }
-    skillFM += `---\n`;
-    const skillBody = `${skillFM}${body}`;
+    // Shared skill body — single content source for Gemini + Cursor Agent Skills discovery
+    writeFileAction(`.agents/skills/${name}/SKILL.md`, skillBody, true);
 
     if (wants('claude')) {
       writeFileAction(`.claude/skills/${name}/SKILL.md`, skillBody, true);
       const claudeCmd = `---\ndescription: ${yamlQuote(desc)}\n---\n\nRead AGENTS.md first, then read and execute .claude/skills/${name}/SKILL.md.\nArguments: $ARGUMENTS\n`;
       writeFileAction(`.claude/commands/${name}.md`, claudeCmd, true);
     }
+
     if (wants('cursor')) {
-      writeFileAction(`.cursor/skills/${name}/SKILL.md`, skillBody, true);
+      // Requestable Rules = Cursor slash/Rules UX (no .cursor/skills mirror)
+      const cursorRule = [
+        '---',
+        `description: ${yamlQuote(desc)}`,
+        'globs: *',
+        'alwaysApply: false',
+        '---',
+        '',
+        bodyText
+      ].join('\n');
+      writeFileAction(`.cursor/rules/${name}.mdc`, cursorRule, true);
     }
+
     if (wants('gemini')) {
-      writeFileAction(`.gemini/skills/${name}/SKILL.md`, skillBody, true);
-      const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+      // Slash entry only — body is .agents/skills (no .gemini/skills mirror)
+      const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read and execute .agents/skills/${name}/SKILL.md.\nArguments: {{args}}\n"""\n`;
       writeFileAction(`.gemini/commands/${name}.toml`, geminiCmd, true);
     }
   }
@@ -546,7 +579,7 @@ try {
     console.log(`Backups:      ${stats.backups}`);
     console.log(`Unchanged:    ${stats.unchanged}`);
     console.log(`Conflicts:    ${stats.conflicts}`);
-    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}, docs/`);
+    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/`);
     console.log(`Note:         Installer does not create .specs/, docs/decisions, or docs/misc.`);
   }
 

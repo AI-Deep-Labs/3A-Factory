@@ -97,7 +97,7 @@ Do not reuse one approval for another gate. Never auto-deploy.
 | `templates/skills/workflow/` | `project-manager`, `triage`, `grill-me`, `analyze`, `requirements`, `adr`, `design`, `tasks`, `acceptance`, `spec-review`, `spec`, `develop`, `review`, `qa`, `converge`, `deploy` |
 | `templates/skills/utility/` | `onboarding`, `handoff`, `caveman`, `synthesize-design-doc`, `qa-issues` |
 
-Runtime paths: Claude `.claude/skills`, Gemini `.gemini/skills`, Cursor `.cursor/skills` + `.cursor/rules/ai-workflow.mdc`.
+Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/commands` → `.agents/skills`; Cursor `.cursor/rules/*.mdc` + `ai-workflow.mdc` (skill body in `.agents/skills` only — no `.cursor/skills` / `.gemini/skills` mirrors).
 
 ## Language
 

@@ -20,8 +20,10 @@ Artifact truth: `requirements.md` (Business) · `design.md` (Technical) · `task
 Greenfield: no legacy feature lifecycle under `docs/requirements|designs|reviews|qa`; no migration tooling.
 
 Gemini-specific:
-- Skills: `.gemini/skills/<skill-name>/SKILL.md`
-- Commands: `.gemini/commands/*.toml`
+- Slash commands: `.gemini/commands/<name>.toml` → type `/name` (then `/commands reload` if newly installed)
+- Skill body (single source): `.agents/skills/<name>/SKILL.md`
+- Installer does **not** create `.gemini/skills/` (avoid duplicate mirrors)
+- List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
 - If slash commands are unavailable, invoke phases in natural language (`project-manager`, `tasks`, `converge`, …).
 
 **Generated docs under `.specs/` must be Vietnamese** (see `AGENTS.md`). Chat may follow the user’s language.

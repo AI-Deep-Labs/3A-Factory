@@ -1,8 +1,8 @@
 ---
 name: grill-me
 description: Deep clarification (one question at a time) into .specs/.../discovery.md; update manifest status clarifying until READY_FOR_ANALYSIS.
-disable-model-invocation: false
-argument-hint: [requirement or REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[requirement or REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # Grill-me

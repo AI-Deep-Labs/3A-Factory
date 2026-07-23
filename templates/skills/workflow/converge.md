@@ -1,8 +1,8 @@
 ---
 name: converge
 description: Final Spec Package consistency gate after QA — compares requirements/design/tasks/acceptance/code/evidence/manifest; writes converge-report.md; sets awaiting_user_review on PASSED. Does not mark done or deploy.
-disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug> or package path]
+disable-model-invocation: true
+argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 
 # Converge

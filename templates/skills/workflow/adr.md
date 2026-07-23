@@ -1,8 +1,8 @@
 ---
 name: adr
 description: Optional Architectural Decision Record — feature-local under .specs/.../decisions/ or project-wide under docs/decisions/. Register feature ADRs in package manifest.
-disable-model-invocation: false
-argument-hint: [slug or REQ id or package path] [feature|project]
+disable-model-invocation: true
+argument-hint: "[slug or REQ id or package path] [feature|project]"
 ---
 
 # ADR

@@ -47,7 +47,12 @@ manifest.yaml   = Package State Truth
 - QA max 3 auto-fix attempts; converge then `APPROVED_USER_REVIEW`.
 - Deploy needs `APPROVED_DEPLOY`.
 
-## Skills
+## Skills / slash commands
 
-Execute installed `.cursor/skills/<skill>/SKILL.md` (slash commands).  
+- **Rules (slash / Rules UX):** `.cursor/rules/<skill>.mdc` with `alwaysApply: false`
+- **Skill body (single source):** `.agents/skills/<skill>/SKILL.md` (Cursor discovers `.agents/skills`)
+- Pipeline rule always on: `.cursor/rules/ai-workflow.mdc`
+- Installer does **not** create `.cursor/skills/` (avoid duplicate mirrors)
+- Use **Agent** chat. After reinstall, start a new chat if the `/` list is stale.
+
 New repos: `/onboarding` first.

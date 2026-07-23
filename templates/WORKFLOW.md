@@ -47,6 +47,6 @@ Separate from PM. Requires `manifest.status == done` and `APPROVED_DEPLOY`.
 ## Tool mapping
 | Tool | Native files | Notes |
 |---|---|---|
-| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills first-class |
-| Gemini CLI | `.gemini/skills`, `.gemini/commands/*.toml`, `GEMINI.md` | TOML slash commands |
-| Cursor | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` | Slash via skills |
+| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills + slash commands |
+| Gemini CLI | `.gemini/commands/*.toml` → `.agents/skills`, `GEMINI.md` | Slash entry; single skill body |
+| Cursor | `.cursor/rules/*.mdc` + `ai-workflow.mdc`; skill body in `.agents/skills` | Requestable rules; no `.cursor/skills` mirror |

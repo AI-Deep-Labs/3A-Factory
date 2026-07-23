@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0--rc.2-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.0--rc.3-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
@@ -145,7 +145,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
-- [Release notes 3.0.0-rc.2](release-notes/3.0.0-rc.2.md)
+- [Release notes 3.0.0-rc.3](release-notes/3.0.0-rc.3.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)
 
@@ -159,10 +159,10 @@ npx 3a-factory --target=all --dry-run
 
 | Selection | Paths |
 |---|---|
-| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`, `docs/` |
+| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas,skills}`, `docs/` |
 | claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
-| gemini | `GEMINI.md`, `.gemini/skills`, `.gemini/commands` |
-| cursor | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` |
+| gemini | `GEMINI.md`, `.gemini/commands` → `.agents/skills` |
+| cursor | `.cursor/rules/*.mdc` (skills) + `ai-workflow.mdc`; body in `.agents/skills` |
 
 ## License
 
