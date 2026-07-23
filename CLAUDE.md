@@ -1,15 +1,30 @@
 # CLAUDE.md
 
-Read `AGENTS.md` first. Follow the 3A-Factory pipeline:
+Read `AGENTS.md` first.
 
-`triage → (grill-me) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa` → stop; `/deploy` is separate + requires `APPROVED`.
+**Spec is a Feature-local Spec Package, not a single document.**
+
+Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+
+Canonical workflow:
+
+```text
+triage → grill-me if unclear → analyze → build/refine Spec Package
+→ spec-review → APPROVED_SPEC_PACKAGE → project-manager
+→ develop task-by-task → review per task → qa → converge
+→ APPROVED_USER_REVIEW → done → deploy with APPROVED_DEPLOY
+```
+
+Artifact truth: `requirements.md` (Business) · `design.md` (Technical) · `tasks.md` (Execution) · `acceptance.md` (Verification) · `manifest.yaml` (State).
+
+Greenfield: no legacy `docs/*` feature lifecycle paths; no migration tooling.
 
 Claude-specific:
 - Skills: `.claude/skills/<skill-name>/SKILL.md`
-- Commands: `.claude/commands/*.md` (slash: `/project-manager`, `/grill-me`, …)
-- Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/design`, `/spec`, `/plan`, `/develop`, `/review`, `/qa`, `/deploy`, `/qa-issues`, …
+- Commands: `.claude/commands/*.md`
+- Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`, `/qa-issues`
 
-**Generated docs under `docs/` must be written in Vietnamese** (see `AGENTS.md` language rules).
+**Generated docs under `.specs/` must be Vietnamese** (see `AGENTS.md`).
 
 Project context (filled by `/onboarding`):
 - Project type: `[DETECTED_PROJECT_TYPE]`

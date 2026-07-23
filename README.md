@@ -1,130 +1,170 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-2.3.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.0--rc.1-blue.svg)](package.json)
 
-AI agent workflow template for **Claude Code**, **Gemini CLI**, and **Cursor**.
-## Pipeline
+**3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
-```text
-triage → (grill-me if unclear) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa (UT + System/UAT auto-loop) → user review
-```
+## Giới thiệu
 
-Deploy is **separate**: `/deploy <env>` only after QA Pass + user review and always requires **`APPROVED`**.
+- **Mục tiêu:** Chuẩn hóa cách agent thu thập yêu cầu, thiết kế, chia task, implement, review, QA và nghiệm thu — với traceability và approval rõ ràng.
+- **Đối tượng:** Team dùng AI coding agents để giao hàng feature có kiểm soát.
+- **Supported agents:** Claude Code, Gemini CLI, Cursor.
+- **Kiến trúc:** Greenfield — không hỗ trợ legacy workflow / migration / `/plan`.
 
-After **every** spec, the pipeline **stops** for agent self-review + user `APPROVED` before plan/develop.
-
-Spec must include **Acceptance Criteria**, **System Test Conditions**, and **UAT Conditions**.
-
-After coding, **QA** writes unit tests + `…-UT.md` + `…-qa.md`, runs tests, verifies System Test/UAT from the spec, and **auto-fixes until all Pass**, then stops for user review.
-
-### Two entry points
-- **`/project-manager "<requirement>"`** — auto-run the pipeline.
-- **`/grill-me`** — deep clarification; when clear or user says “execute now” → write discovery and continue.
-
-### Artifacts
-Inside the target project:
+## Core Principle
 
 ```text
-docs/
-├── requirements/   # REQ-<NNNNNN>-<slug>-{raw,discovery,spec}.md
-├── designs/        # …-analysis|design|plan.md ; ADR-<NNNNNN>-<slug>.md
-├── reviews/
-├── qa/             # …-qa.md, …-UT.md, optional …-run-*.md
-├── release-notes/
-├── misc/
-│   ├── compact/    # HANDOFF-*.md
-│   └── issues/     # ISSUE-*.md
-└── project_overview.md   # from /onboarding
+Spec is a Feature-local Spec Package, not a single document.
 ```
 
-Shared id with branch: `feature/REQ-<NNNNNN>-<slug>` (6-digit zero-padded; legacy unpadded/slug-less files still count when allocating the next number).
+## Canonical Package Structure
 
-## Install
-
-Shared files always install (`docs/`, `AGENTS.md`, `WORKFLOW.md`, `.agents/…`).  
-Agent adapters install **only for the agent(s) you select**.
-
-### By agent (recommended)
-
-```bash
-# Claude Code only
-npx 3a-factory --agent=claude
-
-# Gemini CLI only
-npx 3a-factory --agent=gemini
-
-# Cursor only
-npx 3a-factory --agent=cursor
-
-# Multiple
-npx 3a-factory --agent=claude,cursor --force
-
-# Flags form
-npx 3a-factory --claude
-npx 3a-factory --claude --force
+```text
+.specs/
+└── REQ-000013-sync-masterdata/
+    ├── manifest.yaml
+    ├── raw.md
+    ├── discovery.md
+    ├── analysis.md
+    ├── requirements.md
+    ├── design.md
+    ├── tasks.md
+    ├── acceptance.md
+    ├── spec-review.md
+    ├── decisions/
+    ├── reviews/
+    ├── qa/
+    └── release/
 ```
 
-Env (handy for npm scripts / CI):
+Project-wide ADR: `docs/decisions/`. Global misc: `docs/misc/`, `docs/project_overview.md`.
 
-```bash
-THREEA_AGENT=claude npx 3a-factory --force
-# or
-npm_config_3a_agent=gemini npx 3a-factory --force
+## Artifact Ownership
+
+```text
+requirements.md = Business Truth
+design.md       = Technical Truth
+tasks.md        = Execution Truth
+acceptance.md   = Verification Truth
+manifest.yaml   = Package State Truth
 ```
 
-Default with **no** `--agent` flag: install **all** agents (backward compatible).
+## Canonical Workflow
 
-### NPM dependency
-
-```bash
-npm install --save-dev 3a-factory
-# postinstall defaults to all agents; re-run selectively:
-npx 3a-factory --agent=cursor --force
+```text
+triage
+→ grill-me if unclear
+→ analyze
+→ build/refine Spec Package
+→ spec-review
+→ APPROVED_SPEC_PACKAGE
+→ project-manager
+→ develop task-by-task
+→ review per task
+→ repeat until all tasks done
+→ qa
+→ bounded repair loop (max 3)
+→ converge
+→ APPROVED_USER_REVIEW
+→ done
+→ deploy only with APPROVED_DEPLOY
 ```
 
-### Scripts
-- Windows: `powershell -ExecutionPolicy Bypass -File .\scripts\install.ps1 --agent=claude`
-- macOS/Linux: `bash ./scripts/install.sh --agent=gemini`
+## Quick Start
 
-Use `--force` to overwrite (creates `.bak.*` unless `--no-backup`).  
-`npx 3a-factory --help` lists all options.
+1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
+2. Installer **không** tạo `.specs/` và không chạy workflow.
+3. Chạy `/onboarding` nếu repo mới.
+4. `/triage` yêu cầu → tạo package dưới `.specs/`.
+5. `/grill-me` nếu còn ambiguity → `/analyze`.
+6. `/spec` (orchestrator) hoàn thiện requirements → ADR? → design → tasks → acceptance → spec-review.
+7. User: `APPROVED_SPEC_PACKAGE`.
+8. `/project-manager` chọn task → `/develop` → `/review` (lặp đến hết task).
+9. `/qa` → (repair loop nếu cần) → `/converge`.
+10. User: `APPROVED_USER_REVIEW` → `done`.
+11. Deploy chỉ khi user gọi `/deploy` + `APPROVED_DEPLOY`.
 
-### What each agent gets
+## Commands
 
-| Selection | Extra paths |
+```text
+/triage
+/grill-me
+/analyze
+/requirements
+/adr
+/design
+/tasks
+/acceptance
+/spec-review
+/spec
+/project-manager
+/develop
+/review
+/qa
+/converge
+/deploy
+```
+
+**Không có:** `/plan`, migration/resolver commands.
+
+## Approval Tokens
+
+| Token | Khi nào |
 |---|---|
-| shared (always) | `docs/*` (incl. `misc/compact`, `misc/issues`), `AGENTS.md`, `WORKFLOW.md`, `.agents/templates` |
-| `claude` | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
-| `gemini` | `GEMINI.md`, `.gemini/skills`, `.gemini/commands` |
-| `cursor` | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` |
-## Onboarding one repo
-From the target repo, install the template then run **`/onboarding`**: scaffold `docs/`, fill `CLAUDE.md` / `GEMINI.md` / `AGENTS.md` context, explore the codebase, write `docs/project_overview.md`. Create nothing outside the current repo.
+| `APPROVED_SPEC_PACKAGE` | Sau spec-review PASSED — bắt buộc trước Develop |
+| `APPROVED_DEVELOP` | Khi high-risk policy yêu cầu |
+| `APPROVED_USER_REVIEW` | Sau converge PASSED — chuyển `done` |
+| `APPROVED_DEPLOY` | Trước mọi deploy — tách biệt user review |
 
-## Breaking changes
-- Lifecycle artifacts move from `.agents/{specs,plans,...}` → `docs/...`.
-- Phase order changes (design before spec); adds analyze / deploy / project-manager.
-- After **every** SPEC: mandatory self-review + user `APPROVED` before plan/develop (all risk levels). Spec must include System Test + UAT conditions. High risk still needs Planning + a separate develop `APPROVED`. Every deploy needs `APPROVED`.
-- QA writes `…-UT.md` + unit tests, verifies System Test/UAT, auto-loops until Pass, then stops for user review.
-- `/qa` = pipeline QA testing; conversational issue filing → `/qa-issues`.
+Chi tiết: [docs/approvals.md](docs/approvals.md).
 
-## Skill layout (package source)
-```text
-templates/skills/
-├── workflow/     # pipeline skills (triage → … → qa, plus project-manager)
-└── utility/      # onboarding, handoff, caveman, synthesize-design-doc, qa-issues
+## Safety Guarantees
+
+- Không code trước `APPROVED_SPEC_PACKAGE`.
+- Không auto-approve / auto-deploy.
+- Không commit/push mặc định.
+- Installer không tạo feature package (`.specs/`).
+- Greenfield: không legacy workflow, không migration tooling.
+
+## Development Commands
+
+```bash
+npm run build
+npm test
+npm run validate
+npm run test:installer
+npm run test:workflow
+npm run ci
 ```
 
-Installer emits **agent-native** skill paths only:
-- Claude → `.claude/skills/<name>/` + `.claude/commands/`
-- Gemini → `.gemini/skills/<name>/` + `.gemini/commands/`
-- Cursor → `.cursor/skills/<name>/` (slash commands) + `.cursor/rules/ai-workflow.mdc`
+## Tài liệu thêm
 
-## Internal docs
-Read `AGENTS.md` and `WORKFLOW.md` after install.
+- [Architecture](docs/architecture/spec-package.md)
+- [Workflow](docs/workflow.md)
+- [Commands](docs/commands.md)
+- [Approvals](docs/approvals.md)
+- [Breaking changes](BREAKING-CHANGES.md)
+- [Changelog](CHANGELOG.md)
+- [Release notes 3.0.0-rc.1](release-notes/3.0.0-rc.1.md)
+- [Release checklist](RELEASE-CHECKLIST.md)
+- [Example package](examples/spec-packages/REQ-000001-example-feature/)
+
+## Install (agents)
+
+```bash
+npx 3a-factory --agent=claude
+npx 3a-factory --agent=gemini,cursor --force
+npx 3a-factory --target=all --dry-run
+```
+
+| Selection | Paths |
+|---|---|
+| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`, `docs/decisions`, `docs/misc/*` |
+| claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
+| gemini | `GEMINI.md`, `.gemini/skills`, `.gemini/commands` |
+| cursor | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` |
 
 ## License
-MIT — see [LICENSE](LICENSE).
 
-## Publish note
-npm package ships a **bundled** `dist/` only (`bundle.json` + `install.js`). Source tree (`templates/`, `scripts/`) is not published to the registry Code tab. Run `npm run build` before `npm publish`.
+MIT — see [LICENSE](LICENSE).

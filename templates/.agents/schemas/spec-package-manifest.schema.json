@@ -1,0 +1,276 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "$id": "https://3a-factory.local/schemas/spec-package-manifest.schema.json",
+  "title": "3A-Factory Spec Package Manifest",
+  "description": "Machine-readable state for a Feature-local Spec Package (schema_version = 1). Phase 3 adds optional/required execution, review, and user_review fields in a backward-compatible way for new packages.",
+  "type": "object",
+  "additionalProperties": false,
+  "required": [
+    "schema_version",
+    "id",
+    "slug",
+    "title",
+    "risk",
+    "status",
+    "artifacts",
+    "decisions",
+    "validation",
+    "approval",
+    "execution",
+    "review",
+    "qa"
+  ],
+  "properties": {
+    "schema_version": {
+      "type": "integer",
+      "const": 1,
+      "description": "Manifest schema major version. Current contract: 1 (Phase 3 additive fields)."
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^REQ-[0-9]{6}$",
+      "description": "REQ identifier without slug (e.g. REQ-000013)."
+    },
+    "slug": {
+      "type": "string",
+      "pattern": "^[a-z0-9]+(?:-[a-z0-9]+)*$",
+      "description": "Kebab-case feature slug."
+    },
+    "title": {
+      "type": "string",
+      "minLength": 1
+    },
+    "risk": {
+      "type": "string",
+      "enum": ["low", "medium", "high"]
+    },
+    "status": {
+      "type": "string",
+      "enum": [
+        "new",
+        "triaged",
+        "clarifying",
+        "analyzed",
+        "specifying",
+        "validating",
+        "awaiting_approval",
+        "approved",
+        "implementing",
+        "reviewing",
+        "qa",
+        "converging",
+        "awaiting_user_review",
+        "done",
+        "blocked",
+        "rejected",
+        "superseded",
+        "cancelled"
+      ]
+    },
+    "artifacts": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": [
+        "raw",
+        "discovery",
+        "analysis",
+        "requirements",
+        "design",
+        "tasks",
+        "acceptance"
+      ],
+      "properties": {
+        "raw": { "type": "string", "minLength": 1 },
+        "discovery": { "type": "string", "minLength": 1 },
+        "analysis": { "type": "string", "minLength": 1 },
+        "requirements": { "type": "string", "minLength": 1 },
+        "design": { "type": "string", "minLength": 1 },
+        "tasks": { "type": "string", "minLength": 1 },
+        "acceptance": { "type": "string", "minLength": 1 }
+      }
+    },
+    "decisions": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "additionalProperties": false,
+        "required": ["id", "path"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^ADR-[0-9]{6}(?:-[a-z0-9]+(?:-[a-z0-9]+)*)?$"
+          },
+          "path": { "type": "string", "minLength": 1 },
+          "status": {
+            "type": "string",
+            "enum": ["Proposed", "Accepted", "Rejected", "Superseded", "Deprecated"]
+          }
+        }
+      }
+    },
+    "validation": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "reviewed_at", "blockers", "warnings"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "passed", "failed"]
+        },
+        "reviewed_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        }
+      }
+    },
+    "approval": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["spec_package", "develop", "user_review", "deploy"],
+      "properties": {
+        "spec_package": { "$ref": "#/$defs/approvalRecord" },
+        "develop": { "$ref": "#/$defs/approvalRecord" },
+        "user_review": { "$ref": "#/$defs/approvalRecord" },
+        "deploy": { "$ref": "#/$defs/approvalRecord" }
+      }
+    },
+    "execution": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["current_task", "completed_tasks", "blocked_tasks"],
+      "properties": {
+        "current_task": {
+          "oneOf": [
+            { "type": "string", "pattern": "^TASK-[0-9]{3}$" },
+            { "type": "null" }
+          ]
+        },
+        "completed_tasks": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^TASK-[0-9]{3}$" }
+        },
+        "blocked_tasks": {
+          "type": "array",
+          "items": { "type": "string", "pattern": "^TASK-[0-9]{3}$" }
+        },
+        "attempts": {
+          "type": "object",
+          "additionalProperties": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "description": "Per-task attempt counts keyed by TASK-NNN."
+        },
+        "last_activity_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        },
+        "last_activity_by": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "review": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "current_task", "blockers", "warnings", "reviewed_at"],
+      "properties": {
+        "status": {
+          "type": "string",
+          "enum": ["pending", "passed", "failed"]
+        },
+        "current_task": {
+          "oneOf": [
+            { "type": "string", "pattern": "^TASK-[0-9]{3}$" },
+            { "type": "null" }
+          ]
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "warnings": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "reviewed_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "qa": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["unit_test", "system_test", "uat", "converge"],
+      "properties": {
+        "unit_test": { "$ref": "#/$defs/qaStatus" },
+        "system_test": { "$ref": "#/$defs/qaStatus" },
+        "uat": { "$ref": "#/$defs/qaStatus" },
+        "converge": { "$ref": "#/$defs/qaStatus" },
+        "attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "QA auto-fix attempt counter. Max default: 3."
+        },
+        "blockers": {
+          "type": "array",
+          "items": { "type": "string" }
+        },
+        "last_run_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    }
+  },
+  "$defs": {
+    "approvalStatus": {
+      "type": "string",
+      "enum": ["pending", "approved", "rejected", "not_required", "invalidated"]
+    },
+    "approvalRecord": {
+      "type": "object",
+      "additionalProperties": false,
+      "required": ["status", "approved_by", "approved_at"],
+      "properties": {
+        "status": { "$ref": "#/$defs/approvalStatus" },
+        "approved_by": {
+          "oneOf": [
+            { "type": "string", "minLength": 1 },
+            { "type": "null" }
+          ]
+        },
+        "approved_at": {
+          "oneOf": [
+            { "type": "string", "format": "date-time" },
+            { "type": "null" }
+          ]
+        }
+      }
+    },
+    "qaStatus": {
+      "type": "string",
+      "enum": ["pending", "passed", "failed", "blocked", "not_required"]
+    }
+  }
+}

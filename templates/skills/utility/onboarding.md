@@ -24,9 +24,9 @@ argument-hint: [optional hints about stack/repo role]
 
 ## When to use
 
-- Repo is new to 3A-Factory / missing `docs/{requirements,designs,reviews,qa,release-notes}`.
+- Repo is new to 3A-Factory / missing Spec Package tooling (`.agents/contracts`, governance) or `docs/decisions` / `docs/misc`.
 - User runs `/onboarding`, or asks to apply the workflow / onboard the project.
-- `triage` / `project-manager` detects missing standard `docs/` → recommend this skill first.
+- `triage` / `project-manager` detects missing onboarding → recommend this skill first.
 
 ---
 
@@ -57,15 +57,14 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
 
 1. Create if missing:
   ```text
-   docs/requirements/
-   docs/designs/
-   docs/reviews/
-   docs/qa/
-   docs/release-notes/
+   docs/decisions/
+   docs/misc/compact/
+   docs/misc/issues/
   ```
+   Do **not** create legacy feature lifecycle folders (`docs/requirements|designs|reviews|qa`). Feature work uses `.specs/` via triage — installer must not pre-create `.specs/`.
 2. Agent tooling (if not present after package install):
   - Prompt / run 3a-factory install **into this repo** (`npx 3a-factory` or equivalent) for skills/commands/rules — **do not** clone extra repos.
-  - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/skills|commands`, `.cursor/skills` + `.cursor/rules/ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/templates` (doc templates only).
+  - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/skills|commands`, `.cursor/skills` + `.cursor/rules/ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/{templates,contracts,schemas}`.
 3. Do not create `docs/` or workflow files in parent/sibling directories.
 
 ---

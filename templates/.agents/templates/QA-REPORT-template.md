@@ -3,8 +3,9 @@
 > When filled: write the body in **Vietnamese**.
 
 - REQ: REQ-000001-example-slug
-- Spec: `docs/requirements/REQ-000001-example-slug-spec.md`
-- Unit-test report: `docs/qa/REQ-000001-example-slug-UT.md`
+- Spec Package: `.specs/REQ-000001-example-slug/`
+- Acceptance: `acceptance.md`
+- Unit-test report: `qa/…-UT.md` (package-local)
 - Test date: YYYY-MM-DD
 - Environment: local | staging | …
 - Conclusion: Ready for user review | Not ready

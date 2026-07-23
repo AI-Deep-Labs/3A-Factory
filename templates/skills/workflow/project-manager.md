@@ -1,47 +1,124 @@
 ---
 name: project-manager
-description: Orchestrate the 3A-Factory pipeline from a natural-language requirement — triage → (grill-me) → analyze → ADR? → design → spec → (user APPROVED) → Planning? → develop → review → qa (UT + System/UAT auto-loop) → user review. Never auto-deploy.
+description: Spec Package state-machine orchestrator — routes triage→spec→APPROVED_SPEC_PACKAGE→task-by-task develop/review→qa→converge→APPROVED_USER_REVIEW. Never auto-deploy.
 disable-model-invocation: false
-argument-hint: [requirement text or REQ-<NNNNNN>-<slug>]
+argument-hint: [requirement text or REQ-<NNNNNN>-<slug> or package path]
 ---
 
 # Project Manager
 
-## Goal
-Turn a requirement into an auto-run pipeline through QA Pass (unit tests + System Test + UAT all green), then **stop for user review** and wait for the user to call `/deploy`.
+## Purpose
+State-machine orchestrator for Feature-local Spec Packages. Routes to the correct skill; does **not** write requirements, design, application code, or tests itself.
 
-All artifacts share id `REQ-<NNNNNN>-<slug>` (see `AGENTS.md`). Branch when needed: `feature/REQ-<NNNNNN>-<slug>`.
+## Gate
+Do not modify application source code except by invoking `develop` / related skills.  
+Do not invent requirements or architecture.  
+Do not auto-approve.  
+Do not call `deploy`.  
+Do not commit or push.  
+Do not mark tasks `done` (only `review` may).
 
-If the repo lacks standard `docs/` → stop and recommend `/onboarding` first.
+## Package resolution
+1. Valid `.specs/` package path → use.
+2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+3. Multiple → `PACKAGE_CONFLICT`. None + new requirement text → start with `triage`.
+4. Do not write new feature artifacts under legacy `docs/requirements|designs|reviews|qa`.
 
-**Generated docs under `docs/` must be Vietnamese.**
+## Inputs
+- `manifest.yaml`, `tasks.md`, `spec-review.md`
+- `reviews/`, `qa/`
+- User intent / arguments
+- Spec Package contract
 
-## Sequence (stop after QA — no deploy)
-1. **triage** — create `…/REQ-<NNNNNN>-<slug>-raw.md`. If too vague → **grill-me**.
-2. **grill-me** (if needed) — clarify until clear or user says “execute now”; write `…-discovery.md`; **do not** ask “run the pipeline?”; continue.
-3. **analyze** — `…-analysis.md` + risk level. If heavy architecture review is needed → stop for confirmation.
-4. **ADR** (optional) — `ADR-<NNNNNN>-<slug>.md` for major architecture decisions.
-5. **design** — How → `…-design.md` (must include minimum file/module scope).
-6. **spec** — What → `…-spec.md` with **AC + System Test Conditions + UAT Conditions**. Then **mandatory self-review** against prior artifacts + **stop for user review**. Ask if adjustments are needed; if yes → update spec and related prior docs, then stop again. Open blocking questions → stop and ask.
-7. **Wait for `APPROVED`** on the spec (all risk levels) before continuing.
-8. **plan** — required if risk is **high**; optional for low/medium when design already has order/files → `…-plan.md`.
-9. **develop** — if high risk: wait for `APPROVED` before editing source (separate from spec approval). Boundary: plan (if any) or design.
-10. **review** — `…-review.md`; auto-fix ≤ 2 rounds if needed.
-11. **qa** — write unit tests + `…-UT.md` + `…-qa.md`; run tests; verify **System Test** and **UAT** from the spec; **auto-fix/re-test until all Pass** (no fixed round cap). Then **STOP for user review** (present evidence). Remind `/deploy <env>` + `APPROVED` is separate.
+## Routing table
+
+| Package state | Next action |
+|---|---|
+| `new` | `triage` |
+| `triaged` | `grill-me` or `analyze` (unclear → grill-me) |
+| `clarifying` | `grill-me` |
+| `analyzed` | `spec` |
+| `specifying` | `spec` or owning producer skill |
+| `validating` | `spec-review` |
+| `awaiting_approval` | request `APPROVED_SPEC_PACKAGE` |
+| `approved` | select ready task → `develop` |
+| `implementing` | continue current task or next ready → `develop` |
+| `reviewing` | `review` |
+| `qa` | `qa` |
+| `converging` | `converge` |
+| `awaiting_user_review` | stop; await `APPROVED_USER_REVIEW` |
+| `done` | stop; remind deploy needs `APPROVED_DEPLOY` — never auto-deploy |
+| `blocked` | route by blocker owner |
+| `rejected` / `superseded` / `cancelled` | stop |
+
+## Task selection
+1. If `execution.current_task` exists and task status is `in_progress` → continue that task via `develop`.
+2. If current task status is `review` → route `review`.
+3. If current task is `blocked` and blocks the chain → do not pick unrelated tasks; route blocker owner.
+4. Else pick one task with status `ready`, all dependencies `done`, highest priority, then lowest TASK id.
+5. Phase 3: **no parallel tasks**. Do not skip. Do not mark `done`.
+
+## Execution eligibility (before develop)
+Require: `validation.status == passed`, `approval.spec_package.status == approved`, `status ∈ {approved, implementing}`, task ready/in_progress, deps done, references valid.  
+High-risk + policy: `approval.develop.status == approved` else `APPROVAL_REQUIRED`.
+
+Failure tokens: `EXECUTION_BLOCKED`, `APPROVAL_REQUIRED`, `TASK_NOT_READY`, `TASK_DEPENDENCY_BLOCKED`, `TASK_REFERENCE_INVALID`, `PACKAGE_INVALID`.
+
+## Manifest updates (allowed)
+```text
+manifest.status
+execution.current_task
+execution.last_activity_at
+execution.last_activity_by
+```
+May set `status: implementing` when starting a task handoff to develop.  
+Must **not** set task status to `done`.
+
+## Blocker routing
+```text
+BUSINESS_AMBIGUITY      → grill-me
+ANALYSIS_GAP            → analyze
+REQUIREMENT_DEFECT      → requirements
+ADR_REQUIRED            → adr
+DESIGN_DEFECT           → design
+TASK_DEFECT             → tasks
+ACCEPTANCE_DEFECT       → acceptance
+SPEC_INCONSISTENCY      → spec-review
+IMPLEMENTATION_DEFECT   → develop
+REVIEW_BLOCKER          → develop
+QA_IMPLEMENTATION_BUG   → develop
+QA_SPEC_DEFECT          → spec
+CONVERGENCE_FAILURE     → skill owner per mismatch
+```
+
+## User review completion
+When user says `APPROVED_USER_REVIEW`:
+- Require `status == awaiting_user_review` and `qa.converge == passed`.
+- Then set:
+```yaml
+status: done
+approval:
+  user_review:
+    status: approved
+    approved_by: user
+    approved_at: <ISO-8601>
+```
+- Else `USER_REVIEW_APPROVAL_REJECTED`.
+- Do **not** treat as `APPROVED_DEPLOY`. Do not deploy.
 
 ## Progress reporting
-After each step: one short progress line (e.g. “Created REQ-000013-login-throttle, running analyze…”).
+One short line after each routed step.
 
-## Mandatory stops
-- Missing critical information; security / breaking change without a plan; user says stop.
-- **After spec** (always): self-review + user review; continue only on `APPROVED`.
-- **After QA Pass** (always): stop for user review of UT/QA evidence — do not deploy.
-- Before develop when risk is high and `APPROVED` is missing.
-- During QA if blocked (env/secrets/harness) — stop and ask the user.
+## Stop conditions
+- Need user approval (`APPROVED_SPEC_PACKAGE`, `APPROVED_DEVELOP`, `APPROVED_USER_REVIEW`, `APPROVED_DEPLOY`)
+- Package `blocked` / rejected / cancelled / superseded
+- `awaiting_user_review`
+- No ready task while still implementing
+- Manifest conflict / `PACKAGE_CONFLICT`
+- User says stop
 
-## Do not
-- Do not call `deploy`.
-- Do not invent role-based subagents — call phase skills only.
-- Do not rename legacy REQ/ADR files.
-- Do not start plan / develop before the user approves the spec.
-- Do not leave QA with Fail/untested System Test or UAT and claim Pass.
+## Output contract
+Progress line + next skill invoked + package/task status summary. No direct requirement/design/code/test authoring.
+
+## Stop condition
+Stop on approval wait, blocked package, awaiting_user_review, no ready task, conflicts, or user stop.

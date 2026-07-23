@@ -1,13 +1,37 @@
 {
   "name": "3a-factory",
-  "version": "2.3.1",
-  "description": "Automated-dev-team AI workflow template for Claude, Gemini, and/or Cursor (selective agent install)",
+  "version": "3.0.0-rc.1",
+  "description": "Greenfield Feature-local Spec Package workflow for Claude, Gemini, and Cursor (3A-Factory)",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/AI-Deep-Labs/3A-Factory.git"
+  },
+  "homepage": "https://github.com/AI-Deep-Labs/3A-Factory#readme",
+  "bugs": {
+    "url": "https://github.com/AI-Deep-Labs/3A-Factory/issues"
+  },
   "main": "dist/install.js",
   "bin": {
     "3a-factory": "dist/install.js"
   },
+  "engines": {
+    "node": ">=18"
+  },
   "scripts": {
     "build": "node scripts/build.js",
+    "test": "node --test tests/**/*.test.js",
+    "validate": "node scripts/validation/validate-all.js",
+    "validate:manifest": "node -e \"const r=require('./scripts/validation/validate-manifest').validateSchemaJson(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:package": "node -e \"const r=require('./scripts/validation').validatePackageLayout(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:traceability": "node -e \"const r=require('./scripts/validation').validateTraceability(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:skills": "node -e \"const r=require('./scripts/validation').validateSkillContracts(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:templates": "node -e \"const r=require('./scripts/validation').validateTemplateReferences(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:governance": "node -e \"const r=require('./scripts/validation').validateGovernanceConsistency(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:adapters": "node -e \"const r=require('./scripts/validation').validateAdapterParity(); console.log(r); process.exit(r.ok?0:1)\"",
+    "validate:build": "node -e \"const r=require('./scripts/validation').validateBuildOutput(); console.log(r); process.exit(r.ok?0:1)\"",
+    "test:installer": "node --test tests/installer.test.js",
+    "test:workflow": "node --test tests/workflow.test.js",
+    "ci": "npm run build && npm test && npm run validate",
     "preinstall": "node -e \"const f=require('fs'),{execSync}=require('child_process');if(!f.existsSync('dist/install.js')&&f.existsSync('scripts/build.js'))execSync('node scripts/build.js',{stdio:'inherit'})\"",
     "prepublishOnly": "npm run build",
     "postinstall": "node dist/install.js"
@@ -18,7 +42,8 @@
     "gemini",
     "cursor",
     "ai",
-    "copilot"
+    "copilot",
+    "spec-package"
   ],
   "author": "Huynh Vinh",
   "license": "MIT",

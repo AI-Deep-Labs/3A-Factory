@@ -1,43 +1,119 @@
 ---
 name: spec
-description: Write the What specification after design — docs/requirements/REQ-<NNNNNN>-<slug>-spec.md. Must include System Test + UAT conditions. Always self-review and stop for user APPROVED before continuing.
+description: Spec Package orchestrator — coordinates requirements, ADR, design, tasks, acceptance, and spec-review under .specs/; stops for APPROVED_SPEC_PACKAGE. Does not write *-spec.md or application code.
 disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug>]
+argument-hint: [REQ-<NNNNNN>-<slug> or package path]
 ---
 
-# SPEC (What)
+# Spec (Package Orchestrator)
+
+## Purpose
+Composite skill that completes a Feature-local Spec Package from analysis through validation, then **stops** for `APPROVED_SPEC_PACKAGE`.
+
+**Spec is a package, not a single `*-spec.md` file.**  
+Do **not** create legacy `docs/requirements/REQ-*-spec.md` for new packages.
 
 ## Gate
-Do not modify source code. Only create/update `docs/requirements/REQ-<NNNNNN>-<slug>-spec.md` (and related prior docs if the user requests adjustments).
+Do not modify application source code.  
+Do not implement feature code.  
+Only create or update Spec Package artifacts.  
+Do not auto-approve the package.  
+Do not bypass specialist skill contracts.  
+Do not merge all artifacts into one file.  
+Do not invent requirements or architecture to paper over blockers.
 
-## Phase question
-**What must be done?** → testable specification with acceptance criteria, **System Test Conditions**, and **UAT Conditions**.
+## Package resolution contract
+1. Valid package path → use.
+2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND` (ask `/triage`).
+4. Never write new legacy `*-spec.md` / `*-design.md` / `*-plan.md` under `docs/`.
+5. Do not move/delete legacy artifacts.
 
-## Preconditions
-`docs/designs/REQ-<NNNNNN>-<slug>-design.md` (and analysis) exist. Pipeline: runs **after design**.
+## Inputs
+- `manifest.yaml`, `raw.md`, `discovery.md`, `analysis.md`
+- Spec Package contract + related templates
+- Specialist skills: `requirements`, `adr`, `design`, `tasks`, `acceptance`, `spec-review`
 
-## Process
-1. Read all prior artifacts for this REQ: raw, discovery (if any), analysis, ADR (if any), design.
-2. Write the spec using the SPEC template — behavior/AC focus; do not replace Design How.
-3. **Mandatory test sections** (non-empty, concrete, verifiable):
-   - **Acceptance Criteria** (Given/When/Then)
-   - **System Test Conditions** — end-to-end / integration checks the system must satisfy (environment, data setup, steps, expected observable result). Each item should map to AC where possible.
-   - **UAT Conditions** — user-facing acceptance checks (business scenarios, roles, success criteria from the user’s perspective). Each item should map to AC where possible.
-4. Write `docs/requirements/REQ-<NNNNNN>-<slug>-spec.md`.
-5. If blocking open questions remain → list them and **stop**; do not invent AC / System Test / UAT.
-6. **Mandatory self-review (before asking the user):** compare the new spec against **all** collected content above. Check for gaps, contradictions, missing AC/System Test/UAT, scope drift, and design/spec mismatches. Summarize findings briefly (pass / issues found).
-7. **Mandatory stop — user review:** present the spec path + self-review summary; ask the user to verify and whether any adjustments are needed. **Do not** continue to plan / develop / later phases.
-8. **If the user requests changes:** update the spec **and** any related prior docs already created for this REQ (raw / discovery / analysis / design / ADR as needed) so they stay consistent. Re-run self-review, then stop again for confirmation.
-9. **Continue only after** the user confirms with `APPROVED` (or clear equivalent agreement). Then hand off to Planning / next PM step.
+## Orchestration flow
+Execute in order (invoke / follow each specialist skill’s full contract):
 
-**File body: Vietnamese.**
+```text
+resolve package
+→ verify discovery/analysis readiness
+→ requirements
+→ ADR if required
+→ design
+→ tasks draft
+→ acceptance
+→ synchronize task acceptance references
+→ spec-review
+→ request APPROVED_SPEC_PACKAGE
+→ stop
+```
 
-## Suggested sections
-Metadata, Goal, Context, Current/Expected Behavior, Business Rules, Flow, I/O, Modules, Data/API/Config impact, Edge Cases, Acceptance Criteria (Given/When/Then), **System Test Conditions**, **UAT Conditions**, Out of Scope, Open Questions.
+### Readiness checks before producers
+- Discovery critical open questions → route `grill-me` (`ANALYSIS`/`REQUIREMENTS` blocked patterns).
+- Missing `analysis.md` or not analyzed → route `analyze`.
 
-## Directives
-- Spec is incomplete without System Test Conditions and UAT Conditions.
-- After every new or revised spec: **always** self-review + stop for user review. Applies to **all** risk levels (low / medium / high).
-- `APPROVED` → continue pipeline.
-- `REJECTED` → stop; ask whether to re-analyze from scratch (y/n) per `AGENTS.md`.
-- `RE-EXECUTE` → refine the current spec (and related docs) in place; then self-review and stop again.
+### ADR decision (from `analysis.md`)
+- `ADR_REQUIRED` → run `adr` (feature scope); **stop** if required ADR not yet **Accepted** (`DESIGN_BLOCKED`).
+- `ADR_NOT_REQUIRED` → do not create empty ADR; record rationale in design metadata when design runs.
+- `ADR_DEFERRED` → document deferral; do not block unless later design proves ADR is mandatory — then fail with blocker.
+
+## Failure routing (ownership)
+| Blocker type | Route to |
+|---|---|
+| Business ambiguity | `grill-me` |
+| Analysis gap | `analyze` |
+| Requirement defect | `requirements` |
+| Architecture decision | `adr` |
+| Technical design gap | `design` |
+| Execution breakdown | `tasks` |
+| Verification gap | `acceptance` |
+| Cross-artifact mismatch | `spec-review` |
+
+Do not fix by violating ownership.
+
+## Approval handling (producer phase)
+When the user says `APPROVED_SPEC_PACKAGE` in this package context:
+
+**Allow** update only if:
+- `validation.status == passed`
+- `spec-review.md` Final Decision = `PASSED`
+- No blockers in manifest
+
+Then set:
+```yaml
+status: approved
+approval:
+  spec_package:
+    status: approved
+    approved_by: user
+    approved_at: <ISO-8601>
+```
+
+Otherwise return `APPROVAL_REJECTED` and do not change approval.
+
+Do **not** process `APPROVED_DEVELOP` or `APPROVED_DEPLOY` beyond preserving schema fields.
+
+Legacy keyword `APPROVED` in this skill context maps to `APPROVED_SPEC_PACKAGE` only when validation has passed; still record typed approval in manifest.
+
+## Output (when review PASSED)
+Print:
+- Package summary (id, slug, risk, status)
+- Artifact paths under `.specs/REQ-…/`
+- Validation result
+- Explicit request for user to reply: `APPROVED_SPEC_PACKAGE`
+
+**Stop. Do not call Develop, review, qa, or deploy.**
+
+## Manifest updates
+Orchestration may move status through `specifying` → `validating` → `awaiting_approval` via specialist skills. Approval only per section above.
+
+## Failure states
+- `PACKAGE_NOT_FOUND` / `PACKAGE_CONFLICT`
+- Specialist failure tokens (`REQUIREMENTS_BLOCKED`, `DESIGN_BLOCKED`, …)
+- `APPROVAL_REJECTED`
+
+## Stop condition
+Always stop after PASSED review pending approval, or on any blocker after reporting the owning skill. Never start Develop in Phase 2 / this skill.

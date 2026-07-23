@@ -1,5 +1,5 @@
 ---
-description: 3A-Factory workflow — automated delivery pipeline (Claude/Gemini/Cursor)
+description: 3A-Factory workflow — Spec Package greenfield pipeline (Claude/Gemini/Cursor)
 globs: *
 alwaysApply: true
 ---
@@ -8,33 +8,46 @@ alwaysApply: true
 
 Read `AGENTS.md` and `WORKFLOW.md` before making changes.
 
-## Pipeline
-`triage → (grill-me) → analyze → ADR? → design → spec → Planning? → develop → review → qa` → stop.
-Deploy: separate command + always `APPROVED`.
+**Spec is a Feature-local Spec Package, not a single document.**
 
-## Dual entry
-- `project-manager`: auto-run; if unclear → grill-me; when clear / “execute now” → continue.
-- `grill-me`: deep clarification; write `docs/requirements/REQ-<NNNNNN>-<slug>-discovery.md`.
+Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+
+Canonical workflow:
+
+```text
+triage → grill-me if unclear → analyze → build/refine Spec Package
+→ spec-review → APPROVED_SPEC_PACKAGE → project-manager
+→ develop task-by-task → review per task → qa → converge
+→ APPROVED_USER_REVIEW → done → deploy with APPROVED_DEPLOY
+```
+
+Artifact truth:
+
+```text
+requirements.md = Business Truth
+design.md       = Technical Truth
+tasks.md        = Execution Truth
+acceptance.md   = Verification Truth
+manifest.yaml   = Package State Truth
+```
+
+## Greenfield
+
+- Feature artifacts only under `.specs/`.
+- Project-wide ADR: `docs/decisions/`.
+- No legacy lifecycle folders for new work.
+- No migration tooling.
+- Never auto-deploy.
 
 ## Hard gates
-- No coding from raw requirements.
-- After every `spec`: must include AC + System Test + UAT; self-review vs prior docs → stop for user review; update spec + related docs if needed; continue only on `APPROVED` (all risk levels).
-- High risk → Planning + `APPROVED` before develop.
-- Develop follows plan or design scope.
-- After QA: unit tests (`…-UT.md`) + System Test/UAT from spec must all Pass (auto-fix loop); then stop for user review.
-- Never auto-deploy; every deploy needs `APPROVED`.
 
-## Artifacts
-Write under `docs/{requirements,designs,reviews,qa,release-notes,misc/...}` (+ `docs/project_overview.md` from `/onboarding`).
-- Handoff → `docs/misc/compact/`
-- Filed issues → `docs/misc/issues/`
-Ids: `REQ-<NNNNNN>-<slug>` / `ADR-<NNNNNN>-<slug>` (6 digits); branch `feature/REQ-<NNNNNN>-<slug>`.
-**Artifact body language: Vietnamese.** Instruction/rules language: English.
+- No coding from raw requirements.
+- Develop requires `APPROVED_SPEC_PACKAGE` (+ `APPROVED_DEVELOP` when high-risk policy requires it).
+- Review alone marks tasks `done`.
+- QA max 3 auto-fix attempts; converge then `APPROVED_USER_REVIEW`.
+- Deploy needs `APPROVED_DEPLOY`.
 
 ## Skills
-Execute the matching agent-native skill file:
-- Cursor: `.cursor/skills/<skill>/SKILL.md` (slash: `/project-manager`, `/grill-me`, …)
-- Claude: `.claude/skills/<skill>/SKILL.md`
-- Gemini: `.gemini/skills/<skill>/SKILL.md`
 
-New repos: run `/onboarding` first.
+Execute installed `.cursor/skills/<skill>/SKILL.md` (slash commands).  
+New repos: `/onboarding` first.

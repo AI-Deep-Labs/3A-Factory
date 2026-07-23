@@ -1,0 +1,66 @@
+schema_version: 1
+
+id: {{REQ_ID}}
+slug: {{SLUG}}
+title: {{TITLE}}
+risk: {{RISK}}
+status: new
+
+artifacts:
+  raw: raw.md
+  discovery: discovery.md
+  analysis: analysis.md
+  requirements: requirements.md
+  design: design.md
+  tasks: tasks.md
+  acceptance: acceptance.md
+
+decisions: []
+
+validation:
+  status: pending
+  reviewed_at: null
+  blockers: []
+  warnings: []
+
+approval:
+  spec_package:
+    status: pending
+    approved_by: null
+    approved_at: null
+  develop:
+    status: not_required
+    approved_by: null
+    approved_at: null
+  user_review:
+    status: pending
+    approved_by: null
+    approved_at: null
+  deploy:
+    status: pending
+    approved_by: null
+    approved_at: null
+
+execution:
+  current_task: null
+  completed_tasks: []
+  blocked_tasks: []
+  attempts: {}
+  last_activity_at: null
+  last_activity_by: null
+
+review:
+  status: pending
+  current_task: null
+  blockers: []
+  warnings: []
+  reviewed_at: null
+
+qa:
+  unit_test: pending
+  system_test: pending
+  uat: pending
+  converge: pending
+  attempts: 0
+  blockers: []
+  last_run_at: null

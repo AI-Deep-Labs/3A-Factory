@@ -5,6 +5,8 @@ AGENTS.md
 CLAUDE.md
 GEMINI.md
 .cursorrules
+tests/
+docs/
 
 # Dev / internal
 .agents/
@@ -14,3 +16,6 @@ GEMINI.md
 *.bak
 *.bak.*
 *.log
+coverage/
+.3a-factory/
+

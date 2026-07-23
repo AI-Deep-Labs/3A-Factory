@@ -3,7 +3,8 @@
 > When filled: write the body in **Vietnamese**. Technical identifiers may stay in English.
 
 - REQ: REQ-000001-example-slug
-- Spec: `docs/requirements/REQ-000001-example-slug-spec.md`
+- Spec Package: `.specs/REQ-000001-example-slug/`
+- Acceptance: `acceptance.md`
 - Test date: YYYY-MM-DD
 - Framework / command:
 - Conclusion: All unit tests Pass | Not ready

@@ -1,0 +1,70 @@
+schema_version: 1
+
+id: REQ-000001
+slug: example-feature
+title: Example feature — đồng bộ danh mục mẫu
+risk: low
+status: done
+
+artifacts:
+  raw: raw.md
+  discovery: discovery.md
+  analysis: analysis.md
+  requirements: requirements.md
+  design: design.md
+  tasks: tasks.md
+  acceptance: acceptance.md
+
+decisions: []
+
+validation:
+  status: passed
+  reviewed_at: "2026-07-20T10:00:00.000Z"
+  blockers: []
+  warnings: []
+
+approval:
+  spec_package:
+    status: approved
+    approved_by: example-user
+    approved_at: "2026-07-20T11:00:00.000Z"
+  develop:
+    status: not_required
+    approved_by: null
+    approved_at: null
+  user_review:
+    status: approved
+    approved_by: example-user
+    approved_at: "2026-07-22T16:00:00.000Z"
+  deploy:
+    status: pending
+    approved_by: null
+    approved_at: null
+
+execution:
+  current_task: null
+  completed_tasks:
+    - TASK-001
+    - TASK-002
+  blocked_tasks: []
+  attempts:
+    TASK-001: 1
+    TASK-002: 1
+  last_activity_at: "2026-07-22T15:30:00.000Z"
+  last_activity_by: example-agent
+
+review:
+  status: passed
+  current_task: null
+  blockers: []
+  warnings: []
+  reviewed_at: "2026-07-21T14:00:00.000Z"
+
+qa:
+  unit_test: passed
+  system_test: passed
+  uat: passed
+  converge: passed
+  attempts: 1
+  blockers: []
+  last_run_at: "2026-07-22T15:00:00.000Z"

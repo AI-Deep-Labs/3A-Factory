@@ -1,42 +1,117 @@
 ---
 name: qa
-description: Pipeline QA — write unit tests (…-UT.md), run them, verify System Test + UAT from spec, auto-fix until all Pass, then stop for user review. Also write …-qa.md.
+description: Acceptance-driven QA for Spec Packages — unit/system/UAT(+PERF/SEC) with evidence under .specs/.../qa/; bounded auto-loop (max 3); routes implementation vs spec defects. Does not deploy.
 disable-model-invocation: false
-argument-hint: [REQ-<NNNNNN>-<slug>]
+argument-hint: [REQ-<NNNNNN>-<slug> or package path]
 ---
 
-# QA Testing (pipeline)
+# QA (acceptance-driven)
 
-## Goal
-Prove the implementation matches the **approved** spec: unit tests + System Test conditions + UAT conditions all **Pass** with real evidence. Then **stop for user review** (do not deploy).
+## Purpose
+Verify implementation against `acceptance.md` with real evidence. Bounded auto-fix loop. Does not mark package `done` or deploy.
+
+## Gate
+Do not invent acceptance criteria.  
+Do not hide spec defects by only patching code.  
+Do not auto-approve or deploy.  
+Do not write new QA reports under legacy `docs/qa` for Spec Package features.  
+Do not install new dependencies just to test.
+
+## Package resolution
+`.specs/REQ-…/` only for new packages; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND` as usual.
 
 ## Preconditions
-- `docs/requirements/REQ-<NNNNNN>-<slug>-spec.md` exists and was user-`APPROVED`.
-- Spec must contain **Acceptance Criteria**, **System Test Conditions**, and **UAT Conditions**.
-- Develop (+ review) already ran.
+```text
+all required tasks == done
+manifest.status == qa   # or set to qa when entering if all tasks done and reviews passed
+acceptance.md exists
+review evidence PASSED for every required task
+```
+Else → `QA_BLOCKED`.
 
-## Required outputs
-1. `docs/qa/REQ-<NNNNNN>-<slug>-UT.md` — unit-test plan + mapping + results (**Vietnamese** body).
-2. Unit-test **source files** in the project’s normal test locations (Jest/pytest/xUnit/… — follow existing project conventions).
-3. `docs/qa/REQ-<NNNNNN>-<slug>-qa.md` — QA report covering System Test + UAT + overall conclusion (**Vietnamese** body).
+## Inputs
+```text
+manifest.yaml, requirements.md, design.md, tasks.md, acceptance.md
+reviews/*, implementation evidence, relevant code, test config
+```
 
-## Steps
-1. Read the approved spec; extract AC, **System Test Conditions**, and **UAT Conditions**. If any of these sections are missing/empty → **stop** and ask to update the spec (do not invent criteria).
-2. **Author unit tests** covering the change; prefer automated tests in the repo. Document each case in `…-UT.md` (id, target, scenario, expected, linked AC/System/UAT ids, result).
-3. **Run** the project’s unit-test / build-test commands; record real stdout/stderr and exit codes — **do not guess**.
-4. **Evaluate System Test Conditions** from the spec (automated where possible; else concrete steps with observed evidence). Record Pass/Fail in `…-qa.md`.
-5. **Evaluate UAT Conditions** from the spec the same way. Record Pass/Fail in `…-qa.md`.
-6. **Auto-fix loop (mandatory):** while any unit test, System Test, or UAT condition is Fail / blocked / untested:
-   - Fix application code and/or tests within plan/design scope.
-   - Re-run unit tests and re-check System Test + UAT.
-   - Update `…-UT.md` and `…-qa.md` each round.
-   - Continue until **all** criteria are **Pass** and evidence matches the spec — **no fixed round cap**.
-   - If blocked (missing secrets/env, no runnable test harness, out-of-scope infra) → stop, explain the blocker, and ask the user; do not mark Pass.
-7. When everything Passes: finalize both `…-UT.md` and `…-qa.md` with conclusion **Ready for user review**.
-8. **Stop for user review** — present UT + QA paths and a short Pass summary. Ask the user to verify. Remind that `/deploy` is separate and still needs `APPROVED`. Do **not** call deploy.
+## Verification scope
+Evaluate (create reports only when applicable):
+```text
+Unit Test, System Test, UAT, Performance, Security, Regression impact
+```
+Item results: `PASSED` | `FAILED` | `BLOCKED` | `NOT_REQUIRED`.
 
-## Rules
-- Do not mark Pass / Ready for user review if any AC-linked System Test or UAT row is Fail, skipped, or untested.
-- Unit tests must be real executable tests when the project has a test framework; if none exists, propose a minimal harness **or** document why and use the closest runnable verification — still record evidence.
-- Stay within develop boundaries (plan/design file scope) when fixing.
-- Conversational issue filing → skill **`qa-issues`**, not this skill.
+## Evidence outputs
+Under `.specs/<PACKAGE>/qa/`:
+```text
+unit-test-report.md
+system-test-report.md
+uat-report.md
+performance-report.md      # if applicable
+security-report.md         # if applicable
+qa-summary.md              # required
+```
+Each report references Requirement IDs, Acceptance/Test IDs, Task IDs, review evidence, commands, results.  
+Templates: `QA-SUMMARY-template.md` (+ existing UT/QA templates as structural guidance).  
+Vietnamese bodies.
+
+## Auto-loop (max 3)
+Increment `qa.attempts` at the start of each QA cycle. Default **max = 3**.
+
+### Implementation defect
+Token: `QA_IMPLEMENTATION_BUG`  
+Route: `qa` → `develop` → `review` → `qa`  
+Manifest on fail: `status: implementing`
+
+### Spec defect
+Token: `QA_SPEC_DEFECT`  
+Route: `qa` → owning producer (`requirements`/`design`/`acceptance`/`tasks`) → `spec-review` → invalidate approval → user re-approval  
+```yaml
+status: specifying
+validation.status: pending
+approval.spec_package.status: invalidated
+```
+
+### Loop limit
+If `qa.attempts > 3` (or attempt starts above max):
+```text
+QA_LOOP_LIMIT_REACHED
+```
+```yaml
+status: blocked
+qa:
+  blockers: ["QA_LOOP_LIMIT_REACHED"]
+```
+Stop infinite loops.
+
+## Manifest updates
+On start:
+```yaml
+status: qa
+qa.attempts: <increment>
+qa.last_run_at: <ISO-8601>
+```
+PASSED:
+```yaml
+status: converging
+qa.unit_test: passed | not_required
+qa.system_test: passed | not_required
+qa.uat: passed | not_required
+# clear qa.blockers
+```
+Hand off to `converge`. Do **not** set `done`.
+
+## Failure states
+```text
+QA_BLOCKED
+QA_IMPLEMENTATION_BUG
+QA_SPEC_DEFECT
+QA_LOOP_LIMIT_REACHED
+```
+
+## Stop condition
+Print qa-summary path + result + next route. Remind converge is next on PASS. Never deploy.
+
+## Compatibility
+Legacy `docs/qa/REQ-*-qa.md` path is not used for new Spec Package features.

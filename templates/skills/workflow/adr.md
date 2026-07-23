@@ -1,31 +1,78 @@
 ---
 name: adr
-description: Optional Architectural Decision Record — docs/designs/ADR-<NNNNNN>-<slug>.md. Use for major architecture decisions.
+description: Optional Architectural Decision Record — feature-local under .specs/.../decisions/ or project-wide under docs/decisions/. Register feature ADRs in package manifest.
 disable-model-invocation: false
-argument-hint: [slug or REQ id]
+argument-hint: [slug or REQ id or package path] [feature|project]
 ---
 
 # ADR
 
-## Goal
-Compare ≥2 architecture options and record the decision. **Optional** in the pipeline — only when needed.
+## Purpose
+Compare ≥2 architecture options and record a decision. Optional — only when warranted.
+
+## Gate
+Do not modify application source code.  
+Do not implement feature code.  
+Only create or update Spec Package / ADR artifacts.  
+Do not write requirements, tasks, acceptance, or full design as a substitute for this ADR.  
+Do **not** auto-Accept an ADR when user/maintainer review is required.
+
+## Package resolution contract (feature scope)
+1. Valid package path → use.
+2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
+4. Feature ADR path: `.specs/<PACKAGE>/decisions/ADR-<NNNNNN>-<slug>.md`
+5. Project-wide ADR path: `docs/decisions/ADR-<NNNNNN>-<slug>.md` (canonical global location).
+6. Do not place project-wide ADRs inside a random package.
+7. Do not write feature lifecycle artifacts outside `.specs/`.
+8. Do not create migration/legacy paths.
+
+## When to create
+Create ADR only if: significant options, real trade-offs, hard to reverse, multi-component impact, or security/data/reliability/ops impact.
+
+Do **not** create ADR for: minor naming, local refactor, easily reversible implementation detail, task sequencing.
 
 ## Naming
-1. Scan `docs/designs/ADR-*.md`; parse the number after `ADR-` (including legacy unpadded / slug-less). `next = max+1`, pad **6 digits**. Do not rename old files.
-2. Choose a kebab-case slug; id = `ADR-<NNNNNN>-<slug>`.
-3. Write `docs/designs/ADR-<NNNNNN>-<slug>.md`. Link related REQ as `REQ-<NNNNNN>-<slug>` if any.
+1. Scan `.specs/**/decisions/ADR-*.md` and `docs/decisions/ADR-*.md`.
+2. `next = max+1`, pad **6 digits**. Do not rename old files.
+3. Id = `ADR-<NNNNNN>-<slug>`.
 
 Template: `.agents/templates/ADR-template.md`.
 
-**File body: Vietnamese.** Instruction sections in this skill: English.
+## Inputs
+Feature ADR must read:
+- `manifest.yaml`, `analysis.md`, `requirements.md` (if present)
+- Related ADRs
+- Spec Package contract
 
-## Workflow
-1. Context & goals  
-2. ≥2 options with pros/cons  
-3. Decision & rationale  
-4. Technical design (mermaid/structure if useful)  
-5. Risks & mitigations  
-6. Next steps (usually → design skill)
+Project ADR: read relevant analysis/context; package path may be `n/a`.
 
-## Required structure
-Status, Author, Date, Decision Code (`ADR-<NNNNNN>-<slug>`), sections 1–6 as in the template.
+## Process
+1. Determine `Scope: feature | project`.
+2. Resolve package when feature-scoped.
+3. Draft options (≥2), drivers, decision, consequences, risks, follow-up.
+4. Write ADR with status **`Proposed`** (Vietnamese body).
+5. Feature ADR: ensure `decisions/` exists; append manifest `decisions` entry (no duplicates):
+
+```yaml
+decisions:
+  - id: ADR-000005-example-slug
+    path: decisions/ADR-000005-example-slug.md
+    status: Proposed
+```
+
+6. Do not invent Design IDs; leave Related Design IDs empty or TBD until design exists.
+
+## Output contract
+Must include: ADR ID, Title, Status, Scope, Package Path, Related Requirement IDs, Related Design IDs, Context, Decision Drivers, Options, Decision, Consequences, Risks, Follow-up (align with ADR template sections).
+
+## Manifest updates
+Feature: register under `decisions[]` as above. Do not change `approval.*`.  
+Package is **not** ready while required ADRs remain `Proposed` (spec-review / design gates enforce Accepted).
+
+## Failure states
+- `PACKAGE_NOT_FOUND` / `PACKAGE_CONFLICT` (feature scope)
+- Stop if ADR is not warranted — explain why `ADR_NOT_REQUIRED`
+
+## Stop condition
+Print ADR path + status `Proposed` + whether user Accept is needed before design can proceed. Next usually → `design` after Accept when `ADR_REQUIRED`.

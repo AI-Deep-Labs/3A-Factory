@@ -13,12 +13,14 @@ Save Markdown files in the project so later agents can reuse them.
 
 ## Output contract
 - **Document body language: Vietnamese** (unless the user explicitly requests English). Keep standard technical terms in English when clearer.
-- Paths:
-  - Requirements / discovery / spec: `docs/requirements/REQ-<NNNNNN>-<slug>-*.md`
-  - Analysis / design / plan: `docs/designs/REQ-<NNNNNN>-<slug>-*.md`
-  - ADR: `docs/designs/ADR-<NNNNNN>-<slug>.md`
-  - Review / QA / release: `docs/reviews/`, `docs/qa/`, `docs/release-notes/`
+- Paths (Feature-local Spec Package — greenfield):
+  - Feature package: `.specs/REQ-<NNNNNN>-<slug>/` (`raw.md`, `discovery.md`, `requirements.md`, `analysis.md`, `design.md`, `tasks.md`, `acceptance.md`, …)
+  - Package ADR: `.specs/REQ-<NNNNNN>-<slug>/decisions/ADR-<NNNNNN>-<slug>.md`
+  - Project-wide ADR: `docs/decisions/ADR-<NNNNNN>-<slug>.md`
+  - Review / QA evidence: under the same package (`reviews/`, `qa/`) or package `release/`
   - Compact handoff: `docs/misc/compact/HANDOFF-*.md`
+- Do **not** write new feature artifacts under legacy `docs/requirements|designs|reviews|qa`.
+- Do **not** create `/plan` artifacts.
 
 ## Document modes
 

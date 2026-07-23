@@ -1,24 +1,18 @@
 #!/usr/bin/env node
 
 /**
- * 3A-Factory installer
- * Install shared workflow files + adapters for selected agent(s) only.
+ * 3A-Factory installer (greenfield Spec Package)
+ * Installs shared governance + Spec Package templates/contracts/schemas
+ * and agent adapters for Claude / Gemini / Cursor.
  *
- * Usage:
- *   npx 3a-factory --agent=claude
- *   npx 3a-factory --agent=gemini,cursor --force
- *   npx 3a-factory --claude --cursor
- *   npx 3a-factory --all
- *
- * Env (useful with npm postinstall):
- *   THREEA_AGENT=claude
- *   npm_config_3a_agent=gemini
+ * Does NOT create .specs/, run workflow, approve, commit, push, or deploy.
  */
 
 const fs = require('fs');
 const path = require('path');
 
 const VALID_AGENTS = ['claude', 'gemini', 'cursor'];
+const SKIP_SKILL_NAMES = new Set(['plan']);
 
 const args = process.argv.slice(2);
 
@@ -27,28 +21,104 @@ if (args.includes('--help') || args.includes('-h')) {
   process.exit(0);
 }
 
-const isDryRun = args.includes('--dry-run');
+const isDryRun = args.includes('--dry-run') && !args.includes('--apply');
 const isForce = args.includes('--force') || process.env.npm_config_force === 'true';
 const isNoBackup = args.includes('--no-backup');
 const isVerbose = args.includes('--verbose');
+const isJson = args.includes('--json');
 
-const selectedAgents = parseAgents(args);
+let selectedAgents;
+try {
+  selectedAgents = parseAgents(args);
+} catch (err) {
+  failToken('INSTALL_TARGET_INVALID', err.message);
+}
 
-const targetRoot = process.env.INIT_CWD || process.cwd();
+const cwdArg = getFlagValue(args, '--cwd');
 const scriptDir = __dirname;
 const templateRoot = path.resolve(scriptDir, '..');
-const bundlePath = path.join(scriptDir, 'bundle.json');
+let targetRoot = cwdArg ? path.resolve(cwdArg) : process.env.INIT_CWD || process.cwd();
 
+try {
+  targetRoot = assertInsideAllowedRoot(targetRoot);
+} catch (err) {
+  failToken('INSTALL_PATH_INVALID', err.message);
+}
+
+const bundlePath = path.join(scriptDir, 'bundle.json');
 let bundleFilesCache = null;
+
+const report = {
+  schemaVersion: 1,
+  target: [...selectedAgents].sort().join(','),
+  mode: isDryRun ? 'dry-run' : 'apply',
+  installedFiles: [],
+  updatedFiles: [],
+  unchangedFiles: [],
+  conflicts: [],
+  backups: [],
+  skipped: [],
+  result: null
+};
+
+const stats = {
+  createdDirs: 0,
+  newFiles: 0,
+  updatedFiles: 0,
+  backups: 0,
+  unchanged: 0,
+  skipped: 0,
+  conflicts: 0
+};
+
+function getFlagValue(argv, name) {
+  const idx = argv.indexOf(name);
+  if (idx >= 0 && argv[idx + 1] && !argv[idx + 1].startsWith('-')) return argv[idx + 1];
+  const pref = `${name}=`;
+  const hit = argv.find((a) => a.startsWith(pref));
+  return hit ? hit.slice(pref.length) : null;
+}
+
+function failToken(token, message) {
+  if (isJson) {
+    console.log(JSON.stringify({ result: token, message }, null, 2));
+  } else {
+    console.error(`[ERROR] ${token}: ${message}`);
+  }
+  process.exit(1);
+}
 
 function normalizeRel(relativePath) {
   return String(relativePath || '').replace(/\\/g, '/');
+}
+
+function assertInsideAllowedRoot(candidate) {
+  const resolved = path.resolve(candidate);
+  if (resolved.includes('\0')) throw new Error('null byte in path');
+  const relParts = path.relative(path.parse(resolved).root, resolved).split(path.sep);
+  if (relParts.includes('..')) throw new Error(`path traversal: ${candidate}`);
+  return resolved;
+}
+
+function assertDestSafe(destRelativePath) {
+  const rel = normalizeRel(destRelativePath);
+  if (!rel || rel.startsWith('/') || rel.includes('..') || /^[A-Za-z]:/.test(rel)) {
+    throw new Error(`unsafe dest path: ${destRelativePath}`);
+  }
+  if (rel === '.specs' || rel.startsWith('.specs/')) {
+    throw new Error('installer must not create .specs/');
+  }
+  const full = path.resolve(targetRoot, rel);
+  if (!full.startsWith(targetRoot)) throw new Error(`path escape: ${destRelativePath}`);
+  return { rel, full };
 }
 
 function getBundleFiles() {
   if (bundleFilesCache !== null) return bundleFilesCache;
   if (fs.existsSync(bundlePath)) {
     bundleFilesCache = JSON.parse(fs.readFileSync(bundlePath, 'utf8')).files || {};
+  } else {
+    bundleFilesCache = null;
   }
   return bundleFilesCache;
 }
@@ -56,19 +126,10 @@ function getBundleFiles() {
 function readTemplateContent(relativePath) {
   const rel = normalizeRel(relativePath);
   const bundle = getBundleFiles();
-  if (bundle && Object.prototype.hasOwnProperty.call(bundle, rel)) {
-    return bundle[rel];
-  }
+  if (bundle && Object.prototype.hasOwnProperty.call(bundle, rel)) return bundle[rel];
   const full = path.join(templateRoot, rel);
   if (!fs.existsSync(full)) return null;
   return fs.readFileSync(full, 'utf8');
-}
-
-function templateSourceExists(relativePath) {
-  const rel = normalizeRel(relativePath);
-  const bundle = getBundleFiles();
-  if (bundle) return Object.prototype.hasOwnProperty.call(bundle, rel);
-  return fs.existsSync(path.join(templateRoot, rel));
 }
 
 function listSkillTemplateEntries() {
@@ -77,64 +138,45 @@ function listSkillTemplateEntries() {
   if (bundle) {
     return Object.keys(bundle)
       .filter((key) => key.startsWith(prefix) && key.endsWith('.md'))
+      .sort()
       .map((key) => ({ relativePath: key, content: bundle[key] }));
   }
-
   const skillsDir = path.join(templateRoot, 'templates', 'skills');
-  return scanDirectory(skillsDir).map((filePath) => ({
-    relativePath: normalizeRel(path.relative(templateRoot, filePath)),
-    content: fs.readFileSync(filePath, 'utf8')
-  }));
+  return scanDirectory(skillsDir)
+    .map((filePath) => ({
+      relativePath: normalizeRel(path.relative(templateRoot, filePath)),
+      content: fs.readFileSync(filePath, 'utf8')
+    }))
+    .sort((a, b) => a.relativePath.localeCompare(b.relativePath));
 }
-
-if (path.resolve(targetRoot) === path.resolve(templateRoot)) {
-  console.log('\x1b[32m%s\x1b[0m', '[OK] Running in development repository. Skipping template installation to avoid root pollution.');
-  process.exit(0);
-}
-
-const colors = {
-  reset: '\x1b[0m',
-  cyan: '\x1b[36m',
-  green: '\x1b[32m',
-  yellow: '\x1b[33m',
-  red: '\x1b[31m',
-  gray: '\x1b[90m'
-};
-
-function logInfo(msg) { console.log(`${colors.cyan}[INFO]${colors.reset} ${msg}`); }
-function logOk(msg) { console.log(`${colors.green}[OK]${colors.reset} ${msg}`); }
-function logWarn(msg) { console.warn(`${colors.yellow}[WARN]${colors.reset} ${msg}`); }
-function logErr(msg) { console.error(`${colors.red}[ERROR]${colors.reset} ${msg}`); }
 
 function printHelp() {
-  console.log(`3A-Factory installer
+  console.log(`3A-Factory installer (greenfield Spec Package)
 
 Usage:
   npx 3a-factory [options]
   node scripts/install.js [options]
 
-Agent selection (pick one or more; default: all):
-  --agent=<name>[,<name>...]   claude | gemini | cursor | all
-  --claude / --gemini / --cursor
-  --all
+Targets:
+  --agent=<name>[,<name>...] | --target=<name>[,...]   claude | gemini | cursor | all
+  --claude / --gemini / --cursor / --all
 
-  Env: THREEA_AGENT=claude   or   npm_config_3a_agent=gemini
-
-Other options:
-  --force       Overwrite existing files (backup unless --no-backup)
-  --no-backup   Do not write .bak.* when overwriting
+Modes:
   --dry-run     Print actions only
+  --apply       Write files (default when not --dry-run)
+  --force       Overwrite existing differing files (backup unless --no-backup)
+  --no-backup   Skip backups on force overwrite
+  --cwd <path>  Install root (default: INIT_CWD or cwd)
+  --json        Machine-readable install report on stdout
   --verbose     Extra logging
-  -h, --help    Show help
+  -h, --help
 
-Always installed (shared):
-  docs/*, AGENTS.md, WORKFLOW.md, .agents/templates
-  (docs includes misc/compact + misc/issues)
+Always installs (shared):
+  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}
+  docs/misc/{compact,issues}, docs/decisions (project-wide ADR location)
 
-Per agent:
-  claude  → CLAUDE.md, .claude/skills, .claude/commands
-  gemini  → GEMINI.md, .gemini/skills, .gemini/commands
-  cursor  → .cursor/rules/ai-workflow.mdc + .cursor/skills (slash commands)
+Never:
+  create .specs/, run workflow, approve, commit, push, deploy
 `);
 }
 
@@ -149,7 +191,7 @@ function parseAgents(argv) {
       return;
     }
     if (!VALID_AGENTS.includes(token)) {
-      throw new Error(`Unknown agent "${raw}". Use: ${VALID_AGENTS.join(', ')}, or all`);
+      throw new Error(`Unknown target "${raw}". Use: ${VALID_AGENTS.join(', ')}, or all`);
     }
     selected.add(token);
   }
@@ -163,10 +205,8 @@ function parseAgents(argv) {
       addToken(arg.slice(2));
       continue;
     }
-    const m = arg.match(/^--agents?=(.+)$/i);
-    if (m) {
-      m[1].split(',').forEach(addToken);
-    }
+    const m = arg.match(/^--(?:agents?|target)=(.+)$/i);
+    if (m) m[1].split(',').forEach(addToken);
   }
 
   if (selected.size === 0) {
@@ -174,15 +214,10 @@ function parseAgents(argv) {
       process.env.THREEA_AGENT ||
       process.env.npm_config_3a_agent ||
       process.env.npm_config_agent;
-    if (envVal) {
-      String(envVal).split(',').forEach(addToken);
-    }
+    if (envVal) String(envVal).split(',').forEach(addToken);
   }
 
-  if (selected.size === 0) {
-    VALID_AGENTS.forEach((a) => selected.add(a));
-  }
-
+  if (selected.size === 0) VALID_AGENTS.forEach((a) => selected.add(a));
   return selected;
 }
 
@@ -191,14 +226,12 @@ function wants(agent) {
 }
 
 const sharedDirs = [
-  'docs/requirements',
-  'docs/designs',
-  'docs/reviews',
-  'docs/qa',
-  'docs/release-notes',
+  '.agents/templates',
+  '.agents/contracts',
+  '.agents/schemas',
+  'docs/decisions',
   'docs/misc/compact',
-  'docs/misc/issues',
-  '.agents/templates'
+  'docs/misc/issues'
 ];
 
 const agentDirs = {
@@ -207,205 +240,152 @@ const agentDirs = {
   cursor: ['.cursor/rules', '.cursor/skills']
 };
 
+const SPEC_PACKAGE_TEMPLATES = [
+  'SPEC-PACKAGE-README.md',
+  'SPEC-PACKAGE-MANIFEST-template.yaml',
+  'REQUIREMENTS-template.md',
+  'TASKS-template.md',
+  'ACCEPTANCE-template.md',
+  'SPEC-REVIEW-template.md',
+  'IMPLEMENTATION-EVIDENCE-template.md',
+  'CODE-REVIEW-template.md',
+  'QA-SUMMARY-template.md',
+  'CONVERGE-REPORT-template.md',
+  'ADR-template.md',
+  'RAW-REQ-template.md',
+  'DISCOVERY-template.md',
+  'ANALYSIS-template.md',
+  'DESIGN-template.md',
+  'RELEASE-template.md'
+];
+
 const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
   { src: 'templates/WORKFLOW.md', dest: 'WORKFLOW.md' },
-  { src: 'templates/.agents/templates/SPEC-template.md', dest: '.agents/templates/SPEC-template.md' },
-  { src: 'templates/.agents/templates/PLAN-template.md', dest: '.agents/templates/PLAN-template.md' },
-  { src: 'templates/.agents/templates/ADR-template.md', dest: '.agents/templates/ADR-template.md' },
-  { src: 'templates/.agents/templates/RAW-REQ-template.md', dest: '.agents/templates/RAW-REQ-template.md' },
-  { src: 'templates/.agents/templates/DISCOVERY-template.md', dest: '.agents/templates/DISCOVERY-template.md' },
-  { src: 'templates/.agents/templates/ANALYSIS-template.md', dest: '.agents/templates/ANALYSIS-template.md' },
-  { src: 'templates/.agents/templates/DESIGN-template.md', dest: '.agents/templates/DESIGN-template.md' },
-  { src: 'templates/.agents/templates/REVIEW-template.md', dest: '.agents/templates/REVIEW-template.md' },
-  { src: 'templates/.agents/templates/QA-REPORT-template.md', dest: '.agents/templates/QA-REPORT-template.md' },
-  { src: 'templates/.agents/templates/UT-REPORT-template.md', dest: '.agents/templates/UT-REPORT-template.md' },
-  { src: 'templates/.agents/templates/RELEASE-template.md', dest: '.agents/templates/RELEASE-template.md' }
+  {
+    src: 'templates/.agents/contracts/spec-package.md',
+    dest: '.agents/contracts/spec-package.md'
+  },
+  {
+    src: 'templates/.agents/schemas/spec-package-manifest.schema.json',
+    dest: '.agents/schemas/spec-package-manifest.schema.json'
+  },
+  ...SPEC_PACKAGE_TEMPLATES.map((name) => ({
+    src: `templates/.agents/templates/${name}`,
+    dest: `.agents/templates/${name}`
+  }))
 ];
 
 const agentFiles = {
   claude: [{ src: 'CLAUDE.md', dest: 'CLAUDE.md' }],
   gemini: [{ src: 'GEMINI.md', dest: 'GEMINI.md' }],
-  cursor: [{ src: 'templates/.cursor/rules/ai-workflow.mdc', dest: '.cursor/rules/ai-workflow.mdc' }]
+  cursor: [
+    {
+      src: 'templates/.cursor/rules/ai-workflow.mdc',
+      dest: '.cursor/rules/ai-workflow.mdc'
+    }
+  ]
 };
 
 const optionalAgentFiles = {
   cursor: [{ src: '.cursorrules', dest: '.cursorrules' }]
 };
 
-const stats = {
-  createdDirs: 0,
-  newFiles: 0,
-  updatedFiles: 0,
-  backups: 0,
-  unchanged: 0,
-  skipped: 0
+const colors = {
+  reset: '\x1b[0m',
+  cyan: '\x1b[36m',
+  green: '\x1b[32m',
+  yellow: '\x1b[33m',
+  red: '\x1b[31m',
+  gray: '\x1b[90m'
 };
 
-function sameTemplateContent(srcContent, destFile) {
-  if (!fs.existsSync(destFile)) return false;
-  try {
-    const destContent = fs.readFileSync(destFile, 'utf8');
-    return destContent.replace(/\r\n/g, '\n') === String(srcContent).replace(/\r\n/g, '\n');
-  } catch (err) {
-    return false;
-  }
+function logInfo(msg) {
+  if (!isJson) console.log(`${colors.cyan}[INFO]${colors.reset} ${msg}`);
+}
+function logOk(msg) {
+  if (!isJson) console.log(`${colors.green}[OK]${colors.reset} ${msg}`);
+}
+function logWarn(msg) {
+  if (!isJson) console.warn(`${colors.yellow}[WARN]${colors.reset} ${msg}`);
 }
 
-function sameStringContent(destPath, content) {
-  if (!fs.existsSync(destPath)) return false;
-  try {
-    const destContent = fs.readFileSync(destPath, 'utf8');
-    return destContent.replace(/\r\n/g, '\n') === content.replace(/\r\n/g, '\n');
-  } catch (err) {
-    return false;
-  }
+function sameContent(a, b) {
+  return String(a || '').replace(/\r\n/g, '\n') === String(b || '').replace(/\r\n/g, '\n');
 }
 
 function ensureDirectory(relativeDir) {
-  const fullPath = path.join(targetRoot, relativeDir);
-  if (!fs.existsSync(fullPath)) {
-    if (isDryRun) {
-      console.log(`[DRY-RUN][MKDIR] ${relativeDir}`);
-    } else {
-      fs.mkdirSync(fullPath, { recursive: true });
-    }
+  const { full, rel } = assertDestSafe(relativeDir);
+  if (!fs.existsSync(full)) {
+    if (!isDryRun) fs.mkdirSync(full, { recursive: true });
+    stats.createdDirs++;
+    if (isVerbose) logInfo(`[MKDIR] ${rel}`);
+  }
+}
+
+function backupFile(full, destRel) {
+  const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
+  const backupFile = `${full}.bak.${timestamp}`;
+  if (!isDryRun) fs.copyFileSync(full, backupFile);
+  stats.backups++;
+  report.backups.push(normalizeRel(path.relative(targetRoot, backupFile)));
+  return backupFile;
+}
+
+function writeFileAction(destRel, content, required) {
+  const { full, rel } = assertDestSafe(destRel);
+  const destDir = path.dirname(full);
+  if (!fs.existsSync(destDir)) {
+    if (!isDryRun) fs.mkdirSync(destDir, { recursive: true });
     stats.createdDirs++;
   }
+
+  if (fs.existsSync(full)) {
+    const existing = fs.readFileSync(full, 'utf8');
+    if (sameContent(existing, content)) {
+      stats.unchanged++;
+      report.unchangedFiles.push(rel);
+      return 'UNCHANGED';
+    }
+    if (!isForce) {
+      stats.conflicts++;
+      stats.skipped++;
+      report.conflicts.push(rel);
+      report.skipped.push(rel);
+      logWarn(`INSTALL_CONFLICT: ${rel} (use --force to overwrite)`);
+      return 'CONFLICT';
+    }
+    if (!isNoBackup) backupFile(full, rel);
+    if (!isDryRun) fs.writeFileSync(full, content, 'utf8');
+    stats.updatedFiles++;
+    report.updatedFiles.push(rel);
+    return 'UPDATE_SAFE';
+  }
+
+  if (!isDryRun) fs.writeFileSync(full, content, 'utf8');
+  stats.newFiles++;
+  report.installedFiles.push(rel);
+  return 'CREATE';
 }
 
 function copyWorkflowFile(item, required) {
-  const destFile = path.join(targetRoot, item.dest);
   const srcContent = readTemplateContent(item.src);
-
   if (srcContent === null) {
-    if (required) {
-      throw new Error(`Required template file not found: ${item.src}`);
-    }
+    if (required) throw new Error(`Required template missing: ${item.src}`);
     stats.skipped++;
-    if (isVerbose) {
-      console.log(`${colors.gray}[SKIP][OPTIONAL MISSING] ${item.src}${colors.reset}`);
-    }
+    report.skipped.push(item.dest);
     return;
   }
-
-  const destDir = path.dirname(destFile);
-  if (!fs.existsSync(destDir)) {
-    if (isDryRun) {
-      console.log(`[DRY-RUN][MKDIR] ${path.relative(targetRoot, destDir)}`);
-    } else {
-      fs.mkdirSync(destDir, { recursive: true });
-    }
-    stats.createdDirs++;
-  }
-
-  if (fs.existsSync(destFile)) {
-    if (sameTemplateContent(srcContent, destFile)) {
-      stats.unchanged++;
-      if (isVerbose) {
-        console.log(`${colors.gray}[UNCHANGED] ${item.dest}${colors.reset}`);
-      }
-      return;
-    }
-
-    if (!isForce) {
-      stats.skipped++;
-      logWarn(`Exists, skipped: ${item.dest} (use --force to overwrite)`);
-      return;
-    }
-
-    if (!isNoBackup) {
-      const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
-      const backupFile = `${destFile}.bak.${timestamp}`;
-      if (isDryRun) {
-        console.log(`[DRY-RUN][BACKUP] ${item.dest} -> ${path.basename(backupFile)}`);
-      } else {
-        fs.copyFileSync(destFile, backupFile);
-      }
-      stats.backups++;
-    }
-
-    if (isDryRun) {
-      console.log(`[DRY-RUN][UPDATE] ${item.dest}`);
-    } else {
-      fs.writeFileSync(destFile, srcContent, 'utf8');
-    }
-    stats.updatedFiles++;
-  } else {
-    if (isDryRun) {
-      console.log(`[DRY-RUN][NEW] ${item.dest}`);
-    } else {
-      fs.writeFileSync(destFile, srcContent, 'utf8');
-    }
-    stats.newFiles++;
-  }
-}
-
-function writeGeneratedFile(destRelativePath, content) {
-  const destFile = path.join(targetRoot, destRelativePath);
-  const destDir = path.dirname(destFile);
-
-  if (!fs.existsSync(destDir)) {
-    if (isDryRun) {
-      console.log(`[DRY-RUN][MKDIR] ${path.relative(targetRoot, destDir)}`);
-    } else {
-      fs.mkdirSync(destDir, { recursive: true });
-    }
-    stats.createdDirs++;
-  }
-
-  if (fs.existsSync(destFile)) {
-    if (sameStringContent(destFile, content)) {
-      stats.unchanged++;
-      if (isVerbose) {
-        console.log(`${colors.gray}[UNCHANGED] ${destRelativePath}${colors.reset}`);
-      }
-      return;
-    }
-
-    if (!isForce) {
-      stats.skipped++;
-      logWarn(`Exists, skipped: ${destRelativePath} (use --force to overwrite)`);
-      return;
-    }
-
-    if (!isNoBackup) {
-      const timestamp = new Date().toISOString().replace(/[-:T.]/g, '').slice(0, 14);
-      const backupFile = `${destFile}.bak.${timestamp}`;
-      if (isDryRun) {
-        console.log(`[DRY-RUN][BACKUP] ${destRelativePath} -> ${path.basename(backupFile)}`);
-      } else {
-        fs.writeFileSync(backupFile, fs.readFileSync(destFile, 'utf8'), 'utf8');
-      }
-      stats.backups++;
-    }
-
-    if (isDryRun) {
-      console.log(`[DRY-RUN][UPDATE] ${destRelativePath}`);
-    } else {
-      fs.writeFileSync(destFile, content, 'utf8');
-    }
-    stats.updatedFiles++;
-  } else {
-    if (isDryRun) {
-      console.log(`[DRY-RUN][NEW] ${destRelativePath}`);
-    } else {
-      fs.writeFileSync(destFile, content, 'utf8');
-    }
-    stats.newFiles++;
-  }
+  writeFileAction(item.dest, srcContent, required);
 }
 
 function scanDirectory(dir, fileList = []) {
   if (!fs.existsSync(dir)) return fileList;
-  for (const file of fs.readdirSync(dir)) {
+  for (const file of fs.readdirSync(dir).sort()) {
     const filePath = path.join(dir, file);
     const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) {
-      scanDirectory(filePath, fileList);
-    } else if (stat.isFile() && file.endsWith('.md')) {
-      fileList.push(filePath);
-    }
+    if (stat.isDirectory()) scanDirectory(filePath, fileList);
+    else if (stat.isFile() && file.endsWith('.md')) fileList.push(filePath);
   }
   return fileList;
 }
@@ -414,230 +394,182 @@ function parseYamlFrontmatter(text) {
   const metadata = {};
   const lines = text.split('\n');
   let i = 0;
-
   while (i < lines.length) {
     const line = lines[i];
     if (!line.trim()) {
       i++;
       continue;
     }
-
     const colonIdx = line.indexOf(':');
     if (colonIdx === -1) {
       i++;
       continue;
     }
-
     const key = line.substring(0, colonIdx).trim();
     let val = line.substring(colonIdx + 1).trim();
-
     if (val === '>' || val === '|') {
       const blockLines = [];
       i++;
-      while (i < lines.length) {
-        const next = lines[i];
-        if (/^\s/.test(next)) {
-          blockLines.push(next.replace(/^\s{2,}/, '').trimEnd());
-          i++;
-          continue;
-        }
-        if (next.trim() === '') {
-          i++;
-          continue;
-        }
-        break;
+      while (i < lines.length && (/^\s/.test(lines[i]) || lines[i].trim() === '')) {
+        if (/^\s/.test(lines[i])) blockLines.push(lines[i].replace(/^\s{2,}/, '').trimEnd());
+        i++;
       }
       metadata[key] = blockLines.join(' ').trim();
       continue;
     }
-
     if (
       (val.startsWith('"') && val.endsWith('"')) ||
       (val.startsWith("'") && val.endsWith("'"))
     ) {
-      val = val.substring(1, val.length - 1);
+      val = val.slice(1, -1);
     }
-
     metadata[key] = val;
     i++;
   }
-
   return metadata;
 }
 
 function yamlQuote(value) {
-  const text = String(value || '');
-  return `"${text.replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
+  return `"${String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
 }
-
 function tomlQuote(value) {
   return String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
 }
 
 function parseMarkdownContentWithFrontmatter(content, label) {
   const normalized = String(content).replace(/\r\n/g, '\n');
-  if (!normalized.startsWith('---\n')) {
-    throw new Error(`File does not start with frontmatter: ${label}`);
-  }
+  if (!normalized.startsWith('---\n')) throw new Error(`File does not start with frontmatter: ${label}`);
   const endIdx = normalized.indexOf('\n---\n', 4);
-  if (endIdx === -1) {
-    throw new Error(`Invalid frontmatter in file: ${label}`);
-  }
-  const frontmatterText = normalized.substring(4, endIdx);
+  if (endIdx === -1) throw new Error(`Invalid frontmatter: ${label}`);
+  const metadata = parseYamlFrontmatter(normalized.substring(4, endIdx));
   const body = normalized.substring(endIdx + 5);
-
-  const metadata = parseYamlFrontmatter(frontmatterText);
-
   if (!metadata.name) metadata.name = path.basename(label, '.md');
   if (!metadata.description) metadata.description = '';
-
   return { metadata, body };
-}
-
-function parseMarkdownWithFrontmatter(filePath) {
-  const content = fs.readFileSync(filePath, 'utf8');
-  return parseMarkdownContentWithFrontmatter(content, filePath);
-}
-
-function removeLegacyCursorRule(skillName) {
-  if (skillName === 'ai-workflow') return;
-  const legacyPath = path.join(targetRoot, '.cursor', 'rules', `${skillName}.mdc`);
-  if (!fs.existsSync(legacyPath)) return;
-  if (isDryRun) {
-    logInfo(`[DRY-RUN] Remove legacy rule: .cursor/rules/${skillName}.mdc`);
-    return;
-  }
-  fs.unlinkSync(legacyPath);
-  logOk(`Removed legacy rule: .cursor/rules/${skillName}.mdc (use .cursor/skills/${skillName}/ instead)`);
 }
 
 function processSkills() {
   const skillEntries = listSkillTemplateEntries();
   if (skillEntries.length === 0) {
-    logWarn('No skill templates found (templates/skills/**/*.md)');
-    return;
+    throw new Error('INSTALL_SOURCE_INVALID: no skill templates found');
   }
 
   for (const { relativePath, content } of skillEntries) {
-    try {
-      const { metadata, body } = parseMarkdownContentWithFrontmatter(content, relativePath);
-      const name = metadata.name;
-      const desc = metadata.description;
+    const { metadata, body } = parseMarkdownContentWithFrontmatter(content, relativePath);
+    const name = metadata.name;
+    if (SKIP_SKILL_NAMES.has(name)) continue;
+    const desc = metadata.description;
 
-      if (!desc || desc === '>') {
-        logWarn(`Skill "${name}" has empty description — check frontmatter in ${relativePath}`);
-      }
+    let skillFM = `---\nname: ${name}\ndescription: ${desc}\n`;
+    if (metadata['disable-model-invocation'] !== undefined) {
+      skillFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
+    }
+    if (metadata['argument-hint'] !== undefined) {
+      skillFM += `argument-hint: ${metadata['argument-hint']}\n`;
+    }
+    skillFM += `---\n`;
+    const skillBody = `${skillFM}${body}`;
 
-      if (isVerbose) {
-        logInfo(`Processing skill: ${name}`);
-      }
-
-      let skillFM = `---\nname: ${name}\ndescription: ${desc}\n`;
-      if (metadata['disable-model-invocation'] !== undefined) {
-        skillFM += `disable-model-invocation: ${metadata['disable-model-invocation']}\n`;
-      }
-      if (metadata['argument-hint'] !== undefined) {
-        skillFM += `argument-hint: ${metadata['argument-hint']}\n`;
-      }
-      skillFM += `---\n`;
-      const skillBody = `${skillFM}${body}`;
-
-      if (wants('claude')) {
-        writeGeneratedFile(`.claude/skills/${name}/SKILL.md`, skillBody);
-        const claudeCmd = `---\ndescription: ${yamlQuote(desc)}\n---\n\nRead AGENTS.md first, then read and execute .claude/skills/${name}/SKILL.md.\nArguments: $ARGUMENTS\n`;
-        writeGeneratedFile(`.claude/commands/${name}.md`, claudeCmd);
-      }
-
-      if (wants('cursor')) {
-        writeGeneratedFile(`.cursor/skills/${name}/SKILL.md`, skillBody);
-        removeLegacyCursorRule(name);
-      }
-
-      if (wants('gemini')) {
-        writeGeneratedFile(`.gemini/skills/${name}/SKILL.md`, skillBody);
-        const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
-        writeGeneratedFile(`.gemini/commands/${name}.toml`, geminiCmd);
-      }
-    } catch (err) {
-      logWarn(`Failed to parse or convert skill file ${relativePath}: ${err.message}`);
+    if (wants('claude')) {
+      writeFileAction(`.claude/skills/${name}/SKILL.md`, skillBody, true);
+      const claudeCmd = `---\ndescription: ${yamlQuote(desc)}\n---\n\nRead AGENTS.md first, then read and execute .claude/skills/${name}/SKILL.md.\nArguments: $ARGUMENTS\n`;
+      writeFileAction(`.claude/commands/${name}.md`, claudeCmd, true);
+    }
+    if (wants('cursor')) {
+      writeFileAction(`.cursor/skills/${name}/SKILL.md`, skillBody, true);
+    }
+    if (wants('gemini')) {
+      writeFileAction(`.gemini/skills/${name}/SKILL.md`, skillBody, true);
+      const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read .gemini/skills/${name}/SKILL.md and execute that workflow.\nArguments: {{args}}\n"""\n`;
+      writeFileAction(`.gemini/commands/${name}.toml`, geminiCmd, true);
     }
   }
 }
 
-function collectTargetDirs() {
-  const dirs = [...sharedDirs];
-  for (const agent of VALID_AGENTS) {
-    if (wants(agent)) {
-      dirs.push(...(agentDirs[agent] || []));
-    }
+function writeInstallManifest() {
+  const dir = path.join(targetRoot, '.3a-factory');
+  if (!isDryRun) {
+    fs.mkdirSync(dir, { recursive: true });
+    fs.writeFileSync(
+      path.join(dir, 'install-manifest.json'),
+      `${JSON.stringify(report, null, 2)}\n`,
+      'utf8'
+    );
   }
-  return dirs;
 }
 
-function collectRequiredFiles() {
-  const files = [...sharedFiles];
-  for (const agent of VALID_AGENTS) {
-    if (wants(agent)) {
-      files.push(...(agentFiles[agent] || []));
-    }
+function assertNoSpecsCreated() {
+  // Installer itself must not create .specs — verify we didn't write under it
+  if (report.installedFiles.some((f) => f === '.specs' || f.startsWith('.specs/'))) {
+    failToken('INSTALL_PATH_INVALID', 'installer attempted to create .specs/');
   }
-  return files;
 }
 
-function collectOptionalFiles() {
-  const files = [];
-  for (const agent of VALID_AGENTS) {
-    if (wants(agent)) {
-      files.push(...(optionalAgentFiles[agent] || []));
-    }
-  }
-  return files;
+// Dev repo skip (avoid polluting package source tree)
+if (path.resolve(targetRoot) === path.resolve(templateRoot) && !cwdArg) {
+  const msg =
+    '[OK] Running in development repository. Skipping template installation to avoid root pollution. Use --cwd <temp> for smoke tests.';
+  if (isJson) console.log(JSON.stringify({ result: 'INSTALL_PASSED', skippedDevRepo: true, message: msg }));
+  else console.log('\x1b[32m%s\x1b[0m', msg);
+  process.exit(0);
 }
 
-function printFooter() {
+if (!getBundleFiles() && !fs.existsSync(path.join(templateRoot, 'templates'))) {
+  failToken('INSTALL_SOURCE_INVALID', 'bundle.json missing and templates/ not found — run npm run build');
+}
+
+if (!isJson) {
   console.log(`${colors.cyan}=============================================${colors.reset}`);
-  console.log(`Agents installed: ${[...selectedAgents].join(', ')}`);
-  console.log(`Artifacts:        docs/{requirements,designs,reviews,qa,release-notes,misc/...}`);
-  console.log(`Shared:           docs/*, AGENTS.md, WORKFLOW.md, .agents/templates`);
-  if (wants('claude')) {
-    console.log(`Claude Code:      .claude/skills + .claude/commands`);
-  }
-  if (wants('gemini')) {
-    console.log(`Gemini CLI:       .gemini/skills + .gemini/commands`);
-  }
-  if (wants('cursor')) {
-    console.log(`Cursor:           .cursor/skills (slash) + .cursor/rules/ai-workflow.mdc`);
-  }
+  console.log(`${colors.cyan}  3A-Factory Installer (greenfield)${colors.reset}`);
   console.log(`${colors.cyan}=============================================${colors.reset}`);
+  console.log(`Template root: ${templateRoot}`);
+  console.log(`Target root:   ${targetRoot}`);
+  console.log(`Agents:        ${[...selectedAgents].join(', ')}`);
+  console.log(`Mode:          ${isDryRun ? 'dry-run' : 'apply'}`);
+  console.log(`Overwrite:     ${isForce ? 'yes' : 'no'}`);
 }
-
-console.log(`${colors.cyan}=============================================${colors.reset}`);
-console.log(`${colors.cyan}  3A-Factory NPM Installer${colors.reset}`);
-console.log(`${colors.cyan}=============================================${colors.reset}`);
-console.log(`Template root: ${templateRoot}`);
-console.log(`Target root:   ${targetRoot}`);
-console.log(`Agents:        ${[...selectedAgents].join(', ')}`);
-console.log(`Mode:          ${isDryRun ? 'dry-run' : 'write'}`);
-console.log(`Overwrite:     ${isForce ? 'yes' : 'no'}`);
-console.log(`Backup:        ${isNoBackup ? 'no' : 'yes'}`);
-console.log(`${colors.cyan}---------------------------------------------${colors.reset}`);
 
 try {
-  collectTargetDirs().forEach((dir) => ensureDirectory(dir));
-  collectRequiredFiles().forEach((item) => copyWorkflowFile(item, true));
-  collectOptionalFiles().forEach((item) => copyWorkflowFile(item, false));
-  processSkills();
+  sharedDirs.forEach((d) => ensureDirectory(d));
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) (agentDirs[agent] || []).forEach((d) => ensureDirectory(d));
+  }
 
-  console.log(`${colors.cyan}---------------------------------------------${colors.reset}`);
-  logOk('Installation completed.');
-  console.log(`Created dirs: ${stats.createdDirs}`);
-  console.log(`New files:    ${stats.newFiles}`);
-  console.log(`Updated:      ${stats.updatedFiles}`);
-  console.log(`Backups:      ${stats.backups}`);
-  console.log(`Unchanged:    ${stats.unchanged}`);
-  console.log(`Skipped:      ${stats.skipped}`);
-  printFooter();
+  sharedFiles.forEach((item) => copyWorkflowFile(item, true));
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) (agentFiles[agent] || []).forEach((item) => copyWorkflowFile(item, true));
+  }
+  for (const agent of VALID_AGENTS) {
+    if (wants(agent)) (optionalAgentFiles[agent] || []).forEach((item) => copyWorkflowFile(item, false));
+  }
+  processSkills();
+  assertNoSpecsCreated();
+
+  report.result = report.conflicts.length
+    ? 'INSTALL_CONFLICT'
+    : isDryRun
+      ? 'INSTALL_DRY_RUN'
+      : 'INSTALL_PASSED';
+
+  writeInstallManifest();
+
+  if (isJson) {
+    console.log(JSON.stringify(report, null, 2));
+  } else {
+    logOk(`Installation finished: ${report.result}`);
+    console.log(`Created dirs: ${stats.createdDirs}`);
+    console.log(`New files:    ${stats.newFiles}`);
+    console.log(`Updated:      ${stats.updatedFiles}`);
+    console.log(`Backups:      ${stats.backups}`);
+    console.log(`Unchanged:    ${stats.unchanged}`);
+    console.log(`Conflicts:    ${stats.conflicts}`);
+    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}`);
+    console.log(`Note:         Installer does not create .specs/ or run workflow.`);
+  }
+
+  if (report.result === 'INSTALL_CONFLICT') process.exit(2);
 } catch (err) {
-  logErr(`Installation failed: ${err.message}`);
-  process.exit(1);
+  const msg = err.message || String(err);
+  if (msg.startsWith('INSTALL_')) failToken(msg.split(':')[0], msg);
+  failToken('INSTALL_SOURCE_INVALID', msg);
 }
