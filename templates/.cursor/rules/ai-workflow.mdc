@@ -34,7 +34,7 @@ manifest.yaml   = Package State Truth
 ## Greenfield
 
 - Feature artifacts only under `.specs/`.
-- Project-wide ADR: `docs/decisions/`.
+- Project-wide ADR: `docs/decisions/` (create when writing).
 - No legacy lifecycle folders for new work.
 - No migration tooling.
 - Never auto-deploy.

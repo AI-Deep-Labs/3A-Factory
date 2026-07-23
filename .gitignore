@@ -27,6 +27,3 @@ yarn-error.log*
 # Build output (generated before npm publish)
 /dist/
 
-# Installer local report
-.3a-factory/
-

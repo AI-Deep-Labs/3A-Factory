@@ -1,6 +1,6 @@
 # Command Reference
 
-Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.0.0-rc.1**. Không có `/plan`.
+Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.0.0-rc.2**. Không có `/plan`.
 
 ---
 

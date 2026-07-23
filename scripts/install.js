@@ -172,11 +172,10 @@ Modes:
   -h, --help
 
 Always installs (shared):
-  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}
-  docs/misc/{compact,issues}, docs/decisions (project-wide ADR location)
+  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}, docs/
 
 Never:
-  create .specs/, run workflow, approve, commit, push, deploy
+  create .specs/, pre-create docs/decisions or docs/misc, run workflow, approve, commit, push, deploy
 `);
 }
 
@@ -229,9 +228,7 @@ const sharedDirs = [
   '.agents/templates',
   '.agents/contracts',
   '.agents/schemas',
-  'docs/decisions',
-  'docs/misc/compact',
-  'docs/misc/issues'
+  'docs'
 ];
 
 const agentDirs = {
@@ -486,18 +483,6 @@ function processSkills() {
   }
 }
 
-function writeInstallManifest() {
-  const dir = path.join(targetRoot, '.3a-factory');
-  if (!isDryRun) {
-    fs.mkdirSync(dir, { recursive: true });
-    fs.writeFileSync(
-      path.join(dir, 'install-manifest.json'),
-      `${JSON.stringify(report, null, 2)}\n`,
-      'utf8'
-    );
-  }
-}
-
 function assertNoSpecsCreated() {
   // Installer itself must not create .specs — verify we didn't write under it
   if (report.installedFiles.some((f) => f === '.specs' || f.startsWith('.specs/'))) {
@@ -551,8 +536,6 @@ try {
       ? 'INSTALL_DRY_RUN'
       : 'INSTALL_PASSED';
 
-  writeInstallManifest();
-
   if (isJson) {
     console.log(JSON.stringify(report, null, 2));
   } else {
@@ -563,8 +546,8 @@ try {
     console.log(`Backups:      ${stats.backups}`);
     console.log(`Unchanged:    ${stats.unchanged}`);
     console.log(`Conflicts:    ${stats.conflicts}`);
-    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}`);
-    console.log(`Note:         Installer does not create .specs/ or run workflow.`);
+    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas}, docs/`);
+    console.log(`Note:         Installer does not create .specs/, docs/decisions, or docs/misc.`);
   }
 
   if (report.result === 'INSTALL_CONFLICT') process.exit(2);

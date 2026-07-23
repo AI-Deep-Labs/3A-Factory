@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0--rc.1-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.0--rc.2-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
@@ -38,7 +38,7 @@ Spec is a Feature-local Spec Package, not a single document.
     └── release/
 ```
 
-Project-wide ADR: `docs/decisions/`. Global misc: `docs/misc/`, `docs/project_overview.md`.
+Project-wide ADR: `docs/decisions/` (tạo khi `/adr` project-wide ghi file). Global misc: `docs/misc/` (tạo khi handoff / qa-issues ghi file). Overview: `docs/project_overview.md` (onboarding).
 
 ## Artifact Ownership
 
@@ -74,16 +74,15 @@ triage
 ## Quick Start
 
 1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
-2. Installer **không** tạo `.specs/` và không chạy workflow.
-3. Chạy `/onboarding` nếu repo mới.
-4. `/triage` yêu cầu → tạo package dưới `.specs/`.
-5. `/grill-me` nếu còn ambiguity → `/analyze`.
-6. `/spec` (orchestrator) hoàn thiện requirements → ADR? → design → tasks → acceptance → spec-review.
-7. User: `APPROVED_SPEC_PACKAGE`.
-8. `/project-manager` chọn task → `/develop` → `/review` (lặp đến hết task).
-9. `/qa` → (repair loop nếu cần) → `/converge`.
-10. User: `APPROVED_USER_REVIEW` → `done`.
-11. Deploy chỉ khi user gọi `/deploy` + `APPROVED_DEPLOY`.
+2. Chạy `/onboarding` nếu repo mới.
+3. `/triage` yêu cầu → tạo package dưới `.specs/`.
+4. `/grill-me` nếu còn ambiguity → `/analyze`.
+5. `/spec` (orchestrator) hoàn thiện requirements → ADR? → design → tasks → acceptance → spec-review.
+6. User: `APPROVED_SPEC_PACKAGE`.
+7. `/project-manager` chọn task → `/develop` → `/review` (lặp đến hết task).
+8. `/qa` → (repair loop nếu cần) → `/converge`.
+9. User: `APPROVED_USER_REVIEW` → `done`.
+10. Deploy chỉ khi user gọi `/deploy` + `APPROVED_DEPLOY`.
 
 ## Commands
 
@@ -124,7 +123,7 @@ Chi tiết: [docs/approvals.md](docs/approvals.md).
 - Không code trước `APPROVED_SPEC_PACKAGE`.
 - Không auto-approve / auto-deploy.
 - Không commit/push mặc định.
-- Installer không tạo feature package (`.specs/`).
+- Installer không tạo feature package (`.specs/`), không pre-create `docs/decisions` / `docs/misc`, và không ghi `.3a-factory/`.
 - Greenfield: không legacy workflow, không migration tooling.
 
 ## Development Commands
@@ -146,7 +145,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
-- [Release notes 3.0.0-rc.1](release-notes/3.0.0-rc.1.md)
+- [Release notes 3.0.0-rc.2](release-notes/3.0.0-rc.2.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)
 
@@ -160,7 +159,7 @@ npx 3a-factory --target=all --dry-run
 
 | Selection | Paths |
 |---|---|
-| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`, `docs/decisions`, `docs/misc/*` |
+| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`, `docs/` |
 | claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
 | gemini | `GEMINI.md`, `.gemini/skills`, `.gemini/commands` |
 | cursor | `.cursor/skills`, `.cursor/rules/ai-workflow.mdc` |

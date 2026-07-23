@@ -2,7 +2,7 @@
 
 ## Context
 
-3A-Factory **3.0.0-rc.1** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `.specs/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
+3A-Factory **3.0.0-rc.2** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `.specs/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
 
 ## Problem statement
 
@@ -31,7 +31,7 @@
 
 ## Greenfield decision
 
-Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.1`). Không hỗ trợ migration từ layout cũ.
+Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.2`). Không hỗ trợ migration từ layout cũ.
 
 ## Package structure
 
@@ -114,7 +114,7 @@ Shared: `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`.
 ## Build and installer model
 
 - `npm run build` → `dist/` + `bundle.json` + `build-manifest.json` (deterministic).
-- Installer: dry-run/apply, backup khi overwrite, idempotent, **không** tạo `.specs/`, **không** chạy workflow.
+- Installer: dry-run/apply, backup khi overwrite, idempotent; chỉ scaffold `docs/` (không pre-create `docs/decisions` / `docs/misc`); **không** tạo `.specs/`, **không** ghi `.3a-factory/`, **không** chạy workflow. Báo cáo cài qua stdout / `--json`.
 
 ## Validation and CI model
 

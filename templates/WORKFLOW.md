@@ -32,7 +32,7 @@ Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
 ## Greenfield policy
 
 - No legacy feature paths under `docs/requirements|designs|reviews|qa`.
-- Project-wide ADR: `docs/decisions/`.
+- Project-wide ADR: `docs/decisions/` (create when writing the first project-wide ADR).
 - No migration tooling / legacy resolver.
 - Installer does not create `.specs/` and does not run workflow.
 - Never auto-deploy.

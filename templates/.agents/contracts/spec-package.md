@@ -48,7 +48,7 @@ Execution skills (`project-manager`, `develop`, `review`, `qa`, `converge`, `dep
 - New feature artifacts **must** live inside the package.
 - Global project documentation may remain outside `.specs/` (for example `docs/project_overview.md`).
 - Feature-specific ADR lives under `decisions/`.
-- Project-wide ADR lives at `docs/decisions/ADR-*.md`.
+- Project-wide ADR lives at `docs/decisions/ADR-*.md` (create `docs/decisions/` only when writing the first such file; installer must not pre-create it).
 - Do not create the same feature in multiple packages.
 - Greenfield: do not write new feature artifacts under `docs/requirements|designs|reviews|qa`.
 

@@ -32,6 +32,10 @@ describe('installer smoke', () => {
       assert.ok(fs.existsSync(path.join(tmp, '.agents/contracts/spec-package.md')));
       assert.ok(fs.existsSync(path.join(tmp, '.agents/schemas/spec-package-manifest.schema.json')));
       assert.ok(!fs.existsSync(path.join(tmp, '.specs')));
+      assert.ok(!fs.existsSync(path.join(tmp, '.3a-factory')));
+      assert.ok(fs.existsSync(path.join(tmp, 'docs')));
+      assert.ok(!fs.existsSync(path.join(tmp, 'docs/decisions')));
+      assert.ok(!fs.existsSync(path.join(tmp, 'docs/misc')));
       if (agent === 'claude') {
         assert.ok(fs.existsSync(path.join(tmp, '.claude/skills/develop/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.claude/skills/plan')));

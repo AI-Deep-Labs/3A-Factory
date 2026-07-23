@@ -65,8 +65,9 @@ Do not reuse one approval for another gate. Never auto-deploy.
 ## Greenfield policy
 
 - New feature artifacts live only under `.specs/REQ-<NNNNNN>-<slug>/`.
-- Project-wide ADR location: `docs/decisions/`.
-- Global docs may include `docs/project_overview.md` and `docs/misc/*`.
+- Project-wide ADR location: `docs/decisions/` (create on first project-wide ADR write).
+- Global docs may include `docs/project_overview.md` and `docs/misc/*` (create misc paths when handoff/qa-issues write).
+- Installer scaffolds `docs/` only — not `docs/decisions` or `docs/misc`.
 - **No** legacy lifecycle folders for new work (`docs/requirements`, `docs/designs` feature files, `docs/reviews`, `docs/qa`).
 - **No** `/plan` command.
 - **No** migration tooling or legacy resolver.

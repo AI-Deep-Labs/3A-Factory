@@ -17,5 +17,4 @@ docs/
 *.bak.*
 *.log
 coverage/
-.3a-factory/
 

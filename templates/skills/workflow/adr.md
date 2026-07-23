@@ -22,10 +22,11 @@ Do **not** auto-Accept an ADR when user/maintainer review is required.
 2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 4. Feature ADR path: `.specs/<PACKAGE>/decisions/ADR-<NNNNNN>-<slug>.md`
-5. Project-wide ADR path: `docs/decisions/ADR-<NNNNNN>-<slug>.md` (canonical global location).
+5. Project-wide ADR path: `docs/decisions/ADR-<NNNNNN>-<slug>.md` (canonical global location). Create `docs/decisions/` only when writing the first project-wide ADR file.
 6. Do not place project-wide ADRs inside a random package.
 7. Do not write feature lifecycle artifacts outside `.specs/`.
 8. Do not create migration/legacy paths.
+9. Do not pre-create empty `docs/decisions/` or `docs/misc/` during install/onboarding.
 
 ## When to create
 Create ADR only if: significant options, real trade-offs, hard to reverse, multi-component impact, or security/data/reliability/ops impact.
