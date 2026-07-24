@@ -13,6 +13,8 @@ const path = require('path');
 
 const VALID_AGENTS = ['claude', 'gemini', 'cursor'];
 const SKIP_SKILL_NAMES = new Set(['plan']);
+/** npm lifecycle events that must never scaffold a consumer project */
+const NPM_AUTO_LIFECYCLES = new Set(['postinstall', 'install', 'preinstall', 'prepare']);
 
 const args = process.argv.slice(2);
 
@@ -26,6 +28,35 @@ const isForce = args.includes('--force') || process.env.npm_config_force === 'tr
 const isNoBackup = args.includes('--no-backup');
 const isVerbose = args.includes('--verbose');
 const isJson = args.includes('--json');
+
+/**
+ * npx/npm install runs lifecycle scripts without forwarding CLI --agent flags.
+ * Auto-install here used to default to all agents and write into INIT_CWD (consumer repo).
+ * Scaffolding must only happen via explicit CLI / bin invocation.
+ */
+function isNpmAutoLifecycle() {
+  const ev = process.env.npm_lifecycle_event;
+  return Boolean(ev && NPM_AUTO_LIFECYCLES.has(ev));
+}
+
+if (isNpmAutoLifecycle()) {
+  const ev = process.env.npm_lifecycle_event;
+  const msg =
+    `[3a-factory] Skipping auto-install during npm ${ev}. ` +
+    `Run explicitly: npx 3a-factory --agent=<claude|gemini|cursor|all>`;
+  if (isJson) {
+    console.log(
+      JSON.stringify({
+        result: 'INSTALL_SKIPPED_LIFECYCLE',
+        lifecycle: ev,
+        message: msg
+      })
+    );
+  } else {
+    console.log(msg);
+  }
+  process.exit(0);
+}
 
 let selectedAgents;
 try {
@@ -173,6 +204,11 @@ Modes:
   --json        Machine-readable install report on stdout
   --verbose     Extra logging
   -h, --help
+
+Notes:
+  npm postinstall / install / preinstall / prepare never scaffolds a project
+  (avoids npx installing all agents via default-all + INIT_CWD).
+  Always pass --agent=... when invoking the CLI (or omit to install all agents intentionally).
 
 Always installs (shared):
   AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/

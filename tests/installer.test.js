@@ -9,12 +9,37 @@ const { execFileSync } = require('child_process');
 
 const ROOT = path.resolve(__dirname, '..');
 
-function install(cwd, extraArgs = []) {
+function install(cwd, extraArgs = [], env = {}) {
   return execFileSync(
     process.execPath,
     ['scripts/install.js', '--cwd', cwd, ...extraArgs, '--json'],
-    { cwd: ROOT, encoding: 'utf8' }
+    { cwd: ROOT, encoding: 'utf8', env: { ...process.env, ...env } }
   );
+}
+
+/** Simulate npm/npx lifecycle: no --cwd; target comes from INIT_CWD (like real postinstall). */
+function installAsNpmLifecycle(initCwd, lifecycle = 'postinstall', extraArgs = [], env = {}) {
+  return execFileSync(process.execPath, ['scripts/install.js', ...extraArgs, '--json'], {
+    cwd: ROOT,
+    encoding: 'utf8',
+    env: {
+      ...process.env,
+      ...env,
+      npm_lifecycle_event: lifecycle,
+      INIT_CWD: initCwd
+    }
+  });
+}
+
+function listAgentMarkers(dir) {
+  return {
+    shared: fs.existsSync(path.join(dir, 'AGENTS.md')),
+    gemini: fs.existsSync(path.join(dir, 'GEMINI.md')),
+    claude: fs.existsSync(path.join(dir, 'CLAUDE.md')),
+    geminiDir: fs.existsSync(path.join(dir, '.gemini')),
+    claudeDir: fs.existsSync(path.join(dir, '.claude')),
+    cursorDir: fs.existsSync(path.join(dir, '.cursor'))
+  };
 }
 
 describe('installer smoke', () => {
@@ -115,5 +140,102 @@ describe('installer smoke', () => {
     const report = JSON.parse(out);
     assert.equal(report.result, 'INSTALL_DRY_RUN');
     assert.ok(!fs.existsSync(path.join(tmp, 'AGENTS.md')));
+  });
+});
+
+describe('installer npx/postinstall regression', () => {
+  before(() => {
+    execFileSync(process.execPath, ['scripts/build.js'], { cwd: ROOT, stdio: 'pipe' });
+  });
+
+  for (const lifecycle of ['postinstall', 'install', 'preinstall', 'prepare']) {
+    it(`skips scaffolding during npm ${lifecycle} even with INIT_CWD (no --agent)`, () => {
+      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `3a-life-${lifecycle}-`));
+      const out = installAsNpmLifecycle(tmp, lifecycle);
+      const report = JSON.parse(out);
+      assert.equal(report.result, 'INSTALL_SKIPPED_LIFECYCLE');
+      assert.equal(report.lifecycle, lifecycle);
+      const m = listAgentMarkers(tmp);
+      assert.equal(m.shared, false);
+      assert.equal(m.gemini, false);
+      assert.equal(m.claude, false);
+      assert.equal(m.geminiDir, false);
+      assert.equal(m.claudeDir, false);
+      assert.equal(m.cursorDir, false);
+    });
+  }
+
+  it('npx simulation: postinstall must not install all agents; CLI --agent=gemini installs only gemini', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-npx-sim-'));
+
+    // Step 1: npm/npx package install lifecycle (historically defaulted to all agents into INIT_CWD)
+    const lifeOut = installAsNpmLifecycle(tmp, 'postinstall');
+    assert.equal(JSON.parse(lifeOut).result, 'INSTALL_SKIPPED_LIFECYCLE');
+    assert.deepEqual(listAgentMarkers(tmp), {
+      shared: false,
+      gemini: false,
+      claude: false,
+      geminiDir: false,
+      claudeDir: false,
+      cursorDir: false
+    });
+
+    // Step 2: bin/CLI with user flag (what npx runs after install)
+    const cliOut = install(tmp, ['--agent=gemini', '--apply']);
+    assert.equal(JSON.parse(cliOut).result, 'INSTALL_PASSED');
+    const m = listAgentMarkers(tmp);
+    assert.equal(m.shared, true);
+    assert.equal(m.gemini, true);
+    assert.equal(m.geminiDir, true);
+    assert.equal(m.claude, false);
+    assert.equal(m.claudeDir, false);
+    assert.equal(m.cursorDir, false);
+  });
+
+  it('regression: postinstall after gemini-only install must not add claude/cursor', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-reg-post-'));
+    install(tmp, ['--agent=gemini', '--apply']);
+    assert.equal(listAgentMarkers(tmp).claudeDir, false);
+    assert.equal(listAgentMarkers(tmp).cursorDir, false);
+
+    const lifeOut = installAsNpmLifecycle(tmp, 'postinstall');
+    assert.equal(JSON.parse(lifeOut).result, 'INSTALL_SKIPPED_LIFECYCLE');
+
+    const m = listAgentMarkers(tmp);
+    assert.equal(m.gemini, true);
+    assert.equal(m.geminiDir, true);
+    assert.equal(m.claude, false);
+    assert.equal(m.claudeDir, false);
+    assert.equal(m.cursorDir, false);
+  });
+
+  it('lifecycle skip ignores npm_config_agent=all (must not scaffold via postinstall)', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-cfg-agent-'));
+    const out = installAsNpmLifecycle(tmp, 'postinstall', [], {
+      npm_config_agent: 'all'
+    });
+    assert.equal(JSON.parse(out).result, 'INSTALL_SKIPPED_LIFECYCLE');
+    assert.deepEqual(listAgentMarkers(tmp), {
+      shared: false,
+      gemini: false,
+      claude: false,
+      geminiDir: false,
+      claudeDir: false,
+      cursorDir: false
+    });
+  });
+
+  it('explicit CLI without lifecycle still defaults to all agents', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-default-all-'));
+    const out = install(tmp, ['--apply']);
+    const report = JSON.parse(out);
+    assert.equal(report.result, 'INSTALL_PASSED');
+    const m = listAgentMarkers(tmp);
+    assert.equal(m.shared, true);
+    assert.equal(m.gemini, true);
+    assert.equal(m.claude, true);
+    assert.equal(m.geminiDir, true);
+    assert.equal(m.claudeDir, true);
+    assert.equal(m.cursorDir, true);
   });
 });

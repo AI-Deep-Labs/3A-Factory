@@ -5,9 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-rc.4] - Unreleased
+## [3.0.0-rc.5] - Unreleased
 
 Pre-release (release candidate) of the 3.0.0 greenfield Feature-local Spec Package line. Final GA will be `3.0.0` after RC validation.
+
+### Changed
+
+- Package version set to **3.0.0-rc.5**.
+
+### Fixed
+
+- Installer no longer scaffolds a consumer project during npm `postinstall` / `install` / `preinstall` / `prepare`. Those lifecycles exit with `INSTALL_SKIPPED_LIFECYCLE` so `npx 3a-factory@… --agent=gemini` cannot accidentally install all three agents via default-all + `INIT_CWD`. Scaffolding runs only on explicit CLI/bin invocation.
+- Added installer regression tests simulating the npx/postinstall flow.
+
+### Documentation
+
+- README, release notes, and help text updated for the lifecycle skip behavior and **3.0.0-rc.5**.
+
+## [3.0.0-rc.4]
+
+Pre-release candidate: canonical Spec Package path under `docs/tasks/`.
 
 ### Changed
 
@@ -67,14 +84,6 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 - `/plan` skill and alias.
 - Legacy SPEC and PLAN templates.
 - Legacy feature outputs under `docs/requirements` / `docs/designs` (for feature packages).
-- Migration tooling, legacy resolver, compatibility window.
-
-### Fixed
-
-- Documentation drift vs greenfield contract (Phase 6 audit).
-- Traceability validator: duplicate ID check applies to heading definitions only (cross-references allowed); task cycle check uses Dependencies sections.
-- Utility skills / QA-UT templates: remove active legacy `docs/requirements|designs` output paths.
-- Build tests: serialize suite to avoid race when temporarily renaming a required skill.
 
 ### Security
 
@@ -82,4 +91,4 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ## [2.3.1] - Prior
 
-See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.4`).
+See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.5`).

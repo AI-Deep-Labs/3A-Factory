@@ -1,6 +1,6 @@
 # Approval Reference
 
-Version **3.0.0-rc.4**. Token tiếng Anh; giải thích tiếng Việt.
+Version **3.0.0-rc.5**. Token tiếng Anh; giải thích tiếng Việt.
 
 Agent **không** tự ghi approval. Chỉ user (hoặc quy trình người được ủy quyền) mới được coi là approve.
 

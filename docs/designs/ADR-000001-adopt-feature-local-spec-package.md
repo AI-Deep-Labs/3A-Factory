@@ -9,7 +9,7 @@
 *   **Decision owner**: repository maintainers (chấp thuận qua lệnh thực hiện Phase 1)
 *   **Decision Code**: ADR-000001-adopt-feature-local-spec-package
 *   **Related REQ**: (không có — quyết định kiến trúc package-level của 3A-Factory)
-*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.4` pre-release; GA `3.0.0` sau RC)
+*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.5` pre-release; GA `3.0.0` sau RC)
 *   **Implementation note**: Phase 1 bắt đầu triển khai Spec Package contract, manifest schema, templates và governance. Không thay đổi nội dung quyết định kiến trúc đã chốt.
 
 ---
