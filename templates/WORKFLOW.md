@@ -44,6 +44,14 @@ Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
 ## Deploy
 Separate from PM. Requires `manifest.status == done` and `APPROVED_DEPLOY`.
 
+## Naming & id allocation
+
+Formats: `REQ-<NNNNNN>-<slug>`, `ADR-<NNNNNN>-<slug>`; folder `docs/tasks/REQ-<NNNNNN>-<slug>/`; `manifest.id` = `REQ-<NNNNNN>`.
+
+REQ and ADR are **separate** series. **No allocator script.** The agent lists real package/ADR path names and applies `next = max + 1` (none → `000001`).
+
+Count **only** basenames under `docs/tasks/REQ-*` (and legacy package roots if present) for REQ; ADR files under `docs/decisions/` / package `decisions/`. **Never** treat illustrative ids in `.agents/`, skills, or contracts as allocated. Examples in tooling use `REQ-000001-…` / `ADR-000001-…` only.
+
 ## Tool mapping
 | Tool | Native files | Notes |
 |---|---|---|

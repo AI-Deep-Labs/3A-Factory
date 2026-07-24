@@ -9,7 +9,7 @@
 *   **Decision owner**: repository maintainers (chấp thuận qua lệnh thực hiện Phase 1)
 *   **Decision Code**: ADR-000001-adopt-feature-local-spec-package
 *   **Related REQ**: (không có — quyết định kiến trúc package-level của 3A-Factory)
-*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.5` pre-release; GA `3.0.0` sau RC)
+*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.6` pre-release; GA `3.0.0` sau RC)
 *   **Implementation note**: Phase 1 bắt đầu triển khai Spec Package contract, manifest schema, templates và governance. Không thay đổi nội dung quyết định kiến trúc đã chốt.
 
 ---
@@ -133,7 +133,7 @@ Phase 0 **không** triển khai:
 - Template mới / sửa template
 - Manifest schema implementation thực tế
 - Migration tool / migration skill
-- Refactor installer (`scripts/install.js`, `install.ps1`, `install.sh`) hoặc build (`scripts/build.js`)
+- Refactor installer (`scripts/install.js`) hoặc build (`scripts/build.js`)
 - Coding workflow mới trong runtime agents
 - Version bump (`package.json` giữ nguyên)
 - Sửa README / AGENTS / WORKFLOW / Cursor rules
@@ -193,7 +193,7 @@ Spec Package là tập hợp các artifact:
 
 ```text
 docs/tasks/
-└── REQ-000013-sync-masterdata/
+└── REQ-000001-example-feature/
     ├── manifest.yaml
     ├── raw.md
     ├── discovery.md
@@ -203,7 +203,7 @@ docs/tasks/
     ├── tasks.md
     ├── acceptance.md
     ├── decisions/
-    │   └── ADR-000005-example.md
+    │   └── ADR-000001-example.md
     ├── reviews/
     │   └── code-review.md
     ├── qa/

@@ -5,9 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-rc.5] - Unreleased
+## [3.0.0-rc.6] - Unreleased
 
 Pre-release (release candidate) of the 3.0.0 greenfield Feature-local Spec Package line. Final GA will be `3.0.0` after RC validation.
+
+### Changed
+
+- Package version set to **3.0.0-rc.6**.
+- Triage / ADR skills and AGENTS/WORKFLOW: agent allocates ids by listing real path basenames under `docs/tasks/` (and ADR folders), then `next = max + 1` (none → `000001`). REQ and ADR series are independent. **No allocator script.**
+- Illustrative examples normalized to `REQ-000001-…` / `ADR-000001-…` (removed `REQ-000013` / `ADR-000005-example` from contracts, skills, README).
+
+### Fixed
+
+- First REQ in an empty consumer repo no longer jumps to `000014` when agents read example `REQ-000013` from installed contracts/skills.
+
+### Documentation
+
+- Naming & allocation rules documented in AGENTS.md, WORKFLOW.md, architecture docs, and **3.0.0-rc.6** release notes.
+
+## [3.0.0-rc.5]
+
+Pre-release candidate: installer npm lifecycle skip.
 
 ### Changed
 
@@ -91,4 +109,4 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ## [2.3.1] - Prior
 
-See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.5`).
+See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.6`).

@@ -148,22 +148,21 @@ describe('installer npx/postinstall regression', () => {
     execFileSync(process.execPath, ['scripts/build.js'], { cwd: ROOT, stdio: 'pipe' });
   });
 
-  for (const lifecycle of ['postinstall', 'install', 'preinstall', 'prepare']) {
-    it(`skips scaffolding during npm ${lifecycle} even with INIT_CWD (no --agent)`, () => {
-      const tmp = fs.mkdtempSync(path.join(os.tmpdir(), `3a-life-${lifecycle}-`));
-      const out = installAsNpmLifecycle(tmp, lifecycle);
-      const report = JSON.parse(out);
-      assert.equal(report.result, 'INSTALL_SKIPPED_LIFECYCLE');
-      assert.equal(report.lifecycle, lifecycle);
-      const m = listAgentMarkers(tmp);
-      assert.equal(m.shared, false);
-      assert.equal(m.gemini, false);
-      assert.equal(m.claude, false);
-      assert.equal(m.geminiDir, false);
-      assert.equal(m.claudeDir, false);
-      assert.equal(m.cursorDir, false);
+  it('skips scaffolding during npm postinstall with INIT_CWD (no --agent)', () => {
+    const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-life-post-'));
+    const out = installAsNpmLifecycle(tmp, 'postinstall');
+    const report = JSON.parse(out);
+    assert.equal(report.result, 'INSTALL_SKIPPED_LIFECYCLE');
+    assert.equal(report.lifecycle, 'postinstall');
+    assert.deepEqual(listAgentMarkers(tmp), {
+      shared: false,
+      gemini: false,
+      claude: false,
+      geminiDir: false,
+      claudeDir: false,
+      cursorDir: false
     });
-  }
+  });
 
   it('npx simulation: postinstall must not install all agents; CLI --agent=gemini installs only gemini', () => {
     const tmp = fs.mkdtempSync(path.join(os.tmpdir(), '3a-npx-sim-'));

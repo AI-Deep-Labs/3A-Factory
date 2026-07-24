@@ -34,9 +34,15 @@ Create ADR only if: significant options, real trade-offs, hard to reverse, multi
 Do **not** create ADR for: minor naming, local refactor, easily reversible implementation detail, task sequencing.
 
 ## Naming
-1. Scan `docs/tasks/**/decisions/ADR-*.md` and `docs/decisions/ADR-*.md`.
-2. `next = max+1`, pad **6 digits**. Do not rename old files.
-3. Id = `ADR-<NNNNNN>-<slug>`.
+The agent allocates ADR ids itself — **no helper script**.
+
+1. List `ADR-*.md` file basenames under:
+   - `docs/tasks/**/decisions/`
+   - `docs/decisions/`
+   - Legacy: `docs/designs/` (if present)
+2. Parse the numeric part after `ADR-`. Compute **`next = max + 1`**. If none → **`000001`**.
+3. **Never** count illustrative ADR ids in contracts/skills/templates (examples use `ADR-000001-…` only).
+4. Id = `ADR-<NNNNNN>-<slug>`. ADR series is independent of REQ series. Do not rename old files.
 
 Template: `.agents/templates/ADR-template.md`.
 
@@ -57,8 +63,8 @@ Project ADR: read relevant analysis/context; package path may be `n/a`.
 
 ```yaml
 decisions:
-  - id: ADR-000005-example-slug
-    path: decisions/ADR-000005-example-slug.md
+  - id: ADR-000001-example-slug
+    path: decisions/ADR-000001-example-slug.md
     status: Proposed
 ```
 

@@ -18,7 +18,7 @@ Execution skills (`project-manager`, `develop`, `review`, `qa`, `converge`, `dep
 
 ```text
 docs/tasks/
-└── REQ-000013-sync-masterdata/
+└── REQ-000001-example-feature/
     ├── manifest.yaml
     ├── raw.md
     ├── discovery.md
@@ -29,7 +29,7 @@ docs/tasks/
     ├── acceptance.md
     ├── spec-review.md
     ├── decisions/
-    │   └── ADR-000005-example.md
+    │   └── ADR-000001-example.md
     ├── reviews/
     │   └── code-review.md
     ├── qa/
@@ -44,7 +44,8 @@ docs/tasks/
 ### Rules
 
 - One feature ↔ one package.
-- Folder format: `REQ-<6 digits>-<kebab-case-slug>` (example: `REQ-000013-sync-masterdata`).
+- Folder format: `REQ-<6 digits>-<kebab-case-slug>` (illustrative example only: `REQ-000001-example-feature` — **not** an allocated id).
+- The agent allocates real ids by listing `docs/tasks/REQ-*` directory names and applying `next = max + 1` (none → `000001`). Same idea for ADR under `decisions/` / `docs/decisions/`. Ignore examples in this contract and other tooling files. No allocator script.
 - New feature artifacts **must** live inside the package.
 - Global project documentation may remain outside `docs/tasks/` (for example `docs/project_overview.md`).
 - Feature-specific ADR lives under `decisions/`.

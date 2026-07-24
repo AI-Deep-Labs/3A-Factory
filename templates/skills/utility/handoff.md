@@ -13,7 +13,7 @@ None. Utility skill for session consolidation.
 1. Summarize progress, key decisions, active issues, and pending actions from the current conversation.
 2. Save under `docs/misc/compact/` in the current project workspace. Create `docs/misc/compact/` only when writing the handoff file (do not leave empty scaffold dirs).
 3. Filename: `HANDOFF-YYYYMMDD-HHMM.md` (e.g. `HANDOFF-20260601-1430.md`).
-4. Stay focused. Do not duplicate content already in Spec Package artifacts. Link paths like `[tasks.md](file:///docs/tasks/REQ-000013-login-throttle/tasks.md)`.
+4. Stay focused. Do not duplicate content already in Spec Package artifacts. Link paths like `[tasks.md](file:///docs/tasks/REQ-000001-example-feature/tasks.md)`.
 5. Redact secrets, passwords, API keys, PII.
 6. If arguments were passed, treat them as the next session’s objective.
 

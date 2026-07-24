@@ -67,4 +67,13 @@ describe('workflow regression (static)', () => {
     assert.match(pm, /APPROVED_USER_REVIEW/);
     assert.match(pm, /converge/);
   });
+
+  it('triage allocates REQ ids from docs/tasks directory names', () => {
+    const t = skill('triage');
+    assert.match(t, /docs\/tasks\//);
+    assert.match(t, /next\s*=\s*max\s*\+\s*1/i);
+    assert.match(t, /000001/);
+    assert.match(t, /Never/i);
+    assert.doesNotMatch(t, /allocate-id/);
+  });
 });

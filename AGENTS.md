@@ -103,3 +103,27 @@ Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/com
 
 - Skill/rule/template instructions: **English**.
 - Generated artifact bodies (`docs/tasks/`, docs content): **Vietnamese**; IDs/status tokens: **English**.
+
+## Naming & id allocation
+
+### Formats
+
+```text
+Full id:     REQ-<NNNNNN>-<slug>     /  ADR-<NNNNNN>-<slug>
+Folder:      docs/tasks/REQ-<NNNNNN>-<slug>/
+Branch:      feature/REQ-<NNNNNN>-<slug>
+manifest.id: REQ-<NNNNNN>            (digits only after prefix; no slug)
+```
+
+- `<NNNNNN>` = 6-digit zero-padded number.
+- `<slug>` = 2–5 ASCII kebab-case words; fixed for the REQ lifetime.
+- **REQ and ADR use separate number series.**
+- **No allocator script** — the agent computes the next id itself.
+
+### How the agent allocates
+
+1. List **directory names** under `docs/tasks/` matching `REQ-*` (and, if present, legacy `.specs/REQ-*` / `docs/requirements/REQ-*` / `docs/designs/REQ-*` basenames).
+2. Parse the numeric part after `REQ-`. Compute `next = max + 1`. If none exist → **`000001`**.
+3. For ADR: list `ADR-*.md` under `docs/decisions/` and `docs/tasks/*/decisions/` (plus legacy `docs/designs/ADR-*.md` if present); same `next = max + 1` rule on the **ADR** series only.
+
+**Never** take numbers from `.agents/`, skills, contracts, templates, README, or markdown body text. Illustrative examples in tooling always use `REQ-000001-…` / `ADR-000001-…` and are **not** real allocations. Do not rename existing ids.

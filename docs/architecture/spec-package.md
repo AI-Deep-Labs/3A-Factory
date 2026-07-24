@@ -2,7 +2,7 @@
 
 ## Context
 
-3A-Factory **3.0.0-rc.5** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `docs/tasks/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
+3A-Factory **3.0.0-rc.6** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `docs/tasks/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
 
 ## Problem statement
 
@@ -31,7 +31,7 @@
 
 ## Greenfield decision
 
-Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.5`). Không hỗ trợ migration từ layout cũ.
+Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.6`). Không hỗ trợ migration từ layout cũ.
 
 ## Package structure
 
@@ -44,6 +44,14 @@ docs/tasks/REQ-<NNNNNN>-<slug>/
 ```
 
 Project-wide ADR: `docs/decisions/`. Global: `docs/misc/`, `docs/project_overview.md`.
+
+## Naming & id allocation
+
+- Formats: `REQ-<NNNNNN>-<slug>`, `ADR-<NNNNNN>-<slug>`; `manifest.id` = `REQ-<NNNNNN>`.
+- REQ and ADR are separate series.
+- Agent allocates by listing real path basenames under `docs/tasks/` (and ADR folders) then `next = max + 1` (none → `000001`). **No allocator script.**
+- Never take numbers from illustrative text in `.agents/` / skills / contracts.
+- Tooling examples must use `REQ-000001-…` / `ADR-000001-…` only.
 
 ## Artifact ownership
 

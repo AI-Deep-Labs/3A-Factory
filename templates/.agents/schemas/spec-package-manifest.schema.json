@@ -29,7 +29,7 @@
     "id": {
       "type": "string",
       "pattern": "^REQ-[0-9]{6}$",
-      "description": "REQ identifier without slug (e.g. REQ-000013)."
+      "description": "REQ identifier without slug (e.g. REQ-000001)."
     },
     "slug": {
       "type": "string",

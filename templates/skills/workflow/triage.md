@@ -28,11 +28,16 @@ Do **not** invent a solution.
 8. Do not move or delete legacy artifacts.
 
 ## Naming & numbering
-1. Scan existing ids under `docs/tasks/**` and legacy `docs/**` for `REQ-*` / `ADR-*`.
-2. Parse numeric part after `REQ-` (legacy unpadded / slug-less allowed). `next = max+1`, pad **6 digits**. Do not rename old files. If none → `000001`.
-3. Slug: 2–5 ASCII kebab-case words from the request; fixed for the REQ lifetime.
-4. Canonical folder: `docs/tasks/REQ-<NNNNNN>-<slug>/`.
-5. Branch (later): `feature/REQ-<NNNNNN>-<slug>`.
+The agent allocates ids itself — **no helper script**.
+
+1. List **directory names** under `docs/tasks/` matching `REQ-*`.
+2. Also include legacy basenames if those folders still exist: `.specs/REQ-*`, `docs/requirements/REQ-*`, `docs/designs/REQ-*`.
+3. Parse the numeric part after `REQ-` (legacy unpadded allowed). Compute **`next = max + 1`**. If none → **`000001`**.
+4. **Never** read numbers from `.agents/`, skills, contracts, templates, README, or markdown bodies. Tooling examples use `REQ-000001-…` only and do **not** consume the sequence.
+5. Slug: 2–5 ASCII kebab-case words from the request; fixed for the REQ lifetime.
+6. Canonical folder: `docs/tasks/REQ-<NNNNNN>-<slug>/`.
+7. `manifest.id` = `REQ-<NNNNNN>` (no slug). Branch (later): `feature/REQ-<NNNNNN>-<slug>`.
+8. REQ series is independent of ADR series.
 
 ## Inputs
 - Raw requirement text / user request

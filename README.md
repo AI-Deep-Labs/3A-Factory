@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0--rc.5-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.0--rc.6-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
@@ -22,7 +22,7 @@ Spec is a Feature-local Spec Package, not a single document.
 
 ```text
 docs/tasks/
-└── REQ-000013-sync-masterdata/
+└── REQ-000001-example-feature/
     ├── manifest.yaml
     ├── raw.md
     ├── discovery.md
@@ -145,7 +145,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
-- [Release notes 3.0.0-rc.5](release-notes/3.0.0-rc.5.md)
+- [Release notes 3.0.0-rc.6](release-notes/3.0.0-rc.6.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)
 
@@ -158,6 +158,8 @@ npx 3a-factory --target=all --dry-run
 ```
 
 Luôn truyền `--agent=…` (hoặc `--target=all`) khi muốn scaffold. npm `postinstall` **không** ghi file vào repo — tránh `npx … --agent=gemini` vô tình cài cả ba agent.
+
+Cấp số REQ/ADR: agent tự liệt kê thư mục `docs/tasks/REQ-*` rồi `next = max + 1` (không có → `000001`). Không chạy script phụ; không lấy số từ example trong `.agents/`.
 
 | Selection | Paths |
 |---|---|
