@@ -1,7 +1,7 @@
 # Task Implementation Evidence
 
 > When filled: write the body in **Vietnamese**. Keep IDs in English.  
-> Path: `.specs/<PACKAGE>/reviews/TASK-<NNN>-implementation.md`
+> Path: `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md`
 
 ## Metadata
 

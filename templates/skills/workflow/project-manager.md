@@ -19,8 +19,8 @@ Do not commit or push.
 Do not mark tasks `done` (only `review` may).
 
 ## Package resolution
-1. Valid `.specs/` package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+1. Valid `docs/tasks/` package path → use.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None + new requirement text → start with `triage`.
 4. Do not write new feature artifacts under legacy `docs/requirements|designs|reviews|qa`.
 

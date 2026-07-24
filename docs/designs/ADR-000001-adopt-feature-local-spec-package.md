@@ -9,7 +9,7 @@
 *   **Decision owner**: repository maintainers (chấp thuận qua lệnh thực hiện Phase 1)
 *   **Decision Code**: ADR-000001-adopt-feature-local-spec-package
 *   **Related REQ**: (không có — quyết định kiến trúc package-level của 3A-Factory)
-*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.3` pre-release; GA `3.0.0` sau RC)
+*   **Target major version (khuyến nghị)**: `3.0.0` (hiện `package.json` = `3.0.0-rc.4` pre-release; GA `3.0.0` sau RC)
 *   **Implementation note**: Phase 1 bắt đầu triển khai Spec Package contract, manifest schema, templates và governance. Không thay đổi nội dung quyết định kiến trúc đã chốt.
 
 ---
@@ -159,7 +159,7 @@ Gộp requirements, design, tasks, acceptance vào **một file lớn**.
 
 ### Option 3 — Feature-local Spec Package (chọn)
 
-Mỗi feature một thư mục package dưới `.specs/`, gồm artifact chuyên trách + `manifest.yaml`.
+Mỗi feature một thư mục package dưới `docs/tasks/`, gồm artifact chuyên trách + `manifest.yaml`.
 
 - **Ưu**: Single package truth; ownership rõ; validation/gate được; Develop deterministic; phù hợp refactor dần specialist skills.
 - **Nhược**: Nhiều file hơn; cần manifest/validator; cần migration và compatibility layer; breaking change → major version.
@@ -192,7 +192,7 @@ Spec Package là tập hợp các artifact:
 ## 6. Canonical target structure
 
 ```text
-.specs/
+docs/tasks/
 └── REQ-000013-sync-masterdata/
     ├── manifest.yaml
     ├── raw.md
@@ -219,7 +219,7 @@ Spec Package là tập hợp các artifact:
 
 - Một feature ↔ một package.
 - Artifact của feature **không** ghi phân tán trong các global lifecycle folder kiểu `docs/requirements|designs|reviews|qa|release-notes` (layout hiện tại trong `AGENTS.md` / installer).
-- Global project documentation (ví dụ `docs/project_overview.md` từ onboarding) **vẫn có thể** tồn tại ngoài `.specs/`.
+- Global project documentation (ví dụ `docs/project_overview.md` từ onboarding) **vẫn có thể** tồn tại ngoài `docs/tasks/`.
 - Feature-specific ADR nằm trong `decisions/`.
 - Project-wide ADR cần **canonical global location riêng** (ví dụ tiếp tục `docs/designs/ADR-*.md` hoặc `docs/decisions/` — chốt chi tiết ở Phase 1 governance; Phase 0 chỉ yêu cầu có location global tách khỏi feature package).
 
@@ -496,7 +496,7 @@ Fail bất kỳ mục critical → không được chuyển `awaiting_approval` 
 
 Chiến lược chuyển tiếp (chốt hướng; implement ở Phase 4):
 
-1. Feature **mới** chỉ ghi vào `.specs/`.
+1. Feature **mới** chỉ ghi vào `docs/tasks/`.
 2. **Không** tự động xóa artifact cũ dưới `docs/…`.
 3. Có **legacy read-only resolver** trong giai đoạn chuyển tiếp (map `docs/requirements|designs|reviews|qa|release-notes` → logical package view).
 4. Có migration tool hoặc migration skill.
@@ -517,7 +517,7 @@ Khuyến nghị target major version: **`3.0.0`**.
 
 ### Lý do
 
-- Đổi artifact layout (`docs/…` lifecycle folders → `.specs/<REQ>/…`)
+- Đổi artifact layout (`docs/…` lifecycle folders → `docs/tasks/<REQ>/…`)
 - Đổi trách nhiệm skill (`spec` orchestrator; `plan` → `tasks`; thêm requirements/acceptance/spec-review/converge)
 - Đổi command semantics (`/plan` deprecated alias)
 - Đổi approval semantics (typed approvals + manifest)

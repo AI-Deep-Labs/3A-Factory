@@ -18,7 +18,7 @@ Do **not**: choose architecture; write technical design; split implementation ta
 
 ## Package resolution contract
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 4. Do not write new artifacts to legacy `docs/requirements|designs|qa|reviews`.
 5. Do not move/delete legacy artifacts.

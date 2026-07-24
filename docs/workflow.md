@@ -1,6 +1,6 @@
 # Workflow 3A-Factory (Feature-local Spec Package)
 
-Tài liệu vận hành cho phiên bản **3.0.0-rc.3** (dòng 3.0.0). Spec = package dưới `.specs/`, không phải single document.
+Tài liệu vận hành cho phiên bản **3.0.0-rc.4** (dòng 3.0.0). Spec = package dưới `docs/tasks/`, không phải single document.
 
 ## 1–11. Producer (intake → Spec Package approval)
 

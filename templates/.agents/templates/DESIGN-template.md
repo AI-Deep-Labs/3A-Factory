@@ -2,13 +2,13 @@
 
 > When filled: write the body in **Vietnamese**. Keep Design IDs in English.  
 > Authoritative: **Technical Truth — HOW**. Do not invent business requirements. Do not put execution task lists here (use `tasks.md`).  
-> Spec Package path (target): `.specs/REQ-<NNNNNN>-<slug>/design.md`
+> Spec Package path (target): `docs/tasks/REQ-<NNNNNN>-<slug>/design.md`
 
 ## Metadata
 
 - REQ ID: REQ-000001
 - Feature:
-- Package path: `.specs/REQ-000001-<slug>/`
+- Package path: `docs/tasks/REQ-000001-<slug>/`
 - Date: YYYY-MM-DD
 - Analysis ref: `analysis.md`
 - Requirements ref: `requirements.md`

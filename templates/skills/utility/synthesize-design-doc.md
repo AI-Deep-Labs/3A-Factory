@@ -14,8 +14,8 @@ Save Markdown files in the project so later agents can reuse them.
 ## Output contract
 - **Document body language: Vietnamese** (unless the user explicitly requests English). Keep standard technical terms in English when clearer.
 - Paths (Feature-local Spec Package — greenfield):
-  - Feature package: `.specs/REQ-<NNNNNN>-<slug>/` (`raw.md`, `discovery.md`, `requirements.md`, `analysis.md`, `design.md`, `tasks.md`, `acceptance.md`, …)
-  - Package ADR: `.specs/REQ-<NNNNNN>-<slug>/decisions/ADR-<NNNNNN>-<slug>.md`
+  - Feature package: `docs/tasks/REQ-<NNNNNN>-<slug>/` (`raw.md`, `discovery.md`, `requirements.md`, `analysis.md`, `design.md`, `tasks.md`, `acceptance.md`, …)
+  - Package ADR: `docs/tasks/REQ-<NNNNNN>-<slug>/decisions/ADR-<NNNNNN>-<slug>.md`
   - Project-wide ADR: `docs/decisions/ADR-<NNNNNN>-<slug>.md`
   - Review / QA evidence: under the same package (`reviews/`, `qa/`) or package `release/`
   - Compact handoff: `docs/misc/compact/HANDOFF-*.md`

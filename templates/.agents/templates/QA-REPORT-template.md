@@ -3,7 +3,7 @@
 > When filled: write the body in **Vietnamese**.
 
 - REQ: REQ-000001-example-slug
-- Spec Package: `.specs/REQ-000001-example-slug/`
+- Spec Package: `docs/tasks/REQ-000001-example-slug/`
 - Acceptance: `acceptance.md`
 - Unit-test report: `qa/…-UT.md` (package-local)
 - Test date: YYYY-MM-DD

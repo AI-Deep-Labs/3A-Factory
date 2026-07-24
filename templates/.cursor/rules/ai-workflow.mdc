@@ -10,7 +10,7 @@ Read `AGENTS.md` and `WORKFLOW.md` before making changes.
 
 **Spec is a Feature-local Spec Package, not a single document.**
 
-Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+Canonical path: `docs/tasks/REQ-<NNNNNN>-<slug>/`
 
 Canonical workflow:
 
@@ -33,7 +33,7 @@ manifest.yaml   = Package State Truth
 
 ## Greenfield
 
-- Feature artifacts only under `.specs/`.
+- Feature artifacts only under `docs/tasks/`.
 - Project-wide ADR: `docs/decisions/` (create when writing).
 - No legacy lifecycle folders for new work.
 - No migration tooling.

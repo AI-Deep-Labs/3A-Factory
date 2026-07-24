@@ -1,6 +1,6 @@
 ---
 name: spec
-description: Spec Package orchestrator — coordinates requirements, ADR, design, tasks, acceptance, and spec-review under .specs/; stops for APPROVED_SPEC_PACKAGE. Does not write *-spec.md or application code.
+description: Spec Package orchestrator — coordinates requirements, ADR, design, tasks, acceptance, and spec-review under docs/tasks/; stops for APPROVED_SPEC_PACKAGE. Does not write *-spec.md or application code.
 disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
@@ -24,7 +24,7 @@ Do not invent requirements or architecture to paper over blockers.
 
 ## Package resolution contract
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND` (ask `/triage`).
 4. Never write new legacy `*-spec.md` / `*-design.md` / `*-plan.md` under `docs/`.
 5. Do not move/delete legacy artifacts.
@@ -101,7 +101,7 @@ Legacy keyword `APPROVED` in this skill context maps to `APPROVED_SPEC_PACKAGE` 
 ## Output (when review PASSED)
 Print:
 - Package summary (id, slug, risk, status)
-- Artifact paths under `.specs/REQ-…/`
+- Artifact paths under `docs/tasks/REQ-…/`
 - Validation result
 - Explicit request for user to reply: `APPROVED_SPEC_PACKAGE`
 

@@ -8,7 +8,7 @@
 
 - REQ ID: REQ-000001
 - Feature:
-- Package: `.specs/REQ-000001-<slug>/`
+- Package: `docs/tasks/REQ-000001-<slug>/`
 - Status: draft | ready | superseded
 - Risk: low | medium | high
 - Last updated: YYYY-MM-DD

@@ -5,18 +5,27 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-rc.3] - Unreleased
+## [3.0.0-rc.4] - Unreleased
 
 Pre-release (release candidate) of the 3.0.0 greenfield Feature-local Spec Package line. Final GA will be `3.0.0` after RC validation.
 
 ### Changed
 
-- Package version set to **3.0.0-rc.3**.
-- Installer slim skill layout: skill body only in `.agents/skills/`; Cursor `.cursor/rules/<skill>.mdc`; Gemini `.gemini/commands/*.toml` → `.agents/skills/` (no `.cursor/skills` / `.gemini/skills` mirrors).
+- Package version set to **3.0.0-rc.4**.
+- **Canonical Spec Package path:** `docs/tasks/REQ-<NNNNNN>-<slug>/` (replaces `.specs/`).
 
 ### Documentation
 
-- README, WORKFLOW, AGENTS, GEMINI, architecture, onboarding, and release notes updated for slim installer paths and **3.0.0-rc.3**.
+- Contract, skills, governance, validators, README, and release notes updated for `docs/tasks/` and **3.0.0-rc.4**.
+
+## [3.0.0-rc.3]
+
+Pre-release candidate with slim installer skill layout.
+
+### Changed
+
+- Package version set to **3.0.0-rc.3**.
+- Installer slim skill layout: skill body only in `.agents/skills/`; Cursor `.cursor/rules/<skill>.mdc`; Gemini `.gemini/commands/*.toml` → `.agents/skills/` (no `.cursor/skills` / `.gemini/skills` mirrors).
 
 ## [3.0.0-rc.2]
 
@@ -40,7 +49,7 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ### Added
 
-- Feature-local Spec Package under `.specs/REQ-<NNNNNN>-<slug>/` with mandatory `manifest.yaml`.
+- Feature-local Spec Package under `.specs/REQ-<NNNNNN>-<slug>/` with mandatory `manifest.yaml` (superseded by `docs/tasks/` from rc.4).
 - Producer skills: `requirements`, `tasks`, `acceptance`, `spec-review`; orchestrator `/spec`.
 - Execution: task-by-task `develop`, review-owned task completion, acceptance-driven `qa`, `converge`.
 - Approval tokens: `APPROVED_SPEC_PACKAGE`, `APPROVED_DEVELOP`, `APPROVED_USER_REVIEW`, `APPROVED_DEPLOY`.
@@ -73,4 +82,4 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ## [2.3.1] - Prior
 
-See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.3`).
+See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.4`).

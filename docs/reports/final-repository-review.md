@@ -2,7 +2,7 @@
 
 ## Executive Summary
 
-Review độc lập toàn repo **3a-factory@3.0.0-rc.3** sau Phase 6 (documentation, versioning, example, validation). Kiến trúc Feature-local Spec Package greenfield đã được implement (Phase 0–3, 5), document, và kiểm chứng bằng build/test/validate/installer. Phase 4 intentionally skipped. Không publish/tag/commit trong Phase 6.
+Review độc lập toàn repo **3a-factory@3.0.0-rc.4** sau Phase 6 (documentation, versioning, example, validation). Kiến trúc Feature-local Spec Package greenfield đã được implement (Phase 0–3, 5), document, và kiểm chứng bằng build/test/validate/installer. Phase 4 intentionally skipped. Không publish/tag/commit trong Phase 6.
 
 **Verdict đề xuất:** `READY_WITH_KNOWN_LIMITATIONS`
 
@@ -35,7 +35,7 @@ Gates không bị bypass trong skill contracts. Tokens đúng bốn loại. Re-a
 
 ## Build and Installer
 
-Deterministic build (`BUILD_REPRODUCIBLE`). Installer path-safe smoke + idempotent; không tạo `.specs/`; backup on force; dry-run OK. Publish tarball: `dist/*`, README, LICENSE, package.json only.
+Deterministic build (`BUILD_REPRODUCIBLE`). Installer path-safe smoke + idempotent; không tạo `docs/tasks/`; backup on force; dry-run OK. Publish tarball: `dist/*`, README, LICENSE, package.json only.
 
 ## Validation and CI
 
@@ -47,7 +47,7 @@ Claude / Gemini / Cursor install smoke PASS. Adapter parity validator PASS. Shar
 
 ## Documentation Quality
 
-README, architecture, workflow, commands, approvals, BREAKING-CHANGES, CHANGELOG, release notes, checklist, example — đầy đủ và đồng bộ version 3.0.0-rc.3.
+README, architecture, workflow, commands, approvals, BREAKING-CHANGES, CHANGELOG, release notes, checklist, example — đầy đủ và đồng bộ version 3.0.0-rc.4.
 
 ## Greenfield Consistency
 
@@ -93,7 +93,7 @@ None (đã xử lý trong Phase 6):
 
 ## Release Readiness
 
-Version 3.0.0-rc.3, docs, example, CI-equivalent, reproducibility, idempotency, pack dry-run — sẵn sàng làm release candidate. Chưa publish.
+Version 3.0.0-rc.4, docs, example, CI-equivalent, reproducibility, idempotency, pack dry-run — sẵn sàng làm release candidate. Chưa publish.
 
 ## Remaining Risks
 

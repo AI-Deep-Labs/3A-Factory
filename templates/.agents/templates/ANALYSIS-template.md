@@ -2,13 +2,13 @@
 
 > When filled: write the body in **Vietnamese**.  
 > Authoritative for **impact / risk / current-state analysis** only — not Requirements (WHAT) and not Design (HOW).  
-> Spec Package path (target): `.specs/REQ-<NNNNNN>-<slug>/analysis.md`
+> Spec Package path (target): `docs/tasks/REQ-<NNNNNN>-<slug>/analysis.md`
 
 ## Metadata
 
 - REQ ID: REQ-000001
 - Feature slug:
-- Package path: `.specs/REQ-000001-<slug>/`
+- Package path: `docs/tasks/REQ-000001-<slug>/`
 - Date: YYYY-MM-DD
 - Risk level: low | medium | high
 

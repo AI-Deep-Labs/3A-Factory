@@ -19,7 +19,7 @@ Do not ignore mismatches.
 May fix obvious broken references / non-semantic metadata / simple manifest summary mismatches — record every correction in the report.
 
 ## Package resolution
-`.specs/REQ-…/`; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`.
+`docs/tasks/REQ-…/`; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`.
 
 ## Preconditions
 - `manifest.status == converging` (or QA just PASSED and handed off)
@@ -50,7 +50,7 @@ Entire package + relevant git diff / sources + QA/review evidence.
 
 ## Output
 ```text
-.specs/<PACKAGE>/qa/converge-report.md
+docs/tasks/<PACKAGE>/qa/converge-report.md
 ```
 Template: `.agents/templates/CONVERGE-REPORT-template.md` (Vietnamese).  
 Result: `PASSED` | `FAILED`.

@@ -1,7 +1,7 @@
 # Spec Package Contract
 
 > Instruction / machine-readable identifiers: **English**.  
-> Generated artifact bodies under `.specs/` (when filled): **Vietnamese**.  
+> Generated artifact bodies under `docs/tasks/` (when filled): **Vietnamese**.  
 > Canonical decision: `ADR-000001-adopt-feature-local-spec-package`.
 
 This file is the **single source of truth** for the Feature-local Spec Package contract (Phase 1+).  
@@ -17,7 +17,7 @@ Execution skills (`project-manager`, `develop`, `review`, `qa`, `converge`, `dep
 ### Canonical layout
 
 ```text
-.specs/
+docs/tasks/
 └── REQ-000013-sync-masterdata/
     ├── manifest.yaml
     ├── raw.md
@@ -46,11 +46,12 @@ Execution skills (`project-manager`, `develop`, `review`, `qa`, `converge`, `dep
 - One feature ↔ one package.
 - Folder format: `REQ-<6 digits>-<kebab-case-slug>` (example: `REQ-000013-sync-masterdata`).
 - New feature artifacts **must** live inside the package.
-- Global project documentation may remain outside `.specs/` (for example `docs/project_overview.md`).
+- Global project documentation may remain outside `docs/tasks/` (for example `docs/project_overview.md`).
 - Feature-specific ADR lives under `decisions/`.
 - Project-wide ADR lives at `docs/decisions/ADR-*.md` (create `docs/decisions/` only when writing the first such file; installer must not pre-create it).
 - Do not create the same feature in multiple packages.
 - Greenfield: do not write new feature artifacts under `docs/requirements|designs|reviews|qa`.
+- Do **not** use legacy package root `.specs/` — canonical root is `docs/tasks/`.
 
 ---
 
@@ -288,15 +289,15 @@ Only the **review** skill may move a task from `review` → `done`.
 ### Evidence paths (new packages)
 
 ```text
-.specs/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
-.specs/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
-.specs/<PACKAGE>/qa/unit-test-report.md
-.specs/<PACKAGE>/qa/system-test-report.md
-.specs/<PACKAGE>/qa/uat-report.md
-.specs/<PACKAGE>/qa/performance-report.md
-.specs/<PACKAGE>/qa/security-report.md
-.specs/<PACKAGE>/qa/qa-summary.md
-.specs/<PACKAGE>/qa/converge-report.md
+docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
+docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
+docs/tasks/<PACKAGE>/qa/unit-test-report.md
+docs/tasks/<PACKAGE>/qa/system-test-report.md
+docs/tasks/<PACKAGE>/qa/uat-report.md
+docs/tasks/<PACKAGE>/qa/performance-report.md
+docs/tasks/<PACKAGE>/qa/security-report.md
+docs/tasks/<PACKAGE>/qa/qa-summary.md
+docs/tasks/<PACKAGE>/qa/converge-report.md
 ```
 
 Do not write new feature review/QA evidence under legacy `docs/reviews` or `docs/qa`.

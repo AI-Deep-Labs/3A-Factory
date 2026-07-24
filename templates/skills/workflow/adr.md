@@ -1,6 +1,6 @@
 ---
 name: adr
-description: Optional Architectural Decision Record — feature-local under .specs/.../decisions/ or project-wide under docs/decisions/. Register feature ADRs in package manifest.
+description: Optional Architectural Decision Record — feature-local under docs/tasks/.../decisions/ or project-wide under docs/decisions/. Register feature ADRs in package manifest.
 disable-model-invocation: true
 argument-hint: "[slug or REQ id or package path] [feature|project]"
 ---
@@ -19,12 +19,12 @@ Do **not** auto-Accept an ADR when user/maintainer review is required.
 
 ## Package resolution contract (feature scope)
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
-4. Feature ADR path: `.specs/<PACKAGE>/decisions/ADR-<NNNNNN>-<slug>.md`
+4. Feature ADR path: `docs/tasks/<PACKAGE>/decisions/ADR-<NNNNNN>-<slug>.md`
 5. Project-wide ADR path: `docs/decisions/ADR-<NNNNNN>-<slug>.md` (canonical global location). Create `docs/decisions/` only when writing the first project-wide ADR file.
 6. Do not place project-wide ADRs inside a random package.
-7. Do not write feature lifecycle artifacts outside `.specs/`.
+7. Do not write feature lifecycle artifacts outside `docs/tasks/`.
 8. Do not create migration/legacy paths.
 9. Do not pre-create empty `docs/decisions/` or `docs/misc/` during install/onboarding.
 
@@ -34,7 +34,7 @@ Create ADR only if: significant options, real trade-offs, hard to reverse, multi
 Do **not** create ADR for: minor naming, local refactor, easily reversible implementation detail, task sequencing.
 
 ## Naming
-1. Scan `.specs/**/decisions/ADR-*.md` and `docs/decisions/ADR-*.md`.
+1. Scan `docs/tasks/**/decisions/ADR-*.md` and `docs/decisions/ADR-*.md`.
 2. `next = max+1`, pad **6 digits**. Do not rename old files.
 3. Id = `ADR-<NNNNNN>-<slug>`.
 

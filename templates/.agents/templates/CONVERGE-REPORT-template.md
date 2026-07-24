@@ -1,7 +1,7 @@
 # Convergence Report
 
 > When filled: write the body in **Vietnamese**. Keep result tokens in English.  
-> Path: `.specs/<PACKAGE>/qa/converge-report.md`  
+> Path: `docs/tasks/<PACKAGE>/qa/converge-report.md`  
 > Runs only after QA PASSED. Does **not** mark package `done` or deploy.
 
 ## Metadata

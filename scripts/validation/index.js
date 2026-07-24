@@ -5,10 +5,10 @@ const path = require('path');
 const { ROOT, result, REQUIRED_SKILLS, exists, walk, parseFrontmatter, read, FORBIDDEN_ACTIVE, HAPPY_TRANSITIONS, PACKAGE_STATUS } = require('./lib');
 const { validateSchemaJson, validateManifestFile } = require('./validate-manifest');
 
-function validatePackageLayout(specsRoot = path.join(ROOT, '.specs')) {
+function validatePackageLayout(specsRoot = path.join(ROOT, 'docs/tasks')) {
   const details = [];
   if (!fs.existsSync(specsRoot)) {
-    return result(true, 'PACKAGE_LAYOUT_VALID', ['no .specs packages (OK)']);
+    return result(true, 'PACKAGE_LAYOUT_VALID', ['no docs/tasks packages (OK)']);
   }
   const dirs = fs.readdirSync(specsRoot).filter((n) =>
     fs.statSync(path.join(specsRoot, n)).isDirectory()
@@ -186,8 +186,8 @@ function validateGovernanceConsistency() {
       continue;
     }
     const text = read(f);
-    if (!text.includes('.specs/')) {
-      if (f !== 'README.md') details.push(`${f}: missing canonical .specs path`);
+    if (!text.includes('docs/tasks/')) {
+      if (f !== 'README.md') details.push(`${f}: missing canonical docs/tasks path`);
     }
     if (f !== 'README.md' && !/Feature-local Spec Package/i.test(text) && f !== 'templates/.agents/contracts/spec-package.md') {
       if (!/Spec is a Feature-local Spec Package/i.test(text) && !/Spec Package/i.test(text)) {
@@ -219,7 +219,7 @@ function validateAdapterParity() {
     }
     const text = read(file);
     for (const needle of [
-      '.specs/',
+      'docs/tasks/',
       'APPROVED_SPEC_PACKAGE',
       'APPROVED_DEPLOY',
       'converge',
@@ -293,6 +293,16 @@ function validateGreenfield() {
     if (/Write `docs\/requirements\/REQ-.*-spec\.md`/.test(text)) {
       details.push(`ACTIVE_REFERENCE legacy spec write in ${f}`);
     }
+    if (/Write `\.specs\//.test(text) || /create `\.\.?\/?\.specs\//i.test(text)) {
+      details.push(`ACTIVE_REFERENCE legacy .specs write in ${f}`);
+    }
+  }
+  const contract = read('templates/.agents/contracts/spec-package.md');
+  if (!contract.includes('docs/tasks/')) {
+    details.push('contract missing docs/tasks/ canonical path');
+  }
+  if (/```text\s*\n\.specs\//.test(contract)) {
+    details.push('contract still shows .specs/ as canonical layout');
   }
   return details.length
     ? result(false, 'GREENFIELD_INVALID', details)

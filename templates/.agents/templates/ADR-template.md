@@ -5,7 +5,7 @@
 *   **ADR ID**: ADR-000001-example-slug
 *   **Status**: Proposed (Draft) | Accepted | Rejected | Superseded | Deprecated
 *   **Scope**: feature | project
-*   **Package Path**: `.specs/REQ-000001-<slug>/decisions/` (required when Scope = feature; omit or `n/a` when Scope = project)
+*   **Package Path**: `docs/tasks/REQ-000001-<slug>/decisions/` (required when Scope = feature; omit or `n/a` when Scope = project)
 *   **Author**:
 *   **Decision Owner**:
 *   **Date**: YYYY-MM-DD

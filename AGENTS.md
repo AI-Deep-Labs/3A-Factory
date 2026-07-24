@@ -9,7 +9,7 @@ Run an automated software-delivery pipeline for **Claude Code**, **Gemini**, and
 ## Canonical path
 
 ```text
-.specs/REQ-<NNNNNN>-<slug>/
+docs/tasks/REQ-<NNNNNN>-<slug>/
 ```
 
 ## Canonical workflow
@@ -64,14 +64,14 @@ Do not reuse one approval for another gate. Never auto-deploy.
 
 ## Greenfield policy
 
-- New feature artifacts live only under `.specs/REQ-<NNNNNN>-<slug>/`.
+- New feature artifacts live only under `docs/tasks/REQ-<NNNNNN>-<slug>/`.
 - Project-wide ADR location: `docs/decisions/` (create on first project-wide ADR write).
 - Global docs may include `docs/project_overview.md` and `docs/misc/*` (create misc paths when handoff/qa-issues write).
 - Installer scaffolds `docs/` only — not `docs/decisions` or `docs/misc`.
 - **No** legacy lifecycle folders for new work (`docs/requirements`, `docs/designs` feature files, `docs/reviews`, `docs/qa`).
 - **No** `/plan` command.
 - **No** migration tooling or legacy resolver.
-- Installer never creates `.specs/` and never runs the workflow.
+- Installer never creates `docs/tasks/` and never runs the workflow.
 
 ## Hard gates
 
@@ -102,4 +102,4 @@ Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/com
 ## Language
 
 - Skill/rule/template instructions: **English**.
-- Generated artifact bodies (`.specs/`, docs content): **Vietnamese**; IDs/status tokens: **English**.
+- Generated artifact bodies (`docs/tasks/`, docs content): **Vietnamese**; IDs/status tokens: **English**.

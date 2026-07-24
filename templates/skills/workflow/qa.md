@@ -1,6 +1,6 @@
 ---
 name: qa
-description: Acceptance-driven QA for Spec Packages — unit/system/UAT(+PERF/SEC) with evidence under .specs/.../qa/; bounded auto-loop (max 3); routes implementation vs spec defects. Does not deploy.
+description: Acceptance-driven QA for Spec Packages — unit/system/UAT(+PERF/SEC) with evidence under docs/tasks/.../qa/; bounded auto-loop (max 3); routes implementation vs spec defects. Does not deploy.
 disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
@@ -18,7 +18,7 @@ Do not write new QA reports under legacy `docs/qa` for Spec Package features.
 Do not install new dependencies just to test.
 
 ## Package resolution
-`.specs/REQ-…/` only for new packages; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND` as usual.
+`docs/tasks/REQ-…/` only for new packages; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND` as usual.
 
 ## Preconditions
 ```text
@@ -43,7 +43,7 @@ Unit Test, System Test, UAT, Performance, Security, Regression impact
 Item results: `PASSED` | `FAILED` | `BLOCKED` | `NOT_REQUIRED`.
 
 ## Evidence outputs
-Under `.specs/<PACKAGE>/qa/`:
+Under `docs/tasks/<PACKAGE>/qa/`:
 ```text
 unit-test-report.md
 system-test-report.md

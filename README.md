@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.0.0--rc.3-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.0.0--rc.4-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
@@ -21,7 +21,7 @@ Spec is a Feature-local Spec Package, not a single document.
 ## Canonical Package Structure
 
 ```text
-.specs/
+docs/tasks/
 └── REQ-000013-sync-masterdata/
     ├── manifest.yaml
     ├── raw.md
@@ -75,7 +75,7 @@ triage
 
 1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
 2. Chạy `/onboarding` nếu repo mới.
-3. `/triage` yêu cầu → tạo package dưới `.specs/`.
+3. `/triage` yêu cầu → tạo package dưới `docs/tasks/`.
 4. `/grill-me` nếu còn ambiguity → `/analyze`.
 5. `/spec` (orchestrator) hoàn thiện requirements → ADR? → design → tasks → acceptance → spec-review.
 6. User: `APPROVED_SPEC_PACKAGE`.
@@ -123,7 +123,7 @@ Chi tiết: [docs/approvals.md](docs/approvals.md).
 - Không code trước `APPROVED_SPEC_PACKAGE`.
 - Không auto-approve / auto-deploy.
 - Không commit/push mặc định.
-- Installer không tạo feature package (`.specs/`), không pre-create `docs/decisions` / `docs/misc`, và không ghi `.3a-factory/`.
+- Installer không tạo feature package (`docs/tasks/`), không pre-create `docs/decisions` / `docs/misc`, và không ghi `.3a-factory/`.
 - Greenfield: không legacy workflow, không migration tooling.
 
 ## Development Commands
@@ -145,7 +145,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
-- [Release notes 3.0.0-rc.3](release-notes/3.0.0-rc.3.md)
+- [Release notes 3.0.0-rc.4](release-notes/3.0.0-rc.4.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)
 

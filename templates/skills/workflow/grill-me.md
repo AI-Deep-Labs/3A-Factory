@@ -1,6 +1,6 @@
 ---
 name: grill-me
-description: Deep clarification (one question at a time) into .specs/.../discovery.md; update manifest status clarifying until READY_FOR_ANALYSIS.
+description: Deep clarification (one question at a time) into docs/tasks/.../discovery.md; update manifest status clarifying until READY_FOR_ANALYSIS.
 disable-model-invocation: true
 argument-hint: "[requirement or REQ-<NNNNNN>-<slug> or package path]"
 ---
@@ -19,7 +19,7 @@ Do not write requirements, design, or acceptance as authoritative truth.
 
 ## Package resolution contract
 1. Valid package path from user/context → use it.
-2. Else REQ id → find exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → find exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. One match → use. Multiple → `PACKAGE_CONFLICT`.
 4. None found → this skill does **not** invent a new REQ; stop with `PACKAGE_NOT_FOUND` and ask for `/triage` first (or create minimal package only if triage already implied the same id).
 5. Never write new artifacts to legacy `docs/requirements|designs|qa|reviews`.

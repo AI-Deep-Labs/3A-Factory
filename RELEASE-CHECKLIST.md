@@ -1,4 +1,4 @@
-# Release Checklist — 3.0.0-rc.3
+# Release Checklist — 3.0.0-rc.4
 
 ## Architecture
 
@@ -27,7 +27,7 @@
 - [x] Cursor passed
 - [x] Idempotent
 - [x] Backup tested
-- [x] No workflow side effects (no `.specs/` create)
+- [x] No workflow side effects (no `docs/tasks/` create)
 
 
 
@@ -62,7 +62,7 @@
 - [x] Commands
 - [x] Approvals
 - [x] Breaking changes
-- [x] Changelog (`[3.0.0-rc.3] - Unreleased` until RC publish date is set)
+- [x] Changelog (`[3.0.0-rc.4] - Unreleased` until RC publish date is set)
 - [x] Release notes
 - [x] Example package
 
@@ -70,10 +70,10 @@
 
 ## Release Safety
 
-- [x] Version `3.0.0-rc.3`
+- [x] Version `3.0.0-rc.4`
 - [x] Publish content correct (`npm pack --dry-run`)
 - [x] No secrets in bundle
-- [x] No local `.specs/` in package
+- [x] No local `docs/tasks/` in package
 - [x] No test fixtures in runtime bundle
 - [x] No accidental publish/tag/push from automation
 

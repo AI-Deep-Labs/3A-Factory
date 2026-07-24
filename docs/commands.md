@@ -1,6 +1,6 @@
 # Command Reference
 
-Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.0.0-rc.3**. Không có `/plan`.
+Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.0.0-rc.4**. Không có `/plan`.
 
 ---
 
@@ -12,7 +12,7 @@ Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.
 | When to use | Request mới |
 | Inputs | Mô tả user |
 | Outputs | Package id, slug, risk hint |
-| Artifacts changed | `.specs/REQ-…/manifest.yaml`, `raw.md` |
+| Artifacts changed | `docs/tasks/REQ-…/manifest.yaml`, `raw.md` |
 | Manifest transitions | → `triaged` |
 | Approval required | No |
 | Failure states | Id conflict / invalid slug |

@@ -10,7 +10,7 @@
 
 - REQ ID: REQ-000001
 - Feature:
-- Package: `.specs/REQ-000001-<slug>/`
+- Package: `docs/tasks/REQ-000001-<slug>/`
 - Status: draft | ready | in_progress | done
 - Last updated: YYYY-MM-DD
 

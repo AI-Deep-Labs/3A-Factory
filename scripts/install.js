@@ -5,7 +5,7 @@
  * Installs shared governance + Spec Package templates/contracts/schemas
  * and agent adapters for Claude / Gemini / Cursor.
  *
- * Does NOT create .specs/, run workflow, approve, commit, push, or deploy.
+ * Does NOT create docs/tasks/, run workflow, approve, commit, push, or deploy.
  */
 
 const fs = require('fs');
@@ -106,7 +106,10 @@ function assertDestSafe(destRelativePath) {
     throw new Error(`unsafe dest path: ${destRelativePath}`);
   }
   if (rel === '.specs' || rel.startsWith('.specs/')) {
-    throw new Error('installer must not create .specs/');
+    throw new Error('installer must not create .specs/ (legacy path)');
+  }
+  if (rel === 'docs/tasks' || rel.startsWith('docs/tasks/')) {
+    throw new Error('installer must not create docs/tasks/ feature packages');
   }
   const full = path.resolve(targetRoot, rel);
   if (!full.startsWith(targetRoot)) throw new Error(`path escape: ${destRelativePath}`);
@@ -180,7 +183,8 @@ Per agent:
   cursor  → .cursor/rules/*.mdc (requestable skill rules) + ai-workflow.mdc
 
 Never:
-  create .specs/, pre-create docs/decisions or docs/misc, run workflow, approve, commit, push, deploy
+  create docs/tasks/ feature packages (or legacy .specs/), pre-create docs/decisions or docs/misc,
+  run workflow, approve, commit, push, deploy
   create .cursor/skills/ or .gemini/skills/ (content lives in .agents/skills only)
 `);
 }
@@ -516,10 +520,17 @@ function processSkills() {
   }
 }
 
-function assertNoSpecsCreated() {
-  // Installer itself must not create .specs — verify we didn't write under it
-  if (report.installedFiles.some((f) => f === '.specs' || f.startsWith('.specs/'))) {
-    failToken('INSTALL_PATH_INVALID', 'installer attempted to create .specs/');
+function assertNoFeaturePackagesCreated() {
+  // Installer must not create feature Spec Packages (docs/tasks or legacy .specs)
+  const bad = report.installedFiles.some(
+    (f) =>
+      f === '.specs' ||
+      f.startsWith('.specs/') ||
+      f === 'docs/tasks' ||
+      f.startsWith('docs/tasks/')
+  );
+  if (bad) {
+    failToken('INSTALL_PATH_INVALID', 'installer attempted to create feature Spec Package paths');
   }
 }
 
@@ -561,7 +572,7 @@ try {
     if (wants(agent)) (optionalAgentFiles[agent] || []).forEach((item) => copyWorkflowFile(item, false));
   }
   processSkills();
-  assertNoSpecsCreated();
+  assertNoFeaturePackagesCreated();
 
   report.result = report.conflicts.length
     ? 'INSTALL_CONFLICT'
@@ -580,7 +591,7 @@ try {
     console.log(`Unchanged:    ${stats.unchanged}`);
     console.log(`Conflicts:    ${stats.conflicts}`);
     console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/`);
-    console.log(`Note:         Installer does not create .specs/, docs/decisions, or docs/misc.`);
+    console.log(`Note:         Installer does not create docs/tasks/ packages, docs/decisions, or docs/misc.`);
   }
 
   if (report.result === 'INSTALL_CONFLICT') process.exit(2);

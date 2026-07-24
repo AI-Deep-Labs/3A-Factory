@@ -21,7 +21,7 @@ May fix trivial format / obvious broken-reference / non-conflicting metadata iss
 
 ## Package resolution contract
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 4. Do not migrate or delete legacy artifacts.
 

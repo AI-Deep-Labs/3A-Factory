@@ -1,7 +1,7 @@
 # QA Summary
 
 > When filled: write the body in **Vietnamese**. Keep result tokens in English.  
-> Path: `.specs/<PACKAGE>/qa/qa-summary.md`  
+> Path: `docs/tasks/<PACKAGE>/qa/qa-summary.md`  
 > Driven by `acceptance.md`. Max auto-fix attempts: **3**.
 
 ## Metadata

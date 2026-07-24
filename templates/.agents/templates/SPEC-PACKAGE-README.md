@@ -8,7 +8,7 @@ Canonical templates for Feature-local Spec Package
 A **Spec Package** is the linked, traceable set of artifacts for **one** feature under:
 
 ```text
-.specs/REQ-<NNNNNN>-<slug>/
+docs/tasks/REQ-<NNNNNN>-<slug>/
 ```
 
 Spec is a **package**, not a single document.
@@ -38,7 +38,7 @@ Also: `RAW-REQ`, `DISCOVERY`, `ANALYSIS`, `DESIGN`, `ADR`, `RELEASE` templates.
 - No legacy SPEC/PLAN templates.
 - No `/plan` command.
 - No migration tooling.
-- Installer does not create `.specs/`.
+- Installer does not create `docs/tasks/`.
 
 ## Artifact creation order
 

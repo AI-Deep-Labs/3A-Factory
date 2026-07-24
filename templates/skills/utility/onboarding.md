@@ -60,7 +60,7 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
    docs/
   ```
    Do **not** pre-create `docs/decisions/` or `docs/misc/` — those appear when skills write files (`/adr` project-wide, `/handoff`, `/qa-issues`).
-   Do **not** create legacy feature lifecycle folders (`docs/requirements|designs|reviews|qa`). Feature work uses `.specs/` via triage — installer must not pre-create `.specs/`.
+   Do **not** create legacy feature lifecycle folders (`docs/requirements|designs|reviews|qa`). Feature work uses `docs/tasks/` via triage — installer must not pre-create `docs/tasks/`.
 2. Agent tooling (if not present after package install):
   - Prompt / run 3a-factory install **into this repo** (`npx 3a-factory` or equivalent) for skills/commands/rules — **do not** clone extra repos.
   - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/commands` → `.agents/skills`, `.cursor/rules/*.mdc` + `ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/{templates,contracts,schemas,skills}` / `docs/`. Do not expect `.cursor/skills` or `.gemini/skills` mirrors.

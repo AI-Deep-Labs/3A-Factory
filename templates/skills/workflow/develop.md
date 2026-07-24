@@ -21,7 +21,7 @@ Do not write new evidence under legacy `docs/qa` or `docs/reviews` for Spec Pack
 
 ## Package resolution
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 
 ## Hard gate (before any code change)
@@ -105,7 +105,7 @@ Do not invent scripts or install dependencies.
 ## Evidence output
 Create/update (Vietnamese body):
 ```text
-.specs/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
+docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
 ```
 Use `.agents/templates/IMPLEMENTATION-EVIDENCE-template.md`.
 
@@ -125,7 +125,7 @@ APPROVAL_REQUIRED
 - relevant codebase and tests
 
 ## Output contract
-Implementation evidence at `.specs/<PACKAGE>/reviews/TASK-<NNN>-implementation.md` + handoff to review.
+Implementation evidence at `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md` + handoff to review.
 
 ## Stop condition
 Hand off to `review` with evidence path. Do not start QA. Do not mark `done`. Greenfield only — require Spec Package.

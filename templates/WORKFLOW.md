@@ -4,7 +4,7 @@
 
 **Spec is a Feature-local Spec Package, not a single document.**
 
-Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+Canonical path: `docs/tasks/REQ-<NNNNNN>-<slug>/`
 
 Canonical workflow:
 
@@ -34,7 +34,7 @@ Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
 - No legacy feature paths under `docs/requirements|designs|reviews|qa`.
 - Project-wide ADR: `docs/decisions/` (create when writing the first project-wide ADR).
 - No migration tooling / legacy resolver.
-- Installer does not create `.specs/` and does not run workflow.
+- Installer does not create `docs/tasks/` and does not run workflow.
 - Never auto-deploy.
 
 ## Dual mode

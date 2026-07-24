@@ -1,6 +1,6 @@
 ---
 name: analyze
-description: Impact and risk analysis into .specs/.../analysis.md; set risk and ADR recommendation; status analyzed.
+description: Impact and risk analysis into docs/tasks/.../analysis.md; set risk and ADR recommendation; status analyzed.
 disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
@@ -19,7 +19,7 @@ Do not invent answers to critical open questions.
 
 ## Package resolution contract
 1. Valid package path → use.
-2. Else REQ id → exactly one `.specs/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 4. Do not write new artifacts to legacy `docs/*` lifecycle folders.
 5. Do not move/delete legacy artifacts.

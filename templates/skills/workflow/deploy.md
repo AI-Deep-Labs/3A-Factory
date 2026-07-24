@@ -35,12 +35,12 @@ approval:
 ```
 
 ## Process
-1. Resolve Spec Package under `.specs/`.
+1. Resolve Spec Package under `docs/tasks/`.
 2. Confirm env + gates.
 3. List deploy order from design/tasks/analysis.
 4. Prepare rollback per step.
 5. Execute via project conventions.
-6. Write `.specs/<PACKAGE>/release/release-notes.md`.
+6. Write `docs/tasks/<PACKAGE>/release/release-notes.md`.
 
 ## Failure states
 ```text
@@ -59,4 +59,4 @@ Print result token and paths. Never auto-deploy after success.
 - Project deploy notes
 
 ## Output contract
-Release notes under `.specs/<PACKAGE>/release/release-notes.md` + deploy result summary.
+Release notes under `docs/tasks/<PACKAGE>/release/release-notes.md` + deploy result summary.

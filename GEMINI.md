@@ -4,7 +4,7 @@ Read `AGENTS.md` first.
 
 **Spec is a Feature-local Spec Package, not a single document.**
 
-Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+Canonical path: `docs/tasks/REQ-<NNNNNN>-<slug>/`
 
 Canonical workflow:
 
@@ -26,7 +26,7 @@ Gemini-specific:
 - List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
 - If slash commands are unavailable, invoke phases in natural language (`project-manager`, `tasks`, `converge`, …).
 
-**Generated docs under `.specs/` must be Vietnamese** (see `AGENTS.md`). Chat may follow the user’s language.
+**Generated docs under `docs/tasks/` must be Vietnamese** (see `AGENTS.md`). Chat may follow the user’s language.
 
 Project context (filled by `/onboarding`):
 - Project type: `[DETECTED_PROJECT_TYPE]`

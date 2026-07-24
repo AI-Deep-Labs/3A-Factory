@@ -1,7 +1,7 @@
 # Code Review
 
 > When filled: write the body in **Vietnamese**. Keep severities/IDs in English.  
-> Path: `.specs/<PACKAGE>/reviews/TASK-<NNN>-code-review.md`  
+> Path: `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-code-review.md`  
 > Review does **not** silently fix application code.
 
 ## Metadata

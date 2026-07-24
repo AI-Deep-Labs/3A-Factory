@@ -1,6 +1,6 @@
 ---
 name: triage
-description: Classify a request, allocate REQ id, and initialize a Feature-local Spec Package under .specs/ with manifest.yaml and raw.md.
+description: Classify a request, allocate REQ id, and initialize a Feature-local Spec Package under docs/tasks/ with manifest.yaml and raw.md.
 disable-model-invocation: true
 argument-hint: "[raw requirement text]"
 ---
@@ -18,20 +18,20 @@ Do **not** write requirements, design, tasks, acceptance, or code.
 Do **not** invent a solution.
 
 ## Package resolution contract
-1. If user/context provides a valid package path under `.specs/`, use it.
-2. Else if a `REQ ID` is given, find exactly one directory `.specs/REQ-<NNNNNN>-*/`.
+1. If user/context provides a valid package path under `docs/tasks/`, use it.
+2. Else if a `REQ ID` is given, find exactly one directory `docs/tasks/REQ-<NNNNNN>-*/`.
 3. Exactly one match → use it. Multiple → stop with `PACKAGE_CONFLICT`.
-4. None found and this skill may initialize → create `.specs/REQ-<NNNNNN>-<slug>/`.
+4. None found and this skill may initialize → create `docs/tasks/REQ-<NNNNNN>-<slug>/`.
 5. Do not invent a new REQ ID when one is already provided.
 6. Do not reuse a different REQ ID with a similar slug.
 7. Do **not** write new artifacts under legacy `docs/requirements`, `docs/designs`, `docs/qa`, or `docs/reviews`.
 8. Do not move or delete legacy artifacts.
 
 ## Naming & numbering
-1. Scan existing ids under `.specs/**` and legacy `docs/**` for `REQ-*` / `ADR-*`.
+1. Scan existing ids under `docs/tasks/**` and legacy `docs/**` for `REQ-*` / `ADR-*`.
 2. Parse numeric part after `REQ-` (legacy unpadded / slug-less allowed). `next = max+1`, pad **6 digits**. Do not rename old files. If none → `000001`.
 3. Slug: 2–5 ASCII kebab-case words from the request; fixed for the REQ lifetime.
-4. Canonical folder: `.specs/REQ-<NNNNNN>-<slug>/`.
+4. Canonical folder: `docs/tasks/REQ-<NNNNNN>-<slug>/`.
 5. Branch (later): `feature/REQ-<NNNNNN>-<slug>`.
 
 ## Inputs
@@ -46,7 +46,7 @@ Do **not** invent a solution.
 2. If the request is explanation-only / no engineering lifecycle → answer without creating a package; stop.
 3. Otherwise allocate or reuse REQ id + slug.
 4. If package missing → create:
-   - `.specs/REQ-<NNNNNN>-<slug>/`
+   - `docs/tasks/REQ-<NNNNNN>-<slug>/`
    - `decisions/`, `reviews/`, `qa/`, `qa/runs/`, `release/`
    - `manifest.yaml` from manifest template (`{{REQ_ID}}` = `REQ-<NNNNNN>` without slug, `{{SLUG}}`, `{{TITLE}}`, `{{RISK}}`)
 5. Write `raw.md` (Vietnamese body).

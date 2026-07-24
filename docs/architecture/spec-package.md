@@ -2,7 +2,7 @@
 
 ## Context
 
-3A-Factory **3.0.0-rc.3** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `.specs/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
+3A-Factory **3.0.0-rc.4** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `docs/tasks/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
 
 ## Problem statement
 
@@ -25,18 +25,18 @@
 - Legacy workflow compatibility.
 - Migration tooling / resolver.
 - `/plan` alias.
-- Auto-create `.specs/` qua installer.
+- Auto-create `docs/tasks/` qua installer.
 - Auto-approve / auto-deploy / auto-commit.
 - Phase 4 runtime (intentionally skipped).
 
 ## Greenfield decision
 
-Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.3`). Không hỗ trợ migration từ layout cũ.
+Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.4`). Không hỗ trợ migration từ layout cũ.
 
 ## Package structure
 
 ```text
-.specs/REQ-<NNNNNN>-<slug>/
+docs/tasks/REQ-<NNNNNN>-<slug>/
   manifest.yaml
   raw.md | discovery.md | analysis.md
   requirements.md | design.md | tasks.md | acceptance.md | spec-review.md
@@ -87,7 +87,7 @@ Validators: package layout, traceability, state consistency.
 `triage` → `grill-me?` → `analyze` → `requirements` → `adr?` → `design` → `tasks` → `acceptance` → `spec-review`  
 Orchestrator: `/spec`.
 
-Output dưới `.specs/…`. Dừng cho `APPROVED_SPEC_PACKAGE`.
+Output dưới `docs/tasks/…`. Dừng cho `APPROVED_SPEC_PACKAGE`.
 
 ## Execution skill architecture
 
@@ -114,7 +114,7 @@ Shared: `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas}`.
 ## Build and installer model
 
 - `npm run build` → `dist/` + `bundle.json` + `build-manifest.json` (deterministic).
-- Installer: dry-run/apply, backup khi overwrite, idempotent; chỉ scaffold `docs/` (không pre-create `docs/decisions` / `docs/misc`); **không** tạo `.specs/`, **không** ghi `.3a-factory/`, **không** chạy workflow. Báo cáo cài qua stdout / `--json`.
+- Installer: dry-run/apply, backup khi overwrite, idempotent; chỉ scaffold `docs/` (không pre-create `docs/decisions` / `docs/misc`); **không** tạo `docs/tasks/`, **không** ghi `.3a-factory/`, **không** chạy workflow. Báo cáo cài qua stdout / `--json`.
 
 ## Validation and CI model
 
@@ -127,7 +127,7 @@ CI: `.github/workflows/ci.yml` — build, test, validate (không `continue-on-er
 - Path/symlink safety trong build & install.
 - Không shell injection từ user path.
 - `--force` có giới hạn an toàn.
-- Không bundle secrets / local `.specs/` / test fixtures vào runtime publish content.
+- Không bundle secrets / local `docs/tasks/` / test fixtures vào runtime publish content.
 
 ## Known limitations
 

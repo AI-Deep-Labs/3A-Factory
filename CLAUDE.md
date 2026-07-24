@@ -4,7 +4,7 @@ Read `AGENTS.md` first.
 
 **Spec is a Feature-local Spec Package, not a single document.**
 
-Canonical path: `.specs/REQ-<NNNNNN>-<slug>/`
+Canonical path: `docs/tasks/REQ-<NNNNNN>-<slug>/`
 
 Canonical workflow:
 
@@ -24,7 +24,7 @@ Claude-specific:
 - Commands: `.claude/commands/*.md`
 - Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`, `/qa-issues`
 
-**Generated docs under `.specs/` must be Vietnamese** (see `AGENTS.md`).
+**Generated docs under `docs/tasks/` must be Vietnamese** (see `AGENTS.md`).
 
 Project context (filled by `/onboarding`):
 - Project type: `[DETECTED_PROJECT_TYPE]`

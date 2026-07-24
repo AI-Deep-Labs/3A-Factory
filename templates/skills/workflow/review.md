@@ -19,7 +19,7 @@ Do not approve package/deploy.
 Do not write new reviews under legacy `docs/reviews` for Spec Package features.
 
 ## Package resolution
-Same as other execution skills (`.specs/REQ-…/`, `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`).
+Same as other execution skills (`docs/tasks/REQ-…/`, `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`).
 
 ## Inputs
 ```text
@@ -62,7 +62,7 @@ WARNING
 
 ## Output
 ```text
-.specs/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
+docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
 ```
 Template: `.agents/templates/CODE-REVIEW-template.md` (Vietnamese body).  
 Result: `PASSED` | `FAILED`.

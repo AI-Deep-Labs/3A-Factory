@@ -8,7 +8,7 @@
 
 - REQ ID: REQ-000001
 - Feature:
-- Package: `.specs/REQ-000001-<slug>/`
+- Package: `docs/tasks/REQ-000001-<slug>/`
 - Reviewer:
 - Reviewed at: YYYY-MM-DDTHH:MM:SSZ
 

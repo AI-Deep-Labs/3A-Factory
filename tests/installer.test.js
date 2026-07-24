@@ -31,6 +31,7 @@ describe('installer smoke', () => {
       assert.ok(fs.existsSync(path.join(tmp, 'AGENTS.md')));
       assert.ok(fs.existsSync(path.join(tmp, '.agents/contracts/spec-package.md')));
       assert.ok(fs.existsSync(path.join(tmp, '.agents/schemas/spec-package-manifest.schema.json')));
+      assert.ok(!fs.existsSync(path.join(tmp, 'docs', 'tasks')));
       assert.ok(!fs.existsSync(path.join(tmp, '.specs')));
       assert.ok(!fs.existsSync(path.join(tmp, '.3a-factory')));
       assert.ok(fs.existsSync(path.join(tmp, 'docs')));

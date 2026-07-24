@@ -1,7 +1,7 @@
 # Final End-to-End Validation
 
 **Date:** 2026-07-23  
-**Version:** 3.0.0-rc.3  
+**Version:** 3.0.0-rc.4  
 **Method:** Temp fixture + example Spec Package + skill-contract / state-machine / installer checks (không gọi LLM).
 
 ## Scope
@@ -82,7 +82,7 @@ Example completed package: `examples/spec-packages/REQ-000001-example-feature/` 
 | No `/plan` skill/template | PASS |
 | No migration tooling | PASS |
 | No legacy SPEC/PLAN templates | PASS |
-| Installer không tạo `.specs/` | PASS (idempotency + installer tests) |
+| Installer không tạo `docs/tasks/` | PASS (idempotency + installer tests) |
 
 ## Example package validation
 
@@ -105,7 +105,7 @@ npm run test:installer — 8/8 PASS
 npm run test:workflow — 8/8 PASS
 BUILD_REPRODUCIBLE
 Installer idempotent (claude/gemini/cursor)
-npm pack --dry-run — 3a-factory@3.0.0-rc.3 (6 files)
+npm pack --dry-run — 3a-factory@3.0.0-rc.4 (6 files)
 ```
 
 ## Limitations of this E2E
