@@ -2,7 +2,7 @@
 
 ## Context
 
-3A-Factory **3.0.0-rc.6** (dòng 3.0.0) vận hành vòng đời feature quanh một **Spec Package** dưới `docs/tasks/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
+3A-Factory **3.0.0** vận hành vòng đời feature quanh một **Spec Package** dưới `docs/tasks/REQ-<NNNNNN>-<slug>/`, thay cho một file spec đơn lẻ và các artifact phân tán dưới `docs/requirements` / `docs/designs`.
 
 ## Problem statement
 
@@ -31,7 +31,7 @@
 
 ## Greenfield decision
 
-Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → dòng **3.0.0** (hiện `3.0.0-rc.6`). Không hỗ trợ migration từ layout cũ.
+Xem ADR `docs/designs/ADR-000001-adopt-feature-local-spec-package.md` (Accepted). Breaking change → **3.0.0** GA. Không hỗ trợ migration từ layout cũ.
 
 ## Package structure
 

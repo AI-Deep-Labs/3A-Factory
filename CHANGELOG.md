@@ -5,9 +5,36 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
-## [3.0.0-rc.6] - Unreleased
+## [3.0.0] - 2026-07-27
 
-Pre-release (release candidate) of the 3.0.0 greenfield Feature-local Spec Package line. Final GA will be `3.0.0` after RC validation.
+First stable (GA) release of the greenfield **Feature-local Spec Package** line for Claude, Gemini, and Cursor.
+
+### Added
+
+- Feature-local Spec Package under `docs/tasks/REQ-<NNNNNN>-<slug>/` with mandatory `manifest.yaml`.
+- Producer skills (`requirements`, `tasks`, `acceptance`, `spec-review`) and orchestrator `/spec`.
+- Execution: task-by-task `develop`, review-owned completion, acceptance-driven `qa`, `converge`.
+- Approval tokens: `APPROVED_SPEC_PACKAGE`, `APPROVED_DEVELOP`, `APPROVED_USER_REVIEW`, `APPROVED_DEPLOY`.
+- Contract, JSON Schema, templates, validation suite, installer (dry-run / backup / idempotency), CI gates.
+- Docs: architecture, workflow, commands, approvals; example Spec Package.
+
+### Changed
+
+- **Breaking:** Spec is a package, not a single document. Canonical path `docs/tasks/` (not `.specs/`).
+- Multi-agent installer: Claude, Gemini, Cursor with shared `.agents/skills` body.
+
+### Fixed
+
+- Installer npm lifecycle no longer scaffolds all agents into consumer repo (`INSTALL_SKIPPED_LIFECYCLE`).
+- REQ/ADR numbering: agent scans real `docs/tasks/` basenames only (`next = max + 1`; none → `000001`).
+
+### Removed
+
+- `/plan` skill; legacy SPEC/PLAN templates; migration tooling; 2.x workflow compatibility.
+
+## [3.0.0-rc.6] - 2026-07-24
+
+Final release candidate before GA.
 
 ### Changed
 
@@ -109,4 +136,4 @@ Initial release candidate of the 3.0.0 greenfield Feature-local Spec Package lin
 
 ## [2.3.1] - Prior
 
-See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line (including `3.0.0-rc.6`).
+See git history for 2.x releases. 2.x workflow is **not** supported in the 3.0.0 line.

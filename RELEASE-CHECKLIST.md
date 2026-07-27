@@ -1,4 +1,4 @@
-# Release Checklist — 3.0.0-rc.6
+# Release Checklist — 3.0.0
 
 ## Architecture
 
@@ -62,7 +62,7 @@
 - [x] Commands
 - [x] Approvals
 - [x] Breaking changes
-- [x] Changelog (`[3.0.0-rc.6] - Unreleased` until RC publish date is set)
+- [x] Changelog (`[3.0.0] - 2026-07-27`)
 - [x] Release notes
 - [x] Example package
 
@@ -70,7 +70,7 @@
 
 ## Release Safety
 
-- [x] Version `3.0.0-rc.6`
+- [x] Version `3.0.0`
 - [x] Publish content correct (`npm pack --dry-run`)
 - [x] No secrets in bundle
 - [x] No local `docs/tasks/` in package
