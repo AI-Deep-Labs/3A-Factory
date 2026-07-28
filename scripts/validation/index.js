@@ -169,6 +169,45 @@ function validateTemplateReferences() {
     : result(true, 'TEMPLATE_VALIDATION_PASSED', []);
 }
 
+const AGENT_MODE_HUB = 'templates/.agents/rules/agent-mode.md';
+const AGENT_MODE_POINTER = '.agents/rules/agent-mode.md';
+
+function validateAgentModeHub() {
+  const details = [];
+  if (!exists(AGENT_MODE_HUB)) {
+    details.push(`missing ${AGENT_MODE_HUB}`);
+    return details;
+  }
+  const hub = read(AGENT_MODE_HUB);
+  for (const needle of [
+    'CRITICAL OVERRIDE',
+    'No Internal Planning Mode',
+    'No Hidden Artifacts',
+    'docs/tasks/REQ-',
+    'APPROVED_SPEC_PACKAGE'
+  ]) {
+    if (!hub.includes(needle)) details.push(`${AGENT_MODE_HUB}: missing '${needle}'`);
+  }
+  const pointers = [
+    ['AGENTS.md', 'CRITICAL AGENT OVERRIDE'],
+    ['CLAUDE.md', 'CRITICAL'],
+    ['GEMINI.md', 'CRITICAL'],
+    ['templates/.cursor/rules/ai-workflow.mdc', 'CRITICAL']
+  ];
+  for (const [file, marker] of pointers) {
+    if (!exists(file)) {
+      details.push(`missing ${file}`);
+      continue;
+    }
+    const text = read(file);
+    if (!text.includes(AGENT_MODE_POINTER)) {
+      details.push(`${file}: missing pointer to ${AGENT_MODE_POINTER}`);
+    }
+    if (!text.includes(marker)) details.push(`${file}: missing '${marker}' override marker`);
+  }
+  return details;
+}
+
 function validateGovernanceConsistency() {
   const files = [
     'AGENTS.md',
@@ -179,7 +218,7 @@ function validateGovernanceConsistency() {
     'templates/.agents/contracts/spec-package.md',
     'README.md'
   ];
-  const details = [];
+  const details = [...validateAgentModeHub()];
   for (const f of files) {
     if (!exists(f)) {
       details.push(`missing ${f}`);
@@ -223,7 +262,8 @@ function validateAdapterParity() {
       'APPROVED_SPEC_PACKAGE',
       'APPROVED_DEPLOY',
       'converge',
-      'tasks.md'
+      'tasks.md',
+      AGENT_MODE_POINTER
     ]) {
       if (!text.includes(needle)) details.push(`${marker}: missing ${needle}`);
     }
@@ -254,6 +294,9 @@ function validateBuildOutput() {
     }
     if (bundle.files['templates/.agents/templates/PLAN-template.md']) {
       details.push('bundle contains PLAN-template.md');
+    }
+    if (!bundle.files[AGENT_MODE_HUB]) {
+      details.push(`bundle missing ${AGENT_MODE_HUB}`);
     }
   }
   return details.length

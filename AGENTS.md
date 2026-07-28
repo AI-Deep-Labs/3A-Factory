@@ -75,6 +75,9 @@ Do not reuse one approval for another gate. Never auto-deploy.
 
 ## Hard gates
 
+**CRITICAL AGENT OVERRIDE**:
+You MUST read and strictly obey all override rules defined in `.agents/rules/agent-mode.md` before taking any planning or execution actions.
+
 1. No application coding from a raw requirement.
 2. Develop only when `validation.status == passed` and `APPROVED_SPEC_PACKAGE` (plus `APPROVED_DEVELOP` when high-risk policy requires it).
 3. Develop follows `tasks.md` / `execution.current_task` and referenced design/acceptance.

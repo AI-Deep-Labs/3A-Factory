@@ -18,6 +18,7 @@ const REQUIRED_ARTIFACTS = [
   'GEMINI.md',
   'templates/WORKFLOW.md',
   'templates/.cursor/rules/ai-workflow.mdc',
+  'templates/.agents/rules/agent-mode.md',
   'templates/.agents/contracts/spec-package.md',
   'templates/.agents/schemas/spec-package-manifest.schema.json',
   'templates/.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml',
