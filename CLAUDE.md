@@ -24,6 +24,8 @@ Claude-specific:
 - Commands: `.claude/commands/*.md`
 - Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`, `/qa-issues`
 
+**CRITICAL**: Before taking any actions, you must read `.agents/rules/agent-mode.md` to understand your strict constraints regarding internal thinking loops.
+
 **Generated docs under `docs/tasks/` must be Vietnamese** (see `AGENTS.md`).
 
 Project context (filled by `/onboarding`):

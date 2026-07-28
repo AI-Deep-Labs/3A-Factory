@@ -274,6 +274,7 @@ const sharedDirs = [
   '.agents/templates',
   '.agents/contracts',
   '.agents/schemas',
+  '.agents/rules',
   '.agents/skills',
   'docs'
 ];
@@ -309,6 +310,10 @@ const sharedFiles = [
   {
     src: 'templates/.agents/contracts/spec-package.md',
     dest: '.agents/contracts/spec-package.md'
+  },
+  {
+    src: 'templates/.agents/rules/agent-mode.md',
+    dest: '.agents/rules/agent-mode.md'
   },
   {
     src: 'templates/.agents/schemas/spec-package-manifest.schema.json',

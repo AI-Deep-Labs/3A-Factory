@@ -56,6 +56,12 @@ describe('installer smoke', () => {
       assert.ok(fs.existsSync(path.join(tmp, 'AGENTS.md')));
       assert.ok(fs.existsSync(path.join(tmp, '.agents/contracts/spec-package.md')));
       assert.ok(fs.existsSync(path.join(tmp, '.agents/schemas/spec-package-manifest.schema.json')));
+      assert.ok(fs.existsSync(path.join(tmp, '.agents/rules/agent-mode.md')));
+      const agentMode = fs.readFileSync(path.join(tmp, '.agents/rules/agent-mode.md'), 'utf8');
+      assert.match(agentMode, /No Internal Planning Mode/);
+      assert.match(agentMode, /No Hidden Artifacts/);
+      const agentsMd = fs.readFileSync(path.join(tmp, 'AGENTS.md'), 'utf8');
+      assert.match(agentsMd, /\.agents\/rules\/agent-mode\.md/);
       assert.ok(!fs.existsSync(path.join(tmp, 'docs', 'tasks')));
       assert.ok(!fs.existsSync(path.join(tmp, '.specs')));
       assert.ok(!fs.existsSync(path.join(tmp, '.3a-factory')));
@@ -63,10 +69,14 @@ describe('installer smoke', () => {
       assert.ok(!fs.existsSync(path.join(tmp, 'docs/decisions')));
       assert.ok(!fs.existsSync(path.join(tmp, 'docs/misc')));
       if (agent === 'claude') {
+        const claudeMd = fs.readFileSync(path.join(tmp, 'CLAUDE.md'), 'utf8');
+        assert.match(claudeMd, /\.agents\/rules\/agent-mode\.md/);
         assert.ok(fs.existsSync(path.join(tmp, '.claude/skills/develop/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.claude/skills/plan')));
       }
       if (agent === 'gemini') {
+        const geminiMd = fs.readFileSync(path.join(tmp, 'GEMINI.md'), 'utf8');
+        assert.match(geminiMd, /\.agents\/rules\/agent-mode\.md/);
         assert.ok(fs.existsSync(path.join(tmp, '.gemini/commands/converge.toml')));
         assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/converge/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.gemini/skills')));
@@ -75,6 +85,8 @@ describe('installer smoke', () => {
         assert.match(toml, /\.agents\/skills\/triage\/SKILL\.md/);
       }
       if (agent === 'cursor') {
+        const workflow = fs.readFileSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc'), 'utf8');
+        assert.match(workflow, /\.agents\/rules\/agent-mode\.md/);
         assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc')));
         assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/triage.mdc')));
         assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/tasks/SKILL.md')));

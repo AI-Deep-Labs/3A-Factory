@@ -22,6 +22,7 @@ describe('build', { concurrency: 1 }, () => {
     const bundle = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/bundle.json'), 'utf8'));
     assert.ok(bundle.files['templates/skills/workflow/converge.md']);
     assert.ok(bundle.files['templates/.agents/contracts/spec-package.md']);
+    assert.ok(bundle.files['templates/.agents/rules/agent-mode.md']);
     assert.equal(bundle.files['templates/skills/workflow/plan.md'], undefined);
     assert.equal(bundle.files['templates/.agents/templates/SPEC-template.md'], undefined);
     assert.equal(bundle.files['templates/.agents/templates/PLAN-template.md'], undefined);

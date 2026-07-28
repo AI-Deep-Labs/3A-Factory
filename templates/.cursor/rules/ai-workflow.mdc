@@ -41,6 +41,8 @@ manifest.yaml   = Package State Truth
 
 ## Hard gates
 
+**CRITICAL**: Read and strictly obey the global rules located at `.agents/rules/agent-mode.md` before taking any planning actions.
+
 - No coding from raw requirements.
 - Develop requires `APPROVED_SPEC_PACKAGE` (+ `APPROVED_DEVELOP` when high-risk policy requires it).
 - Review alone marks tasks `done`.

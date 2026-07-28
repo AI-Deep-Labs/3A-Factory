@@ -26,6 +26,8 @@ Gemini-specific:
 - List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
 - If slash commands are unavailable, invoke phases in natural language (`project-manager`, `tasks`, `converge`, …).
 
+**CRITICAL**: Before taking any actions, you must read `.agents/rules/agent-mode.md` to understand your strict constraints regarding Planning Mode.
+
 **Generated docs under `docs/tasks/` must be Vietnamese** (see `AGENTS.md`). Chat may follow the user’s language.
 
 Project context (filled by `/onboarding`):

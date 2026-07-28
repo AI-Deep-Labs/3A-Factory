@@ -5,6 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rc.1] - 2026-07-28
+
+Pre-release candidate: **Core Rules Hub + Agent Pointers** (Phase 1) — centralize agent override constraints so all agents follow the established workflow instead of default internal planning modes.
+
+### Added
+
+- Shared rule hub: `.agents/rules/agent-mode.md` (installed from `templates/.agents/rules/agent-mode.md`) with CRITICAL overrides: disable built-in planning mode, forbid hidden scratch artifacts, enforce canonical `docs/tasks/REQ-*` workflow.
+- Installer scaffolds `.agents/rules/` alongside existing shared `.agents/*` paths.
+- Governance, adapter-parity, build-output, installer, and build tests assert hub presence and entry-point pointers.
+
+### Changed
+
+- Package version set to **3.1.0-rc.1**.
+- Entry points (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `ai-workflow.mdc`) add **CRITICAL** pointers to `.agents/rules/agent-mode.md` before planning or execution actions.
+- Build bundle includes `templates/.agents/rules/agent-mode.md` (48 files).
+
+### Notes
+
+- Phase 1 scope only: agent override constraints. Canonical workflow docs, hard-gates consolidation, and approval gates SSOT are planned for Phase 2–3.
+
 ## [3.0.0] - 2026-07-27
 
 First stable (GA) release of the greenfield **Feature-local Spec Package** line for Claude, Gemini, and Cursor.
