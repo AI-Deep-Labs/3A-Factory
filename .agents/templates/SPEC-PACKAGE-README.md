@@ -13,8 +13,8 @@ docs/tasks/REQ-<NNNNNN>-<slug>/
 
 Spec is a **package**, not a single document.
 
-Contract: `templates/.agents/contracts/spec-package.md`  
-Manifest schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
+Contract: `.agents/contracts/spec-package.md`
+Manifest schema: `.agents/schemas/spec-package-manifest.schema.json`
 
 ## Template files
 

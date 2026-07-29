@@ -2,7 +2,7 @@
 
 > When filled: write the body in **Vietnamese**. Keep machine fields / enums in English.  
 > Package is approval-ready only when `Review Result: PASSED` and `Blocking Issues: 0`.  
-> Contract: `templates/.agents/contracts/spec-package.md`
+> Contract: `.agents/contracts/spec-package.md`
 
 ## Metadata
 

@@ -89,12 +89,22 @@ describe('workflow regression (static)', () => {
     const pm = skill('project-manager');
 
     assert.match(agents, /Auto-intake/);
+    assert.match(agents, /Intent gate/);
     assert.match(agents, /ONBOARDING_REQUIRED/);
     assert.match(agents, /project-manager/);
     assert.match(workflowRule, /Auto-intake/);
     assert.match(pm, /Auto-intake entry/);
+    assert.match(pm, /### Intent gate/);
+    assert.match(pm, /AUTO-ACTIVATE/);
     assert.match(pm, /Session orchestration/);
     assert.match(pm, /ONBOARDING_REQUIRED/);
+    assert.doesNotMatch(pm, /^disable-model-invocation:\s*true$/m);
+    const agentMode = fs.readFileSync(
+      path.join(ROOT, '.agents/rules/agent-mode.md'),
+      'utf8'
+    );
+    assert.match(agentMode, /When these rules apply/);
+    assert.match(agentMode, /When these rules do NOT apply/);
   });
 
   it('natural language approval gates', () => {

@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.2.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.2.1-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI Agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (SDLC greenfield).
 
@@ -75,7 +75,7 @@ triage
 
 1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
 2. Chạy `/onboarding` (hoặc mô tả "onboard repo này") nếu repo mới.
-3. **Mô tả yêu cầu bằng ngôn ngữ tự nhiên** — `project-manager` tự phát hiện repo đã onboard và route theo canonical workflow (triage → … → qa → converge).
+3. **Mô tả yêu cầu lifecycle bằng ngôn ngữ tự nhiên** (feature/bug/change…) — `project-manager` tự route theo Intent gate (`AGENTS.md` § Auto-intake). Q&A / giải thích code / slash bước → **không** mở PM.
 4. `/grill-me` nếu còn ambiguity (PM cũng tự route khi cần).
 5. `/spec` hoặc PM orchestrate: requirements → ADR? → design → tasks → acceptance → spec-review.
 6. Agent hỏi xác nhận spec → user trả lời **có/không** (hoặc đồng ý/từ chối).
@@ -154,11 +154,8 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
+- [Release notes 3.2.1](release-notes/3.2.1.md)
 - [Release notes 3.2.0](release-notes/3.2.0.md)
-- [Release notes 3.1.0-rc.4](release-notes/3.1.0-rc.4.md)
-- [Release notes 3.1.0-rc.3](release-notes/3.1.0-rc.3.md)
-- [Release notes 3.1.0-rc.2](release-notes/3.1.0-rc.2.md)
-- [Release notes 3.1.0-rc.1](release-notes/3.1.0-rc.1.md)
 - [Release notes 3.0.0](release-notes/3.0.0.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)

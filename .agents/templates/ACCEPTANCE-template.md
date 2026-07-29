@@ -3,7 +3,7 @@
 > When filled: write the body in **Vietnamese**. Keep IDs and machine fields in English.  
 > Authoritative: **Verification Truth** and Definition of Done.  
 > Do **not** create additional business scope. Map verification to existing requirements.  
-> Contract: `templates/.agents/contracts/spec-package.md`
+> Contract: `.agents/contracts/spec-package.md`
 
 ## Metadata
 

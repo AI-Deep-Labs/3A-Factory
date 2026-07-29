@@ -26,8 +26,8 @@ acceptance.md   = Verification Truth
 manifest.yaml   = Package State Truth
 ```
 
-Contract: `templates/.agents/contracts/spec-package.md`  
-Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
+Contract: `.agents/contracts/spec-package.md`  
+Schema: `.agents/schemas/spec-package-manifest.schema.json`
 
 ## Greenfield policy
 
@@ -41,7 +41,7 @@ Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
 
 ### Auto-intake (default in onboarded repos)
 
-Describe requirements in natural language — no slash required. Agent reads `.agents/skills/project-manager/SKILL.md`; PM routes by `manifest.status`. See `AGENTS.md` § Auto-intake.
+Natural-language **lifecycle** / continue REQ / approval → agent reads `.agents/skills/project-manager/SKILL.md` (Intent gate first). Q&A / explain code / step slash → do **not** open PM. See `AGENTS.md` § Auto-intake.
 
 ### Slash overrides
 

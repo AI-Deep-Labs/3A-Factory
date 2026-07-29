@@ -1,12 +1,12 @@
 # Workflow 3A-Factory (Feature-local Spec Package)
 
-Tài liệu vận hành cho phiên bản **3.2.0**. Spec = package dưới `docs/tasks/`, không phải single document.
+Tài liệu vận hành cho phiên bản **3.2.1**. Spec = package dưới `docs/tasks/`, không phải single document.
 
 ## 1–11. Producer (intake → Spec Package approval)
 
 | # | Phase | Skill / action | Kết quả chính |
 |---|---|---|---|
-| 1 | Request intake | User mô tả nhu cầu (auto-intake) | Input thô |
+| 1 | Request intake | User mô tả nhu cầu lifecycle (auto-intake + Intent gate) | Input thô; Q&A không mở PM |
 | 2 | Triage | `project-manager` → `triage` | Package + `raw.md`, status `triaged` |
 | 3 | Clarification | `/grill-me` nếu unclear | `discovery.md`, có thể `clarifying` |
 | 4 | Analysis | `/analyze` | `analysis.md`, risk, `analyzed` |

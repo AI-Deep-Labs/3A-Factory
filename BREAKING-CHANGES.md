@@ -1,5 +1,11 @@
 # Breaking Changes
 
+## 3.2.1
+
+**Không breaking.** Patch trên dòng 3.2.0: Intent gate auto-intake, scoped `agent-mode`, PM model-invocation, cleanup template orphan. Consumer: `npx 3a-factory@3.2.1 --agent=<agent> --force`.
+
+---
+
 ## 3.2.0
 
 **Consumer runtime:** không breaking — cài đặt qua `npx 3a-factory@3.2.0 --agent=<agent> --force` như bình thường.

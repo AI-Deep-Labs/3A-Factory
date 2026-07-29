@@ -1,6 +1,6 @@
 # Approval Reference
 
-Version **3.2.0**. Gate IDs tiếng Anh (nội bộ); giải thích tiếng Việt.
+Version **3.2.1**. Gate IDs tiếng Anh (nội bộ); giải thích tiếng Việt.
 
 Agent **không** tự ghi approval. Chỉ user (hoặc quy trình được ủy quyền) mới được coi là approve.
 

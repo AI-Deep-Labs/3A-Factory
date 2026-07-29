@@ -2,7 +2,7 @@
 
 > When filled: write the body in **Vietnamese**. Keep IDs and machine fields in English.  
 > Authoritative: **Business Truth — WHAT and WHY**. Do not put implementation How, file scope, or task order here.  
-> Contract: `templates/.agents/contracts/spec-package.md`
+> Contract: `.agents/contracts/spec-package.md`
 
 ## Metadata
 

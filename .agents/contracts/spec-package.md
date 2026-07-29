@@ -353,14 +353,14 @@ Do not write new feature review/QA evidence under legacy `docs/reviews` or `docs
 
 | Kind | Path |
 |---|---|
-| Manifest JSON Schema | `templates/.agents/schemas/spec-package-manifest.schema.json` |
-| Manifest template | `templates/.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml` |
-| Requirements template | `templates/.agents/templates/REQUIREMENTS-template.md` |
-| Tasks template | `templates/.agents/templates/TASKS-template.md` |
-| Acceptance template | `templates/.agents/templates/ACCEPTANCE-template.md` |
-| Spec-review template | `templates/.agents/templates/SPEC-REVIEW-template.md` |
-| Implementation evidence | `templates/.agents/templates/IMPLEMENTATION-EVIDENCE-template.md` |
-| Code review evidence | `templates/.agents/templates/CODE-REVIEW-template.md` |
-| QA summary | `templates/.agents/templates/QA-SUMMARY-template.md` |
-| Converge report | `templates/.agents/templates/CONVERGE-REPORT-template.md` |
-| Package template README | `templates/.agents/templates/SPEC-PACKAGE-README.md` |
+| Manifest JSON Schema | `.agents/schemas/spec-package-manifest.schema.json` |
+| Manifest template | `.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml` |
+| Requirements template | `.agents/templates/REQUIREMENTS-template.md` |
+| Tasks template | `.agents/templates/TASKS-template.md` |
+| Acceptance template | `.agents/templates/ACCEPTANCE-template.md` |
+| Spec-review template | `.agents/templates/SPEC-REVIEW-template.md` |
+| Implementation evidence | `.agents/templates/IMPLEMENTATION-EVIDENCE-template.md` |
+| Code review evidence | `.agents/templates/CODE-REVIEW-template.md` |
+| QA summary | `.agents/templates/QA-SUMMARY-template.md` |
+| Converge report | `.agents/templates/CONVERGE-REPORT-template.md` |
+| Package template README | `.agents/templates/SPEC-PACKAGE-README.md` |

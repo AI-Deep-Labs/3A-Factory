@@ -41,7 +41,7 @@ manifest.yaml   = Package State Truth
 
 ## Hard gates
 
-**CRITICAL**: Read and strictly obey the global rules located at `.agents/rules/agent-mode.md` before taking any planning actions.
+**CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read and obey `.agents/rules/agent-mode.md` (see **When these rules apply**). Do not force Spec Package for Q&A / explain code / meta / bypass / non-PM step slash.
 
 - No coding from raw requirements.
 - Develop requires spec package approval (+ develop approval when high-risk). User confirms at each gate — see contract § 5.4.1.
@@ -51,10 +51,11 @@ manifest.yaml   = Package State Truth
 
 ## Auto-intake
 
-See `AGENTS.md` § Auto-intake for the full contract.
+See `AGENTS.md` § Auto-intake for the full contract (Intent gate).
 
 - **Not onboarded** (missing `AGENTS.md`, `.agents/contracts/spec-package.md`, or `docs/`) → read `.agents/skills/onboarding/SKILL.md`
-- **Onboarded** → describe requirements in natural language; read and execute `.agents/skills/project-manager/SKILL.md` — PM routes by `manifest.status` (no `/project-manager` required)
+- **Onboarded** + Intent `lifecycle` / `continue_req` / `approval_reply` → read and execute `.agents/skills/project-manager/SKILL.md` — PM routes by `manifest.status` (no `/project-manager` required)
+- Q&A / explain code / step slash / bypass → do **not** open PM
 - Slash commands remain manual overrides
 - **`/project-manager`**: mandatory PM mode — fully execute `.agents/skills/project-manager/SKILL.md` § Slash invocation (mandatory); no skipping workflow phases
 
@@ -66,4 +67,4 @@ See `AGENTS.md` § Auto-intake for the full contract.
 - Installer does **not** create `.cursor/skills/` (avoid duplicate mirrors)
 - Use **Agent** chat. After reinstall, start a new chat if the `/` list is stale.
 
-New repos: run onboarding first (`/onboarding` or natural language). Onboarded repos: describe requirements in natural language — PM auto-routes.
+New repos: run onboarding first (`/onboarding` or natural language). Onboarded repos: lifecycle NL → PM auto-routes; Q&A does not.

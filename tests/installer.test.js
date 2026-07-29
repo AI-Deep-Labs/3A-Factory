@@ -60,8 +60,11 @@ describe('installer smoke', () => {
       const agentMode = fs.readFileSync(path.join(tmp, '.agents/rules/agent-mode.md'), 'utf8');
       assert.match(agentMode, /No Internal Planning Mode/);
       assert.match(agentMode, /No Hidden Artifacts/);
+      assert.match(agentMode, /When these rules apply/);
+      assert.match(agentMode, /When these rules do NOT apply/);
       const agentsMd = fs.readFileSync(path.join(tmp, 'AGENTS.md'), 'utf8');
       assert.match(agentsMd, /\.agents\/rules\/agent-mode\.md/);
+      assert.match(agentsMd, /Intent gate/);
       assert.ok(!fs.existsSync(path.join(tmp, 'docs', 'tasks')));
       assert.ok(!fs.existsSync(path.join(tmp, '.specs')));
       assert.ok(!fs.existsSync(path.join(tmp, '.3a-factory')));
@@ -113,6 +116,11 @@ describe('installer smoke', () => {
         const shared = fs.readFileSync(path.join(tmp, '.agents/skills/triage/SKILL.md'), 'utf8');
         assert.match(shared, /^---\nname: triage\n/);
         assert.match(shared, /disable-model-invocation: true/);
+        const pmSkill = fs.readFileSync(path.join(tmp, '.agents/skills/project-manager/SKILL.md'), 'utf8');
+        assert.match(pmSkill, /AUTO-ACTIVATE/);
+        assert.match(pmSkill, /DO NOT activate/);
+        assert.match(pmSkill, /### Intent gate/);
+        assert.doesNotMatch(pmSkill, /^disable-model-invocation:\s*true$/m);
       }
     });
   }

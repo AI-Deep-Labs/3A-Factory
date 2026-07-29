@@ -2,7 +2,7 @@
 
 > When filled: write the body in **Vietnamese**. Keep IDs and machine fields in English.  
 > Authoritative: **Execution Truth**. Do not invent requirements or architecture decisions.  
-> Contract: `templates/.agents/contracts/spec-package.md`  
+> Contract: `.agents/contracts/spec-package.md`
 > Task status enum: `draft` | `ready` | `in_progress` | `blocked` | `review` | `done` | `cancelled`  
 > Every feature must have at least one task.
 

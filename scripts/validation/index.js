@@ -271,8 +271,27 @@ function validateGovernanceConsistency() {
   if (!pmSkillText.includes('Auto-intake entry')) {
     details.push('project-manager: missing Auto-intake entry section');
   }
+  if (!pmSkillText.includes('Intent gate')) {
+    details.push('project-manager: missing Intent gate in Auto-intake entry');
+  }
+  if (/^disable-model-invocation:\s*true$/m.test(pmSkillText)) {
+    details.push('project-manager: must allow model invocation (remove disable-model-invocation: true)');
+  }
+  if (!pmSkillText.includes('AUTO-ACTIVATE') || !pmSkillText.includes('DO NOT activate')) {
+    details.push('project-manager: description must include AUTO-ACTIVATE and DO NOT activate');
+  }
   if (!pmSkillText.includes('Slash invocation (mandatory)')) {
     details.push('project-manager: missing Slash invocation (mandatory) section');
+  }
+  const agentModeText = read(AGENT_MODE_HUB);
+  if (!agentModeText.includes('When these rules apply')) {
+    details.push('agent-mode.md: missing When these rules apply');
+  }
+  if (!agentModeText.includes('When these rules do NOT apply')) {
+    details.push('agent-mode.md: missing When these rules do NOT apply');
+  }
+  if (!agentsText.includes('Intent gate')) {
+    details.push('AGENTS.md: missing Intent gate in Auto-intake');
   }
   if (!agentsText.includes('/project-manager')) {
     details.push('AGENTS.md: missing /project-manager mandatory mode reference');

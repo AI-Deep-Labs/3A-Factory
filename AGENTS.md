@@ -68,7 +68,7 @@ Do not reuse one approval for another gate. Never auto-deploy. Never auto-approv
 
 ## Auto-intake
 
-In an **onboarded repo**, describe requirements in natural language — no slash command required for intake. The agent reads and executes `.agents/skills/project-manager/SKILL.md`; PM routes by `manifest.status`.
+In an **onboarded repo**, natural-language **lifecycle** requests can start the pipeline without a slash command. Hub rule: call `project-manager` only when Intent matches below; otherwise answer normally. Full Intent gate lives in `.agents/skills/project-manager/SKILL.md` § Auto-intake entry.
 
 ### Onboarded repo markers (all required)
 
@@ -78,22 +78,19 @@ In an **onboarded repo**, describe requirements in natural language — no slash
 
 If any marker is missing → `ONBOARDING_REQUIRED` → read `.agents/skills/onboarding/SKILL.md`; do **not** run the REQ pipeline.
 
-### When to auto-route to project-manager
+### Intent gate (before opening PM)
 
-- Repo is onboarded **and** the message is an engineering lifecycle request: feature, bug, change, enhancement, or continue an existing REQ
-- Or an approval response at an active gate (natural language or `APPROVED_*` token)
-- Or a reference to a package path, REQ id, or `docs/tasks/…`
+| Call PM when | Do **not** call PM when |
+|---|---|
+| Feature / bug / change / enhancement | Pure Q&A, code explanation, ad-hoc review unrelated to a REQ |
+| Continue an existing REQ / `docs/tasks/…` path | Meta questions about tooling (unless user asks to run the workflow) |
+| Approval reply at an **active** gate (yes/no, có/không, `APPROVED_*`) | User already invoked a step slash (`/triage`, `/develop`, `/qa`, `/deploy`, `/qa-issues`, …) — that skill owns the turn |
+| | User asks to bypass the workflow |
+| | Ambiguous → ask one yes/no (open Spec Package vs answer only); do not triage until they choose workflow |
 
-### When NOT to auto-route
+### After routing (Intent matched)
 
-- Pure Q&A, code explanation, or ad-hoc review unrelated to a REQ
-- Meta questions about tooling (unless the user wants to run the workflow)
-- User explicitly invoked a different slash skill (`/deploy`, `/qa-issues`, …)
-- User asks to bypass the workflow
-
-### After routing
-
-1. Read `.agents/rules/agent-mode.md`
+1. Read `.agents/rules/agent-mode.md` (applicable — see that file’s scope)
 2. Read and execute `.agents/skills/project-manager/SKILL.md` with the user message as input
 3. PM selects the child skill per routing table + `manifest.yaml`
 4. After each child skill, **return to PM** until a PM stop condition
@@ -117,7 +114,7 @@ Invoking **`/project-manager`** binds **Project Manager mode** for the session: 
 ## Hard gates
 
 **CRITICAL AGENT OVERRIDE**:
-You MUST read and strictly obey all override rules defined in `.agents/rules/agent-mode.md` before taking any planning or execution actions.
+When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM mode, read and obey `.agents/rules/agent-mode.md` (see that file’s **When these rules apply**). Do **not** apply Spec Package-forcing constraints to pure Q&A, code explanation, meta tooling, bypass, or a non-PM step slash.
 
 1. No application coding from a raw requirement.
 2. Develop only when `validation.status == passed` and spec package approval is recorded (plus develop approval when high-risk policy requires it).

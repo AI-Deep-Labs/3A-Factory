@@ -1,7 +1,6 @@
 ---
 name: project-manager
-description: Spec Package state-machine orchestrator — routes triage→spec→APPROVED_SPEC_PACKAGE→task-by-task develop/review→qa→converge→APPROVED_USER_REVIEW. Never auto-deploy.
-disable-model-invocation: true
+description: "AUTO-ACTIVATE in an onboarded repo (AGENTS.md + .agents/contracts/spec-package.md + docs/) when the user describes a new engineering lifecycle request in natural language instead of a slash command: feature, bug, change, enhancement; continues an existing REQ / docs/tasks/ path; or replies to an active approval gate (yes/no, có/không, APPROVED_*). Trigger examples: pasted customer email; 'khách muốn…'; 'cần thêm tính năng…'; 'có bug…'; 'sếp yêu cầu đổi…'; 'tiếp tục REQ-000012…'; 'làm tiếp package docs/tasks/REQ-…'. DO NOT activate when: pure Q&A; explain existing code; tooling/meta questions; user asks to bypass the workflow; OR user already invoked a step slash (/triage /grill-me /analyze /requirements /adr /design /tasks /acceptance /spec-review /spec /develop /review /qa /converge /deploy /qa-issues /onboarding /handoff /caveman /synthesize-design-doc …) — those run exactly one step without project-manager. /project-manager alone still binds mandatory PM mode for the session. Routes triage→spec→APPROVED_SPEC_PACKAGE→task-by-task develop/review→qa→converge→APPROVED_USER_REVIEW. NEVER auto-deploy; deploy is explicit /deploy only."
 argument-hint: "[requirement text or REQ-<NNNNNN>-<slug> or package path]"
 ---
 
@@ -20,9 +19,28 @@ Do not mark tasks `done` (only `review` may).
 
 ## Auto-intake entry
 
-Invoked when the user describes a requirement in natural language (no `/project-manager` prefix) per `AGENTS.md` § Auto-intake.
+Natural-language entry (no `/project-manager` prefix). Same routing/gates as slash once entered; does **not** bind mandatory session mode unless the user used `/project-manager`. Details also in `AGENTS.md` § Auto-intake.
 
-1. Run **Onboarded detection** first.
+### Intent gate (run BEFORE Onboarded detection / Package resolution)
+
+Classify the user message:
+
+| Intent | Action |
+|---|---|
+| `lifecycle` — feature / bug / change / enhancement to build or change the product | Continue → onboarded → PM |
+| `continue_req` — REQ id, `docs/tasks/…`, “tiếp tục REQ…” | Continue → PM |
+| `approval_reply` — confirm/reject at an **active** gate | Continue → PM (active gate only) |
+| `step_slash` — message is / primarily a workflow slash other than `/project-manager` | **Stop.** Do not run PM. Let that command/skill own the turn. |
+| `qa_explain` — pure Q&A, code explanation, ad-hoc review unrelated to a REQ | **Stop.** Answer normally. Do **not** force Spec Package. |
+| `meta_tooling` — how 3a-factory / skills work, unless the user asks to run the pipeline | **Stop.** Answer normally. |
+| `bypass` — user asks to skip the workflow | **Stop.** Honor; do not open/create a package. |
+| `ambiguous` — could be lifecycle or Q&A | Ask **one** yes/no: open Spec Package workflow, or answer only? Do not triage until they choose workflow. |
+
+Only `lifecycle` | `continue_req` | `approval_reply` (after confirm if ambiguous) proceed.
+
+### Then
+
+1. Run **Onboarded detection**.
 2. If not onboarded → `ONBOARDING_REQUIRED`; read `.agents/skills/onboarding/SKILL.md` and stop.
 3. Input = full user message (requirement text, REQ id, package path, approval response at active gate, or continue intent).
 4. Apply **Package resolution** below, then **Session orchestration**.

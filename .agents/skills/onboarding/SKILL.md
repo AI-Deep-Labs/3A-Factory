@@ -151,7 +151,7 @@ Keep it short:
 1. **1-line**: what this repo is
 2. **5-minute**: tasks / inputs / outputs / key files
 3. **Scaffolded**: `docs/` paths + agent files created/updated
-4. **Next**: mô tả yêu cầu bằng ngôn ngữ tự nhiên — `project-manager` tự route (xem `AGENTS.md` § Auto-intake); slash (`/grill-me`, …) vẫn dùng được khi cần override
+4. **Next**: mô tả yêu cầu **lifecycle** bằng ngôn ngữ tự nhiên — `project-manager` route theo Intent gate (`AGENTS.md` § Auto-intake). Q&A / giải thích code không mở PM; slash (`/grill-me`, …) vẫn dùng khi cần override
 
 ---
 

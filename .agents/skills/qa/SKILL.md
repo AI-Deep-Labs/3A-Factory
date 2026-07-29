@@ -53,7 +53,7 @@ security-report.md         # if applicable
 qa-summary.md              # required
 ```
 Each report references Requirement IDs, Acceptance/Test IDs, Task IDs, review evidence, commands, results.  
-Templates: `QA-SUMMARY-template.md` (+ existing UT/QA templates as structural guidance).  
+Templates: `QA-SUMMARY-template.md` (package-local UT/ST/UAT reports as needed).  
 Vietnamese bodies.
 
 ## Auto-loop (max 3)

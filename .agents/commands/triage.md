@@ -45,7 +45,7 @@ The agent allocates ids itself — **no helper script**.
 ## Inputs
 - Raw requirement text / user request
 - Optional existing package path or REQ id
-- Contract: `.agents/contracts/spec-package.md` (or `templates/.agents/contracts/spec-package.md` in this repo)
+- Contract: `.agents/contracts/spec-package.md`
 - Manifest template: `.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml`
 - Raw template guidance: `.agents/templates/RAW-REQ-template.md`
 

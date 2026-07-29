@@ -1,10 +1,10 @@
 # Command Reference
 
-Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.0**. Không có `/plan`.
+Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.1**. Không có `/plan`.
 
 **Nguồn authoring:** `.agents/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
 
-**Auto-intake:** Trong repo đã onboard, mô tả yêu cầu bằng ngôn ngữ tự nhiên — agent đọc `.agents/skills/project-manager/SKILL.md` và route theo `manifest.status`. Slash commands bên dưới là **override thủ công** (không bắt buộc cho intake). Chi tiết: `AGENTS.md` § Auto-intake.
+**Auto-intake:** Trong repo đã onboard, NL **lifecycle / tiếp REQ / approval** → `project-manager` (Intent gate trước). Q&A / giải thích code / slash bước → **không** mở PM. Slash bên dưới là override thủ công. Chi tiết: `AGENTS.md` § Auto-intake.
 
 **Approvals:** Agent hỏi xác nhận tại mỗi gate; user trả lời có/không hoặc tự nhiên — không cần gõ token `APPROVED_*`. Chi tiết: `docs/approvals.md`, contract § 5.4.1.
 

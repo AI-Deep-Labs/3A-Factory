@@ -24,12 +24,12 @@ Gemini-specific:
 - Skill body (single source): `.agents/skills/<name>/SKILL.md`
 - Installer does **not** create `.gemini/skills/` (avoid duplicate mirrors)
 - List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
-- **Auto-intake**: in an onboarded repo, describe requirements in natural language — read `.agents/skills/project-manager/SKILL.md` (see `AGENTS.md` § Auto-intake); slash optional for intake
+- **Auto-intake**: in an onboarded repo, NL **lifecycle / continue REQ / approval** → `project-manager` (`AGENTS.md` § Auto-intake Intent gate). Q&A / explain code / step slash → do **not** open PM
 - **Approvals**: confirmation questions at each gate; natural language or `APPROVED_*` tokens — contract § 5.4.1
 - **`/project-manager`**: mandatory PM mode — fully execute skill § Slash invocation (mandatory)
 - Utility slashes: `/onboarding`, `/handoff`, `/caveman`, `/synthesize-design-doc`, `/qa-issues`
 
-**CRITICAL**: Before taking any actions, you must read `.agents/rules/agent-mode.md` to understand your strict constraints regarding Planning Mode.
+**CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read `.agents/rules/agent-mode.md` (scoped — see **When these rules apply**). Skip Spec Package-forcing rules for Q&A / explain code / meta / bypass / non-PM step slash.
 
 **Generated docs under `docs/tasks/` must be Vietnamese** (see `AGENTS.md`). Chat may follow the user’s language.
 
