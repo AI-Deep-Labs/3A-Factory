@@ -1,12 +1,12 @@
 # Source — published package ships dist/ bundle only (see npm run build)
 scripts/
-templates/
 AGENTS.md
 CLAUDE.md
 GEMINI.md
 .cursorrules
 tests/
 docs/
+examples/
 
 # Dev / internal
 .agents/
@@ -17,4 +17,3 @@ docs/
 *.bak.*
 *.log
 coverage/
-

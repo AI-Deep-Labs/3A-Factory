@@ -1,4 +1,4 @@
-# Release Checklist — 3.0.0
+# Release Checklist — 3.2.0
 
 ## Architecture
 
@@ -62,7 +62,7 @@
 - [x] Commands
 - [x] Approvals
 - [x] Breaking changes
-- [x] Changelog (`[3.0.0] - 2026-07-27`)
+- [x] Changelog (`[3.2.0] - 2026-07-29`)
 - [x] Release notes
 - [x] Example package
 

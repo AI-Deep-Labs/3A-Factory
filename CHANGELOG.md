@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.2.0] - 2026-07-29
+
+General availability — consolidates the 3.1.0-rc line into a stable release.
+
+### Added
+
+- **Auto-intake:** onboarded repos accept natural-language requirements; agent executes `project-manager` and routes by `manifest.status` (`AGENTS.md` § Auto-intake).
+- **Natural language approvals:** contract § 5.4.1 — confirmation questions at each gate; yes/no, có/không, or natural language (tokens optional).
+- **`/project-manager` mandatory PM mode:** slash binds PM mode — full skill execution, session orchestration PM → child → PM, no phase skip.
+- **Core Rules Hub:** `.agents/rules/agent-mode.md` with CRITICAL overrides (no internal planning mode, no hidden artifacts).
+
+### Changed
+
+- **Authoring layout:** removed `templates/` wrapper; skills, commands, contracts, rules, schemas, document templates, and `WORKFLOW.md` live under `.agents/` as the single source tree.
+- **Slash commands embed full body:** Claude / Gemini / Cursor receive complete command content from `.agents/commands/<name>.md` — commands are source of truth and can be customized independently of skills.
+- **Onboarding:** only creates/updates the agent context file for the **current agent** (Claude → `CLAUDE.md`, Gemini → `GEMINI.md`, Cursor → rules only).
+- Installer, build, validation, tests aligned for `.agents/` paths.
+- Package version set to **3.2.0**.
+
+### Notes
+
+- Consumer runtime paths unchanged (`.agents/skills`, `.claude/commands`, `.gemini/commands`, `.cursor/rules`).
+- Upgrade from 3.0.0 or 3.1.0-rc.x: `npx 3a-factory@3.2.0 --agent=<agent> --force`.
+
 ## [3.1.0-rc.4] - 2026-07-29
 
 ### Changed

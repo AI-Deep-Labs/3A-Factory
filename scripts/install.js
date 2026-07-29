@@ -12,7 +12,6 @@ const fs = require('fs');
 const path = require('path');
 const {
   parseCommandFile,
-  stripSkillFrontmatter,
   emitClaudeCommand,
   emitGeminiCommand,
   emitCursorRule

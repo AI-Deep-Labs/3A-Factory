@@ -1,4 +1,18 @@
-# Breaking Changes — 3.0.0
+# Breaking Changes
+
+## 3.2.0
+
+**Consumer runtime:** không breaking — cài đặt qua `npx 3a-factory@3.2.0 --agent=<agent> --force` như bình thường.
+
+**Authoring / fork:** nếu bạn maintain fork hoặc custom skill/command source:
+
+- Path cũ `templates/skills/`, `templates/commands/`, `templates/.agents/` → `.agents/skills/`, `.agents/commands/`, `.agents/{contracts,rules,schemas,templates}/`
+- Thư mục `templates/` wrapper đã xóa
+- Slash command files chứa full body (không còn pointer-only prompt)
+
+---
+
+## 3.0.0
 
 Kiến trúc **Feature-local Spec Package** (greenfield). Không có migration path từ 2.x.
 
