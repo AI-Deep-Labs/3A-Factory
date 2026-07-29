@@ -1,9 +1,9 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.1.0--rc.3-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.0--rc.4-blue.svg)](package.json)
 
-**3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
+**3A-Factory** là bộ workflow template cho AI Agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (SDLC greenfield).
 
 ## Giới thiệu
 
@@ -154,6 +154,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
+- [Release notes 3.1.0-rc.4](release-notes/3.1.0-rc.4.md)
 - [Release notes 3.1.0-rc.3](release-notes/3.1.0-rc.3.md)
 - [Release notes 3.1.0-rc.2](release-notes/3.1.0-rc.2.md)
 - [Release notes 3.1.0-rc.1](release-notes/3.1.0-rc.1.md)
@@ -178,7 +179,7 @@ Cấp số REQ/ADR: agent tự liệt kê thư mục `docs/tasks/REQ-*` rồi `n
 | shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas,rules,skills}`, `docs/` |
 | claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
 | gemini | `GEMINI.md`, `.gemini/commands` → `.agents/skills` |
-| cursor | `.cursor/rules/*.mdc` (from `templates/commands/`); body in `.agents/skills` |
+| cursor | `.cursor/rules/*.mdc` (from `.agents/commands/`); body in `.agents/skills` |
 
 ## License
 

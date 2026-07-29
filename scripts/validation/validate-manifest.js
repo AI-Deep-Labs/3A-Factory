@@ -89,7 +89,7 @@ function validateManifestFile(manifestPath, folderName) {
 }
 
 function validateSchemaJson() {
-  const rel = 'templates/.agents/schemas/spec-package-manifest.schema.json';
+  const rel = '.agents/schemas/spec-package-manifest.schema.json';
   if (!exists(rel)) return result(false, 'MANIFEST_INVALID', ['schema missing']);
   try {
     JSON.parse(read(rel));

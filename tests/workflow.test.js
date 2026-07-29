@@ -8,7 +8,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 function skill(name) {
-  return fs.readFileSync(path.join(ROOT, 'templates/skills', name, 'SKILL.md'), 'utf8');
+  return fs.readFileSync(path.join(ROOT, '.agents/skills', name, 'SKILL.md'), 'utf8');
 }
 
 describe('workflow regression (static)', () => {
@@ -83,7 +83,7 @@ describe('workflow regression (static)', () => {
   it('auto-intake governance markers', () => {
     const agents = fs.readFileSync(path.join(ROOT, 'AGENTS.md'), 'utf8');
     const workflowRule = fs.readFileSync(
-      path.join(ROOT, 'templates/commands/ai-workflow.md'),
+      path.join(ROOT, '.agents/commands/ai-workflow.md'),
       'utf8'
     );
     const pm = skill('project-manager');
@@ -99,7 +99,7 @@ describe('workflow regression (static)', () => {
 
   it('natural language approval gates', () => {
     const contract = fs.readFileSync(
-      path.join(ROOT, 'templates/.agents/contracts/spec-package.md'),
+      path.join(ROOT, '.agents/contracts/spec-package.md'),
       'utf8'
     );
     const agents = fs.readFileSync(path.join(ROOT, 'AGENTS.md'), 'utf8');
@@ -115,7 +115,7 @@ describe('workflow regression (static)', () => {
     assert.match(deploy, /confirmation question|natural language|5\.4\.1/i);
     assert.ok(
       fs.existsSync(
-        path.join(ROOT, 'templates/.agents/templates/APPROVAL-CONFIRMATION-template.md')
+        path.join(ROOT, '.agents/templates/APPROVAL-CONFIRMATION-template.md')
       )
     );
   });

@@ -75,6 +75,10 @@ describe('installer smoke', () => {
         assert.ok(!fs.existsSync(path.join(tmp, '.claude/skills/plan')));
         const pmClaude = fs.readFileSync(path.join(tmp, '.claude/commands/project-manager.md'), 'utf8');
         assert.match(pmClaude, /MANDATORY PM MODE/);
+        assert.match(pmClaude, /Session orchestration/);
+        const triageClaude = fs.readFileSync(path.join(tmp, '.claude/commands/triage.md'), 'utf8');
+        assert.match(triageClaude, /# Triage/);
+        assert.match(triageClaude, /Classify a raw request/);
       }
       if (agent === 'gemini') {
         const geminiMd = fs.readFileSync(path.join(tmp, 'GEMINI.md'), 'utf8');
@@ -84,7 +88,8 @@ describe('installer smoke', () => {
         assert.ok(!fs.existsSync(path.join(tmp, '.gemini/skills')));
         const toml = fs.readFileSync(path.join(tmp, '.gemini/commands/triage.toml'), 'utf8');
         assert.match(toml, /^description = "/);
-        assert.match(toml, /\.agents\/skills\/triage\/SKILL\.md/);
+        assert.match(toml, /# Triage/);
+        assert.match(toml, /Classify a raw request/);
         const pmGemini = fs.readFileSync(path.join(tmp, '.gemini/commands/project-manager.toml'), 'utf8');
         assert.match(pmGemini, /MANDATORY PM MODE/);
       }

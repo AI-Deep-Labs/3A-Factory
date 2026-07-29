@@ -54,43 +54,43 @@ const REQUIRED_ARTIFACTS = [
 
   'GEMINI.md',
 
-  'templates/WORKFLOW.md',
+  '.agents/WORKFLOW.md',
 
-  'templates/.agents/rules/agent-mode.md',
+  '.agents/rules/agent-mode.md',
 
-  'templates/.agents/contracts/spec-package.md',
+  '.agents/contracts/spec-package.md',
 
-  'templates/.agents/schemas/spec-package-manifest.schema.json',
+  '.agents/schemas/spec-package-manifest.schema.json',
 
-  'templates/.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml',
+  '.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml',
 
-  'templates/.agents/templates/REQUIREMENTS-template.md',
+  '.agents/templates/REQUIREMENTS-template.md',
 
-  'templates/.agents/templates/DESIGN-template.md',
+  '.agents/templates/DESIGN-template.md',
 
-  'templates/.agents/templates/TASKS-template.md',
+  '.agents/templates/TASKS-template.md',
 
-  'templates/.agents/templates/ACCEPTANCE-template.md',
+  '.agents/templates/ACCEPTANCE-template.md',
 
-  'templates/.agents/templates/SPEC-REVIEW-template.md',
+  '.agents/templates/SPEC-REVIEW-template.md',
 
-  'templates/.agents/templates/IMPLEMENTATION-EVIDENCE-template.md',
+  '.agents/templates/IMPLEMENTATION-EVIDENCE-template.md',
 
-  'templates/.agents/templates/CODE-REVIEW-template.md',
+  '.agents/templates/CODE-REVIEW-template.md',
 
-  'templates/.agents/templates/QA-SUMMARY-template.md',
+  '.agents/templates/QA-SUMMARY-template.md',
 
-  'templates/.agents/templates/CONVERGE-REPORT-template.md',
+  '.agents/templates/CONVERGE-REPORT-template.md',
 
-  'templates/.agents/templates/APPROVAL-CONFIRMATION-template.md',
+  '.agents/templates/APPROVAL-CONFIRMATION-template.md',
 
-  'templates/commands/ai-workflow.md',
+  '.agents/commands/ai-workflow.md',
 
-  'templates/commands/project-manager.md',
+  '.agents/commands/project-manager.md',
 
-  ...WORKFLOW_SKILLS.map((s) => `templates/skills/${s}/SKILL.md`),
+  ...WORKFLOW_SKILLS.map((s) => `.agents/skills/${s}/SKILL.md`),
 
-  ...UTILITY_SKILLS.map((s) => `templates/skills/${s}/SKILL.md`)
+  ...UTILITY_SKILLS.map((s) => `.agents/skills/${s}/SKILL.md`)
 
 ];
 
@@ -174,15 +174,17 @@ function isForbiddenSource(rel) {
 
   if (FORBIDDEN_PATH_PARTS.some((p) => n.toLowerCase().includes(p))) return true;
 
-  if (n.startsWith('templates/skills/workflow/')) return true;
+  if (n.startsWith('.agents/skills/workflow/')) return true;
 
-  if (n.startsWith('templates/skills/utility/')) return true;
+  if (n.startsWith('.agents/skills/utility/')) return true;
 
-  if (n.startsWith('templates/.cursor/')) return true;
+  if (n.startsWith('.cursor/')) return true;
 
-  if (n === 'templates/skills/workflow/plan.md') return true;
+  if (n === '.agents/skills/workflow/plan.md') return true;
 
-  if (n === 'templates/skills/plan/SKILL.md') return true;
+  if (n === '.agents/skills/plan/SKILL.md') return true;
+
+  if (/^\.agents\/(docs|plans|reviews|runs|specs)\//.test(n)) return true;
 
   return false;
 
@@ -266,7 +268,7 @@ function main() {
 
   }
 
-  collected.push(...walkSorted('templates'));
+  collected.push(...walkSorted('.agents'));
 
   collected.sort((a, b) => a.localeCompare(b));
 
@@ -302,9 +304,9 @@ function main() {
 
     let type = 'file';
 
-    if (rel.startsWith('templates/skills/')) type = 'skill';
+    if (rel.startsWith('.agents/skills/')) type = 'skill';
 
-    else if (rel.startsWith('templates/commands/')) type = 'command';
+    else if (rel.startsWith('.agents/commands/')) type = 'command';
 
     else if (rel.includes('/contracts/')) type = 'contract';
 
@@ -312,7 +314,7 @@ function main() {
 
     else if (rel.includes('/templates/')) type = 'template';
 
-    else if (['AGENTS.md', 'CLAUDE.md', 'GEMINI.md', 'templates/WORKFLOW.md'].includes(rel)) {
+    else if (['AGENTS.md', 'CLAUDE.md', 'GEMINI.md', '.agents/WORKFLOW.md'].includes(rel)) {
 
       type = 'governance';
 

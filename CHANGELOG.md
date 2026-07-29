@@ -5,12 +5,26 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rc.4] - 2026-07-29
+
+### Changed
+
+- **Flatten authoring layout:** removed the `templates/` wrapper. Skills, commands, contracts, rules, schemas, document templates, and `WORKFLOW.md` now live under `.agents/` as the single source tree.
+- **Slash commands embed full body:** Claude `.md` and Gemini `.toml` (like Cursor `.mdc`) receive the full command body from `.agents/commands/<name>.md` — no longer pointer-only “read SKILL.md” prompts. Commands and skills can be customized independently.
+- Installer / build / validation / tests updated for `.agents/` paths; bundle keys use `.agents/skills/…`, `.agents/commands/…`, etc.
+- Package version set to **3.1.0-rc.4**.
+
+### Notes
+
+- Consumer runtime paths unchanged (`.agents/skills`, `.claude/commands`, `.gemini/commands`, `.cursor/rules`).
+- Upgrade: `npx 3a-factory@3.1.0-rc.4 --agent=<agent> --force`.
+
 ## [3.1.0-rc.3] - 2026-07-29
 
 ### Fixed
 
 - **Onboarding skill:** only creates/updates the agent context file for the **current agent** (Claude → `CLAUDE.md`, Gemini → `GEMINI.md`, Cursor → rules only). Previously created all three regardless of which agent was running.
-- Added § Agent detection to `templates/skills/onboarding/SKILL.md` with explicit "Do not create" guards per agent.
+- Added § Agent detection to `.agents/skills/onboarding/SKILL.md` with explicit "Do not create" guards per agent.
 
 ### Changed
 
@@ -24,13 +38,13 @@ Pre-release candidate: **workflow UX (auto-intake, natural approvals, mandatory 
 
 - **Auto-intake:** onboarded repos accept natural-language requirements; agent executes `project-manager` and routes by `manifest.status` (`AGENTS.md` § Auto-intake).
 - **Natural language approvals:** contract § 5.4.1 — confirmation questions at each gate; yes/no, có/không, or natural language (tokens optional). Template `APPROVAL-CONFIRMATION-template.md`.
-- **`/project-manager` mandatory PM mode:** slash binds MANDATORY PM MODE — full skill execution, session orchestration PM → child → PM, no phase skip (`templates/commands/project-manager.md`).
+- **`/project-manager` mandatory PM mode:** slash binds MANDATORY PM MODE — full skill execution, session orchestration PM → child → PM, no phase skip (`.agents/commands/project-manager.md`).
 
 ### Changed
 
-- **Authoring layout:** `templates/skills/<name>/SKILL.md` + canonical `templates/commands/<name>.md` (flat).
+- **Authoring layout:** `.agents/skills/<name>/SKILL.md` + canonical `.agents/commands/<name>.md` (flat).
 - Installer: copy-only skills; agent command adapters (`scripts/install/command-adapters.js`) emit `.mdc` / `.md` / `.toml`.
-- Removed legacy template trees: `templates/skills/workflow/`, `templates/skills/utility/`, `templates/.cursor/`.
+- Removed legacy template trees and `templates/` wrapper directory; all authoring content now under `.agents/`.
 - Build bundle **70 files** (was 48 in 3.1.0-rc.1).
 - Package version set to **3.1.0-rc.2**.
 - Docs, validation, tests aligned; `.gitignore` adds `.vs/`; repo cleanup (legacy dirs, one-shot migration script).
@@ -46,7 +60,7 @@ Pre-release candidate: **Core Rules Hub + Agent Pointers** (Phase 1) — central
 
 ### Added
 
-- Shared rule hub: `.agents/rules/agent-mode.md` (installed from `templates/.agents/rules/agent-mode.md`) with CRITICAL overrides: disable built-in planning mode, forbid hidden scratch artifacts, enforce canonical `docs/tasks/REQ-*` workflow.
+- Shared rule hub: `.agents/rules/agent-mode.md` with CRITICAL overrides: disable built-in planning mode, forbid hidden scratch artifacts, enforce canonical `docs/tasks/REQ-*` workflow.
 - Installer scaffolds `.agents/rules/` alongside existing shared `.agents/*` paths.
 - Governance, adapter-parity, build-output, installer, and build tests assert hub presence and entry-point pointers.
 
@@ -54,7 +68,7 @@ Pre-release candidate: **Core Rules Hub + Agent Pointers** (Phase 1) — central
 
 - Package version set to **3.1.0-rc.1**.
 - Entry points (`AGENTS.md`, `CLAUDE.md`, `GEMINI.md`, `ai-workflow.mdc`) add **CRITICAL** pointers to `.agents/rules/agent-mode.md` before planning or execution actions.
-- Build bundle includes `templates/.agents/rules/agent-mode.md` (48 files).
+- Build bundle includes `.agents/rules/agent-mode.md`.
 
 ### Notes
 

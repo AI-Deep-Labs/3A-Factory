@@ -1,8 +1,8 @@
 # Command Reference
 
-Chỉ document slash commands có trong `templates/commands/`. Version **3.1.0-rc.3**. Không có `/plan`.
+Chỉ document slash commands có trong `.agents/commands/`. Version **3.1.0-rc.4**. Không có `/plan`.
 
-**Nguồn authoring:** `templates/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
+**Nguồn authoring:** `.agents/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
 
 **Auto-intake:** Trong repo đã onboard, mô tả yêu cầu bằng ngôn ngữ tự nhiên — agent đọc `.agents/skills/project-manager/SKILL.md` và route theo `manifest.status`. Slash commands bên dưới là **override thủ công** (không bắt buộc cho intake). Chi tiết: `AGENTS.md` § Auto-intake.
 

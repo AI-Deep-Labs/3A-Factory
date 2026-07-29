@@ -10,10 +10,10 @@ const ROOT = path.resolve(__dirname, '..');
 
 describe('greenfield + validators', () => {
   it('has no plan skill or legacy SPEC/PLAN templates', () => {
-    assert.equal(fs.existsSync(path.join(ROOT, 'templates/skills/plan/SKILL.md')), false);
-    assert.equal(fs.existsSync(path.join(ROOT, 'templates/skills/workflow/plan.md')), false);
-    assert.equal(fs.existsSync(path.join(ROOT, 'templates/.agents/templates/SPEC-template.md')), false);
-    assert.equal(fs.existsSync(path.join(ROOT, 'templates/.agents/templates/PLAN-template.md')), false);
+    assert.equal(fs.existsSync(path.join(ROOT, '.agents/skills/plan/SKILL.md')), false);
+    assert.equal(fs.existsSync(path.join(ROOT, '.agents/skills/workflow/plan.md')), false);
+    assert.equal(fs.existsSync(path.join(ROOT, '.agents/templates/SPEC-template.md')), false);
+    assert.equal(fs.existsSync(path.join(ROOT, '.agents/templates/PLAN-template.md')), false);
   });
 
   it('greenfield validator passes', () => {

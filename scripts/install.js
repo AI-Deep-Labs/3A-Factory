@@ -174,7 +174,7 @@ function readTemplateContent(relativePath) {
 }
 
 function listSkillTemplateEntries() {
-  const skillPathRe = /^templates\/skills\/[^/]+\/SKILL\.md$/;
+  const skillPathRe = /^\.agents\/skills\/[^/]+\/SKILL\.md$/;
   const bundle = getBundleFiles();
   if (bundle) {
     return Object.keys(bundle)
@@ -182,7 +182,7 @@ function listSkillTemplateEntries() {
       .sort()
       .map((key) => ({ relativePath: key, content: bundle[key] }));
   }
-  const skillsDir = path.join(templateRoot, 'templates', 'skills');
+  const skillsDir = path.join(templateRoot, '.agents', 'skills');
   if (!fs.existsSync(skillsDir)) return [];
   return fs
     .readdirSync(skillsDir)
@@ -191,7 +191,7 @@ function listSkillTemplateEntries() {
       const skillFile = path.join(skillsDir, name, 'SKILL.md');
       if (!fs.existsSync(skillFile)) return null;
       return {
-        relativePath: `templates/skills/${name}/SKILL.md`,
+        relativePath: `.agents/skills/${name}/SKILL.md`,
         content: fs.readFileSync(skillFile, 'utf8')
       };
     })
@@ -200,7 +200,7 @@ function listSkillTemplateEntries() {
 }
 
 function listCommandTemplateEntries() {
-  const prefix = 'templates/commands/';
+  const prefix = '.agents/commands/';
   const bundle = getBundleFiles();
   if (bundle) {
     return Object.keys(bundle)
@@ -208,7 +208,7 @@ function listCommandTemplateEntries() {
       .sort()
       .map((key) => ({ relativePath: key, content: bundle[key] }));
   }
-  const commandsDir = path.join(templateRoot, 'templates', 'commands');
+  const commandsDir = path.join(templateRoot, '.agents', 'commands');
   if (!fs.existsSync(commandsDir)) return [];
   return fs
     .readdirSync(commandsDir)
@@ -250,9 +250,9 @@ Always installs (shared):
   AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/
 
 Per agent:
-  claude  → CLAUDE.md, .claude/skills (mirror), .claude/commands (from templates/commands)
-  gemini  → GEMINI.md, .gemini/commands/*.toml (from templates/commands)
-  cursor  → .cursor/rules/*.mdc (from templates/commands adapters)
+  claude  → CLAUDE.md, .claude/skills (mirror), .claude/commands (from .agents/commands)
+  gemini  → GEMINI.md, .gemini/commands/*.toml (from .agents/commands)
+  cursor  → .cursor/rules/*.mdc (from .agents/commands adapters)
 
 Never:
   create docs/tasks/ feature packages (or legacy .specs/), pre-create docs/decisions or docs/misc,
@@ -343,21 +343,21 @@ const SPEC_PACKAGE_TEMPLATES = [
 
 const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
-  { src: 'templates/WORKFLOW.md', dest: 'WORKFLOW.md' },
+  { src: '.agents/WORKFLOW.md', dest: 'WORKFLOW.md' },
   {
-    src: 'templates/.agents/contracts/spec-package.md',
+    src: '.agents/contracts/spec-package.md',
     dest: '.agents/contracts/spec-package.md'
   },
   {
-    src: 'templates/.agents/rules/agent-mode.md',
+    src: '.agents/rules/agent-mode.md',
     dest: '.agents/rules/agent-mode.md'
   },
   {
-    src: 'templates/.agents/schemas/spec-package-manifest.schema.json',
+    src: '.agents/schemas/spec-package-manifest.schema.json',
     dest: '.agents/schemas/spec-package-manifest.schema.json'
   },
   ...SPEC_PACKAGE_TEMPLATES.map((name) => ({
-    src: `templates/.agents/templates/${name}`,
+    src: `.agents/templates/${name}`,
     dest: `.agents/templates/${name}`
   }))
 ];
@@ -461,14 +461,8 @@ function copyWorkflowFile(item, required) {
 }
 
 function skillNameFromPath(relativePath) {
-  const m = normalizeRel(relativePath).match(/^templates\/skills\/([^/]+)\/SKILL\.md$/);
+  const m = normalizeRel(relativePath).match(/^\.agents\/skills\/([^/]+)\/SKILL\.md$/);
   return m ? m[1] : null;
-}
-
-function readSkillBody(name) {
-  const content = readTemplateContent(`templates/skills/${name}/SKILL.md`);
-  if (content === null) return null;
-  return stripSkillFrontmatter(content);
 }
 
 function copySkills() {
@@ -504,8 +498,7 @@ function processCommands() {
       writeFileAction(`.gemini/commands/${cmd.name}.toml`, emitGeminiCommand(cmd), true);
     }
     if (wants('cursor')) {
-      const skillBody = cmd.cursorBodyFromSkill ? readSkillBody(cmd.name) : null;
-      writeFileAction(`.cursor/rules/${cmd.name}.mdc`, emitCursorRule(cmd, skillBody), true);
+      writeFileAction(`.cursor/rules/${cmd.name}.mdc`, emitCursorRule(cmd), true);
     }
   }
 }
@@ -533,8 +526,8 @@ if (path.resolve(targetRoot) === path.resolve(templateRoot) && !cwdArg) {
   process.exit(0);
 }
 
-if (!getBundleFiles() && !fs.existsSync(path.join(templateRoot, 'templates'))) {
-  failToken('INSTALL_SOURCE_INVALID', 'bundle.json missing and templates/ not found — run npm run build');
+if (!getBundleFiles() && !fs.existsSync(path.join(templateRoot, '.agents'))) {
+  failToken('INSTALL_SOURCE_INVALID', 'bundle.json missing and .agents/ not found — run npm run build');
 }
 
 if (!isJson) {

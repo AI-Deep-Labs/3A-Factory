@@ -4,7 +4,7 @@
 
 *   **Status**: Accepted
 
-> **Layout superseded (2026-07):** Skill/command authoring moved to flat `templates/skills/<name>/SKILL.md` and `templates/commands/<name>.md`. Historical paths below (`templates/skills/workflow/`, `templates/.cursor/rules/`) refer to the pre-3.1 layout at ADR acceptance time.
+> **Layout superseded (2026-07):** Skill/command authoring moved to `.agents/skills/<name>/SKILL.md` and `.agents/commands/<name>.md`. The `templates/` wrapper directory has been removed. Historical paths below (`templates/skills/workflow/`, `templates/.cursor/rules/`) refer to the pre-3.1 layout at ADR acceptance time.
 
 *   **Author**: Principal Solution Architect / AI Agent Workflow Architect (Phase 0)
 *   **Date**: 2026-07-23

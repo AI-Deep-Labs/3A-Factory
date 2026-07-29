@@ -138,8 +138,8 @@ You MUST read and strictly obey all override rules defined in `.agents/rules/age
 
 | Path | Content |
 |---|---|
-| `templates/skills/<name>/SKILL.md` | Workflow + utility skill bodies (21 skills) |
-| `templates/commands/<name>.md` | Canonical slash commands (flat; adapters emit per agent) |
+| `.agents/skills/<name>/SKILL.md` | Workflow + utility skill bodies (21 skills) |
+| `.agents/commands/<name>.md` | Canonical slash commands (flat; adapters emit per agent) |
 
 Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/commands` → `.agents/skills`; Cursor `.cursor/rules/*.mdc` (skill body in `.agents/skills` only — no `.cursor/skills` / `.gemini/skills` mirrors).
 
