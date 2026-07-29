@@ -8,7 +8,7 @@ const path = require('path');
 const ROOT = path.resolve(__dirname, '..');
 
 function skill(name) {
-  return fs.readFileSync(path.join(ROOT, 'templates/skills/workflow', `${name}.md`), 'utf8');
+  return fs.readFileSync(path.join(ROOT, 'templates/skills', name, 'SKILL.md'), 'utf8');
 }
 
 describe('workflow regression (static)', () => {
@@ -66,6 +66,9 @@ describe('workflow regression (static)', () => {
     assert.match(pm, /awaiting_approval/);
     assert.match(pm, /APPROVED_USER_REVIEW/);
     assert.match(pm, /converge/);
+    assert.match(pm, /Slash invocation \(mandatory\)/);
+    assert.match(pm, /Session orchestration/);
+    assert.match(pm, /do not skip phases/i);
   });
 
   it('triage allocates REQ ids from docs/tasks directory names', () => {
@@ -75,5 +78,45 @@ describe('workflow regression (static)', () => {
     assert.match(t, /000001/);
     assert.match(t, /Never/i);
     assert.doesNotMatch(t, /allocate-id/);
+  });
+
+  it('auto-intake governance markers', () => {
+    const agents = fs.readFileSync(path.join(ROOT, 'AGENTS.md'), 'utf8');
+    const workflowRule = fs.readFileSync(
+      path.join(ROOT, 'templates/commands/ai-workflow.md'),
+      'utf8'
+    );
+    const pm = skill('project-manager');
+
+    assert.match(agents, /Auto-intake/);
+    assert.match(agents, /ONBOARDING_REQUIRED/);
+    assert.match(agents, /project-manager/);
+    assert.match(workflowRule, /Auto-intake/);
+    assert.match(pm, /Auto-intake entry/);
+    assert.match(pm, /Session orchestration/);
+    assert.match(pm, /ONBOARDING_REQUIRED/);
+  });
+
+  it('natural language approval gates', () => {
+    const contract = fs.readFileSync(
+      path.join(ROOT, 'templates/.agents/contracts/spec-package.md'),
+      'utf8'
+    );
+    const agents = fs.readFileSync(path.join(ROOT, 'AGENTS.md'), 'utf8');
+    const spec = skill('spec');
+    const pm = skill('project-manager');
+    const deploy = skill('deploy');
+
+    assert.match(contract, /5\.4\.1/);
+    assert.match(contract, /User confirmation \(natural language\)/);
+    assert.match(agents, /confirmation question|5\.4\.1/i);
+    assert.match(spec, /natural language|confirmation question|5\.4\.1/i);
+    assert.match(pm, /Approval gates \(natural language\)/);
+    assert.match(deploy, /confirmation question|natural language|5\.4\.1/i);
+    assert.ok(
+      fs.existsSync(
+        path.join(ROOT, 'templates/.agents/templates/APPROVAL-CONFIRMATION-template.md')
+      )
+    );
   });
 });

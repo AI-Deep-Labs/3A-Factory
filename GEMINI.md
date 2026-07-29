@@ -24,7 +24,10 @@ Gemini-specific:
 - Skill body (single source): `.agents/skills/<name>/SKILL.md`
 - Installer does **not** create `.gemini/skills/` (avoid duplicate mirrors)
 - List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
-- If slash commands are unavailable, invoke phases in natural language (`project-manager`, `tasks`, `converge`, …).
+- **Auto-intake**: in an onboarded repo, describe requirements in natural language — read `.agents/skills/project-manager/SKILL.md` (see `AGENTS.md` § Auto-intake); slash optional for intake
+- **Approvals**: confirmation questions at each gate; natural language or `APPROVED_*` tokens — contract § 5.4.1
+- **`/project-manager`**: mandatory PM mode — fully execute skill § Slash invocation (mandatory)
+- Utility slashes: `/onboarding`, `/handoff`, `/caveman`, `/synthesize-design-doc`, `/qa-issues`
 
 **CRITICAL**: Before taking any actions, you must read `.agents/rules/agent-mode.md` to understand your strict constraints regarding Planning Mode.
 

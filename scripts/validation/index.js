@@ -87,11 +87,19 @@ function validateTraceability(packageDir) {
     : result(true, 'TRACEABILITY_VALID', []);
 }
 
+function skillPath(name) {
+  return `templates/skills/${name}/SKILL.md`;
+}
+
+function commandPath(name) {
+  return `templates/commands/${name}.md`;
+}
+
 function validateSkillContracts() {
   const details = [];
   const names = new Set();
   for (const skill of REQUIRED_SKILLS) {
-    const rel = `templates/skills/workflow/${skill}.md`;
+    const rel = skillPath(skill);
     if (!exists(rel)) {
       details.push(`missing skill: ${skill}`);
       continue;
@@ -133,10 +141,20 @@ function validateSkillContracts() {
     if (skill === 'converge' && /status:\s*done/.test(content) && !/Do \*\*not\*\* set `done`/.test(content)) {
       details.push('converge must not mark done');
     }
+    if (skill === 'spec' && !/natural language|confirmation question|5\.4\.1/i.test(content)) {
+      details.push('spec missing natural language approval handling');
+    }
+    if (skill === 'project-manager' && !/Approval gates \(natural language\)/.test(content)) {
+      details.push('project-manager missing Approval gates (natural language) section');
+    }
+    if (skill === 'deploy' && !/confirmation question|natural language|5\.4\.1/i.test(content)) {
+      details.push('deploy missing natural language deploy confirmation');
+    }
   }
-  if (exists('templates/skills/workflow/plan.md')) {
-    details.push('plan.md must not exist (greenfield)');
-  }
+  if (exists('templates/skills/plan/SKILL.md')) details.push('plan skill must not exist (greenfield)');
+  if (exists('templates/skills/workflow')) details.push('legacy templates/skills/workflow/ must not exist');
+  if (exists('templates/skills/utility')) details.push('legacy templates/skills/utility/ must not exist');
+  if (exists('templates/.cursor')) details.push('legacy templates/.cursor/ must not exist');
   return details.length
     ? result(false, 'SKILL_VALIDATION_FAILED', details)
     : result(true, 'SKILL_VALIDATION_PASSED', []);
@@ -154,7 +172,8 @@ function validateTemplateReferences() {
     'IMPLEMENTATION-EVIDENCE-template.md',
     'CODE-REVIEW-template.md',
     'QA-SUMMARY-template.md',
-    'CONVERGE-REPORT-template.md'
+    'CONVERGE-REPORT-template.md',
+    'APPROVAL-CONFIRMATION-template.md'
   ];
   for (const t of required) {
     if (!exists(`templates/.agents/templates/${t}`)) details.push(`TEMPLATE_REFERENCE_MISSING:${t}`);
@@ -192,7 +211,7 @@ function validateAgentModeHub() {
     ['AGENTS.md', 'CRITICAL AGENT OVERRIDE'],
     ['CLAUDE.md', 'CRITICAL'],
     ['GEMINI.md', 'CRITICAL'],
-    ['templates/.cursor/rules/ai-workflow.mdc', 'CRITICAL']
+    ['templates/commands/ai-workflow.md', 'CRITICAL']
   ];
   for (const [file, marker] of pointers) {
     if (!exists(file)) {
@@ -214,7 +233,7 @@ function validateGovernanceConsistency() {
     'CLAUDE.md',
     'GEMINI.md',
     'templates/WORKFLOW.md',
-    'templates/.cursor/rules/ai-workflow.mdc',
+    'templates/commands/ai-workflow.md',
     'templates/.agents/contracts/spec-package.md',
     'README.md'
   ];
@@ -240,6 +259,35 @@ function validateGovernanceConsistency() {
       }
     }
   }
+  const agentsText = read('AGENTS.md');
+  const workflowRuleText = read('templates/commands/ai-workflow.md');
+  const pmSkillText = read(skillPath('project-manager'));
+  if (!agentsText.includes('Auto-intake')) details.push('AGENTS.md: missing Auto-intake section');
+  if (!workflowRuleText.includes('Auto-intake')) {
+    details.push('ai-workflow command: missing Auto-intake section');
+  }
+  if (!pmSkillText.includes('Session orchestration')) {
+    details.push('project-manager: missing Session orchestration section');
+  }
+  if (!pmSkillText.includes('Auto-intake entry')) {
+    details.push('project-manager: missing Auto-intake entry section');
+  }
+  if (!pmSkillText.includes('Slash invocation (mandatory)')) {
+    details.push('project-manager: missing Slash invocation (mandatory) section');
+  }
+  if (!agentsText.includes('/project-manager')) {
+    details.push('AGENTS.md: missing /project-manager mandatory mode reference');
+  }
+  const contractText = read('templates/.agents/contracts/spec-package.md');
+  if (!contractText.includes('5.4.1') || !/User confirmation \(natural language\)/.test(contractText)) {
+    details.push('spec-package contract: missing § 5.4.1 natural language approval');
+  }
+  if (!agentsText.includes('5.4.1') && !/confirmation question/i.test(agentsText)) {
+    details.push('AGENTS.md: missing natural language approval UX');
+  }
+  if (!exists('templates/.agents/templates/APPROVAL-CONFIRMATION-template.md')) {
+    details.push('missing APPROVAL-CONFIRMATION-template.md');
+  }
   return details.length
     ? result(false, 'GOVERNANCE_CONFLICT', details)
     : result(true, 'GOVERNANCE_CONSISTENT', []);
@@ -250,7 +298,7 @@ function validateAdapterParity() {
   for (const [file, marker] of [
     ['CLAUDE.md', 'Claude'],
     ['GEMINI.md', 'Gemini'],
-    ['templates/.cursor/rules/ai-workflow.mdc', 'Cursor']
+    ['templates/commands/ai-workflow.md', 'Cursor']
   ]) {
     if (!exists(file)) {
       details.push(`missing ${file}`);
@@ -269,8 +317,10 @@ function validateAdapterParity() {
     }
   }
   for (const skill of REQUIRED_SKILLS) {
-    if (!exists(`templates/skills/workflow/${skill}.md`)) details.push(`missing skill ${skill}`);
+    if (!exists(skillPath(skill))) details.push(`missing skill ${skill}`);
+    if (!exists(commandPath(skill))) details.push(`missing command ${skill}`);
   }
+  if (!exists(commandPath('ai-workflow'))) details.push('missing command ai-workflow');
   return details.length
     ? result(false, 'ADAPTER_PARITY_FAILED', details)
     : result(true, 'ADAPTER_PARITY_PASSED', []);
@@ -285,10 +335,14 @@ function validateBuildOutput() {
   if (fs.existsSync(bundlePath)) {
     const bundle = JSON.parse(fs.readFileSync(bundlePath, 'utf8'));
     for (const skill of REQUIRED_SKILLS) {
-      const key = `templates/skills/workflow/${skill}.md`;
+      const key = skillPath(skill);
       if (!bundle.files[key]) details.push(`bundle missing ${key}`);
     }
+    if (!bundle.files[commandPath('ai-workflow')]) {
+      details.push(`bundle missing ${commandPath('ai-workflow')}`);
+    }
     if (bundle.files['templates/skills/workflow/plan.md']) details.push('bundle contains plan.md');
+    if (bundle.files['templates/skills/plan/SKILL.md']) details.push('bundle contains plan skill');
     if (bundle.files['templates/.agents/templates/SPEC-template.md']) {
       details.push('bundle contains SPEC-template.md');
     }
@@ -327,10 +381,14 @@ function validateStateFlow() {
 
 function validateGreenfield() {
   const details = [];
-  if (exists('templates/skills/workflow/plan.md')) details.push('plan skill exists');
+  if (exists('templates/skills/plan/SKILL.md')) details.push('plan skill exists');
+  if (exists('templates/skills/workflow')) details.push('legacy templates/skills/workflow/ exists');
+  if (exists('templates/skills/utility')) details.push('legacy templates/skills/utility/ exists');
+  if (exists('templates/.cursor')) details.push('legacy templates/.cursor/ exists');
+  if (exists('templates/skills/workflow/plan.md')) details.push('legacy plan skill exists');
   if (exists('templates/.agents/templates/SPEC-template.md')) details.push('SPEC-template exists');
   if (exists('templates/.agents/templates/PLAN-template.md')) details.push('PLAN-template exists');
-  const skillFiles = walk('templates/skills/workflow');
+  const skillFiles = walk('templates/skills').filter((f) => f.endsWith('/SKILL.md'));
   for (const f of skillFiles) {
     const text = read(f);
     if (/Write `docs\/requirements\/REQ-.*-spec\.md`/.test(text)) {

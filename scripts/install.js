@@ -10,6 +10,13 @@
 
 const fs = require('fs');
 const path = require('path');
+const {
+  parseCommandFile,
+  stripSkillFrontmatter,
+  emitClaudeCommand,
+  emitGeminiCommand,
+  emitCursorRule
+} = require(path.join(__dirname, 'install', 'command-adapters.js'));
 
 const VALID_AGENTS = ['claude', 'gemini', 'cursor'];
 const SKIP_SKILL_NAMES = new Set(['plan']);
@@ -167,7 +174,33 @@ function readTemplateContent(relativePath) {
 }
 
 function listSkillTemplateEntries() {
-  const prefix = 'templates/skills/';
+  const skillPathRe = /^templates\/skills\/[^/]+\/SKILL\.md$/;
+  const bundle = getBundleFiles();
+  if (bundle) {
+    return Object.keys(bundle)
+      .filter((key) => skillPathRe.test(key))
+      .sort()
+      .map((key) => ({ relativePath: key, content: bundle[key] }));
+  }
+  const skillsDir = path.join(templateRoot, 'templates', 'skills');
+  if (!fs.existsSync(skillsDir)) return [];
+  return fs
+    .readdirSync(skillsDir)
+    .filter((name) => fs.statSync(path.join(skillsDir, name)).isDirectory())
+    .map((name) => {
+      const skillFile = path.join(skillsDir, name, 'SKILL.md');
+      if (!fs.existsSync(skillFile)) return null;
+      return {
+        relativePath: `templates/skills/${name}/SKILL.md`,
+        content: fs.readFileSync(skillFile, 'utf8')
+      };
+    })
+    .filter(Boolean)
+    .sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+}
+
+function listCommandTemplateEntries() {
+  const prefix = 'templates/commands/';
   const bundle = getBundleFiles();
   if (bundle) {
     return Object.keys(bundle)
@@ -175,13 +208,16 @@ function listSkillTemplateEntries() {
       .sort()
       .map((key) => ({ relativePath: key, content: bundle[key] }));
   }
-  const skillsDir = path.join(templateRoot, 'templates', 'skills');
-  return scanDirectory(skillsDir)
-    .map((filePath) => ({
-      relativePath: normalizeRel(path.relative(templateRoot, filePath)),
-      content: fs.readFileSync(filePath, 'utf8')
-    }))
-    .sort((a, b) => a.relativePath.localeCompare(b.relativePath));
+  const commandsDir = path.join(templateRoot, 'templates', 'commands');
+  if (!fs.existsSync(commandsDir)) return [];
+  return fs
+    .readdirSync(commandsDir)
+    .filter((f) => f.endsWith('.md'))
+    .sort()
+    .map((f) => ({
+      relativePath: `${prefix}${f}`,
+      content: fs.readFileSync(path.join(commandsDir, f), 'utf8')
+    }));
 }
 
 function printHelp() {
@@ -214,9 +250,9 @@ Always installs (shared):
   AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/
 
 Per agent:
-  claude  → CLAUDE.md, .claude/skills, .claude/commands
-  gemini  → GEMINI.md, .gemini/commands/*.toml → .agents/skills
-  cursor  → .cursor/rules/*.mdc (requestable skill rules) + ai-workflow.mdc
+  claude  → CLAUDE.md, .claude/skills (mirror), .claude/commands (from templates/commands)
+  gemini  → GEMINI.md, .gemini/commands/*.toml (from templates/commands)
+  cursor  → .cursor/rules/*.mdc (from templates/commands adapters)
 
 Never:
   create docs/tasks/ feature packages (or legacy .specs/), pre-create docs/decisions or docs/misc,
@@ -296,6 +332,7 @@ const SPEC_PACKAGE_TEMPLATES = [
   'CODE-REVIEW-template.md',
   'QA-SUMMARY-template.md',
   'CONVERGE-REPORT-template.md',
+  'APPROVAL-CONFIRMATION-template.md',
   'ADR-template.md',
   'RAW-REQ-template.md',
   'DISCOVERY-template.md',
@@ -328,12 +365,7 @@ const sharedFiles = [
 const agentFiles = {
   claude: [{ src: 'CLAUDE.md', dest: 'CLAUDE.md' }],
   gemini: [{ src: 'GEMINI.md', dest: 'GEMINI.md' }],
-  cursor: [
-    {
-      src: 'templates/.cursor/rules/ai-workflow.mdc',
-      dest: '.cursor/rules/ai-workflow.mdc'
-    }
-  ]
+  cursor: []
 };
 
 const optionalAgentFiles = {
@@ -428,135 +460,52 @@ function copyWorkflowFile(item, required) {
   writeFileAction(item.dest, srcContent, required);
 }
 
-function scanDirectory(dir, fileList = []) {
-  if (!fs.existsSync(dir)) return fileList;
-  for (const file of fs.readdirSync(dir).sort()) {
-    const filePath = path.join(dir, file);
-    const stat = fs.statSync(filePath);
-    if (stat.isDirectory()) scanDirectory(filePath, fileList);
-    else if (stat.isFile() && file.endsWith('.md')) fileList.push(filePath);
-  }
-  return fileList;
+function skillNameFromPath(relativePath) {
+  const m = normalizeRel(relativePath).match(/^templates\/skills\/([^/]+)\/SKILL\.md$/);
+  return m ? m[1] : null;
 }
 
-function parseYamlFrontmatter(text) {
-  const metadata = {};
-  const lines = text.split('\n');
-  let i = 0;
-  while (i < lines.length) {
-    const line = lines[i];
-    if (!line.trim()) {
-      i++;
-      continue;
-    }
-    const colonIdx = line.indexOf(':');
-    if (colonIdx === -1) {
-      i++;
-      continue;
-    }
-    const key = line.substring(0, colonIdx).trim();
-    let val = line.substring(colonIdx + 1).trim();
-    if (val === '>' || val === '|') {
-      const blockLines = [];
-      i++;
-      while (i < lines.length && (/^\s/.test(lines[i]) || lines[i].trim() === '')) {
-        if (/^\s/.test(lines[i])) blockLines.push(lines[i].replace(/^\s{2,}/, '').trimEnd());
-        i++;
-      }
-      metadata[key] = blockLines.join(' ').trim();
-      continue;
-    }
-    if (
-      (val.startsWith('"') && val.endsWith('"')) ||
-      (val.startsWith("'") && val.endsWith("'"))
-    ) {
-      val = val.slice(1, -1);
-    }
-    metadata[key] = val;
-    i++;
-  }
-  return metadata;
+function readSkillBody(name) {
+  const content = readTemplateContent(`templates/skills/${name}/SKILL.md`);
+  if (content === null) return null;
+  return stripSkillFrontmatter(content);
 }
 
-function yamlQuote(value) {
-  return `"${String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"')}"`;
-}
-function tomlQuote(value) {
-  return String(value || '').replace(/\\/g, '\\\\').replace(/"/g, '\\"');
-}
-
-function formatSkillFrontmatter(metadata) {
-  const name = metadata.name;
-  const lines = [
-    '---',
-    `name: ${name}`,
-    `description: ${yamlQuote(metadata.description || '')}`
-  ];
-  // Slash-style invocation: only load when user types /name (Cursor + Agent Skills UX).
-  lines.push('disable-model-invocation: true');
-  if (metadata['argument-hint'] !== undefined && metadata['argument-hint'] !== '') {
-    const hint = Array.isArray(metadata['argument-hint'])
-      ? metadata['argument-hint'].join(' ')
-      : String(metadata['argument-hint']);
-    lines.push(`argument-hint: ${yamlQuote(hint)}`);
-  }
-  lines.push('---', '');
-  return lines.join('\n');
-}
-
-function parseMarkdownContentWithFrontmatter(content, label) {
-  const normalized = String(content).replace(/\r\n/g, '\n');
-  if (!normalized.startsWith('---\n')) throw new Error(`File does not start with frontmatter: ${label}`);
-  const endIdx = normalized.indexOf('\n---\n', 4);
-  if (endIdx === -1) throw new Error(`Invalid frontmatter: ${label}`);
-  const metadata = parseYamlFrontmatter(normalized.substring(4, endIdx));
-  const body = normalized.substring(endIdx + 5);
-  if (!metadata.name) metadata.name = path.basename(label, '.md');
-  if (!metadata.description) metadata.description = '';
-  return { metadata, body };
-}
-
-function processSkills() {
+function copySkills() {
   const skillEntries = listSkillTemplateEntries();
   if (skillEntries.length === 0) {
     throw new Error('INSTALL_SOURCE_INVALID: no skill templates found');
   }
 
   for (const { relativePath, content } of skillEntries) {
-    const { metadata, body } = parseMarkdownContentWithFrontmatter(content, relativePath);
-    const name = metadata.name;
-    if (SKIP_SKILL_NAMES.has(name)) continue;
-    const desc = metadata.description || '';
-    const bodyText = body.replace(/^\n/, '');
-    const skillBody = `${formatSkillFrontmatter(metadata)}${bodyText}`;
+    const name = skillNameFromPath(relativePath);
+    if (!name || SKIP_SKILL_NAMES.has(name)) continue;
+    writeFileAction(`.agents/skills/${name}/SKILL.md`, content, true);
+    if (wants('claude')) {
+      writeFileAction(`.claude/skills/${name}/SKILL.md`, content, true);
+    }
+  }
+}
 
-    // Shared skill body — single content source for Gemini + Cursor Agent Skills discovery
-    writeFileAction(`.agents/skills/${name}/SKILL.md`, skillBody, true);
+function processCommands() {
+  const commandEntries = listCommandTemplateEntries();
+  if (commandEntries.length === 0) {
+    throw new Error('INSTALL_SOURCE_INVALID: no command templates found');
+  }
+
+  for (const { content } of commandEntries) {
+    const cmd = parseCommandFile(content);
+    if (SKIP_SKILL_NAMES.has(cmd.name)) continue;
 
     if (wants('claude')) {
-      writeFileAction(`.claude/skills/${name}/SKILL.md`, skillBody, true);
-      const claudeCmd = `---\ndescription: ${yamlQuote(desc)}\n---\n\nRead AGENTS.md first, then read and execute .claude/skills/${name}/SKILL.md.\nArguments: $ARGUMENTS\n`;
-      writeFileAction(`.claude/commands/${name}.md`, claudeCmd, true);
+      writeFileAction(`.claude/commands/${cmd.name}.md`, emitClaudeCommand(cmd), true);
     }
-
-    if (wants('cursor')) {
-      // Requestable Rules = Cursor slash/Rules UX (no .cursor/skills mirror)
-      const cursorRule = [
-        '---',
-        `description: ${yamlQuote(desc)}`,
-        'globs: *',
-        'alwaysApply: false',
-        '---',
-        '',
-        bodyText
-      ].join('\n');
-      writeFileAction(`.cursor/rules/${name}.mdc`, cursorRule, true);
-    }
-
     if (wants('gemini')) {
-      // Slash entry only — body is .agents/skills (no .gemini/skills mirror)
-      const geminiCmd = `description = "${tomlQuote(desc)}"\nprompt = """\nRead AGENTS.md first, then read and execute .agents/skills/${name}/SKILL.md.\nArguments: {{args}}\n"""\n`;
-      writeFileAction(`.gemini/commands/${name}.toml`, geminiCmd, true);
+      writeFileAction(`.gemini/commands/${cmd.name}.toml`, emitGeminiCommand(cmd), true);
+    }
+    if (wants('cursor')) {
+      const skillBody = cmd.cursorBodyFromSkill ? readSkillBody(cmd.name) : null;
+      writeFileAction(`.cursor/rules/${cmd.name}.mdc`, emitCursorRule(cmd, skillBody), true);
     }
   }
 }
@@ -612,7 +561,8 @@ try {
   for (const agent of VALID_AGENTS) {
     if (wants(agent)) (optionalAgentFiles[agent] || []).forEach((item) => copyWorkflowFile(item, false));
   }
-  processSkills();
+  copySkills();
+  processCommands();
   assertNoFeaturePackagesCreated();
 
   report.result = report.conflicts.length

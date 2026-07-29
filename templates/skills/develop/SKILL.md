@@ -40,7 +40,7 @@ If `risk: high` and develop approval is required by policy/contract:
 ```text
 approval.develop.status == approved
 ```
-Else → `APPROVAL_REQUIRED` (no code changes).
+Else → `APPROVAL_REQUIRED` (no code changes). **Stop and return to `project-manager`** to ask develop confirmation (contract § 5.4.1); do not parse approval replies in this skill.
 
 Other failure tokens: `EXECUTION_BLOCKED`, `TASK_NOT_READY`, `TASK_DEPENDENCY_BLOCKED`, `TASK_REFERENCE_INVALID`, `PACKAGE_INVALID`.
 

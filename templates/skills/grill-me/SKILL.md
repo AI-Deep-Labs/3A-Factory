@@ -77,6 +77,7 @@ When `READY_FOR_ANALYSIS`: leave status for analyze to move to `analyzed` (may r
 
 ## Pipeline handoff
 - Clear enough **or** “execute now” → do **not** ask “run the pipeline?”; continue to `analyze` (or return to `project-manager`).
+- When PM routes here via auto-intake, stop after **one** question per turn (same as slash invocation).
 - “Execute now” does **not** bypass `APPROVED_SPEC_PACKAGE`, high-risk develop approval, or deploy approval.
 - Do **not** start Develop.
 

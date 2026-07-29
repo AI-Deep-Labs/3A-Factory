@@ -20,10 +20,11 @@ describe('build', { concurrency: 1 }, () => {
     assert.ok(fs.existsSync(path.join(ROOT, 'dist/build-manifest.json')));
     assert.ok(fs.existsSync(path.join(ROOT, 'dist/install.js')));
     const bundle = JSON.parse(fs.readFileSync(path.join(ROOT, 'dist/bundle.json'), 'utf8'));
-    assert.ok(bundle.files['templates/skills/workflow/converge.md']);
+    assert.ok(bundle.files['templates/skills/converge/SKILL.md']);
     assert.ok(bundle.files['templates/.agents/contracts/spec-package.md']);
     assert.ok(bundle.files['templates/.agents/rules/agent-mode.md']);
     assert.equal(bundle.files['templates/skills/workflow/plan.md'], undefined);
+    assert.equal(bundle.files['templates/skills/plan/SKILL.md'], undefined);
     assert.equal(bundle.files['templates/.agents/templates/SPEC-template.md'], undefined);
     assert.equal(bundle.files['templates/.agents/templates/PLAN-template.md'], undefined);
   });
@@ -40,13 +41,15 @@ describe('build', { concurrency: 1 }, () => {
   });
 
   it('fails when required skill missing', () => {
-    const skill = path.join(ROOT, 'templates/skills/workflow/converge.md');
-    const bak = skill + '.baktest';
-    fs.renameSync(skill, bak);
+    const skillDir = path.join(ROOT, 'templates/skills/converge');
+    const skillFile = path.join(skillDir, 'SKILL.md');
+    const bakDir = path.join(ROOT, 'templates/skills/converge.baktest');
+    fs.renameSync(skillDir, bakDir);
     try {
       assert.throws(() => runBuild());
     } finally {
-      fs.renameSync(bak, skill);
+      fs.renameSync(bakDir, skillDir);
+      assert.ok(fs.existsSync(skillFile));
       runBuild();
     }
   });

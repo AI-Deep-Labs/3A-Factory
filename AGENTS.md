@@ -53,6 +53,8 @@ Schema: `.agents/schemas/spec-package-manifest.schema.json`
 
 ## Approvals
 
+Gate IDs (internal; recorded in `manifest.yaml`):
+
 ```text
 APPROVED_SPEC_PACKAGE
 APPROVED_DEVELOP
@@ -60,7 +62,46 @@ APPROVED_USER_REVIEW
 APPROVED_DEPLOY
 ```
 
-Do not reuse one approval for another gate. Never auto-deploy.
+Users **do not** need to type these tokens. At each active gate, ask a **confirmation question**; accept yes/no, có/không, đồng ý/từ chối, or equivalent natural language. Exact tokens remain valid for power users. See contract § **5.4.1** and `.agents/templates/APPROVAL-CONFIRMATION-template.md`.
+
+Do not reuse one approval for another gate. Never auto-deploy. Never auto-approve.
+
+## Auto-intake
+
+In an **onboarded repo**, describe requirements in natural language — no slash command required for intake. The agent reads and executes `.agents/skills/project-manager/SKILL.md`; PM routes by `manifest.status`.
+
+### Onboarded repo markers (all required)
+
+- `AGENTS.md`
+- `.agents/contracts/spec-package.md`
+- `docs/` (directory)
+
+If any marker is missing → `ONBOARDING_REQUIRED` → read `.agents/skills/onboarding/SKILL.md`; do **not** run the REQ pipeline.
+
+### When to auto-route to project-manager
+
+- Repo is onboarded **and** the message is an engineering lifecycle request: feature, bug, change, enhancement, or continue an existing REQ
+- Or an approval response at an active gate (natural language or `APPROVED_*` token)
+- Or a reference to a package path, REQ id, or `docs/tasks/…`
+
+### When NOT to auto-route
+
+- Pure Q&A, code explanation, or ad-hoc review unrelated to a REQ
+- Meta questions about tooling (unless the user wants to run the workflow)
+- User explicitly invoked a different slash skill (`/deploy`, `/qa-issues`, …)
+- User asks to bypass the workflow
+
+### After routing
+
+1. Read `.agents/rules/agent-mode.md`
+2. Read and execute `.agents/skills/project-manager/SKILL.md` with the user message as input
+3. PM selects the child skill per routing table + `manifest.yaml`
+4. After each child skill, **return to PM** until a PM stop condition
+5. Slash commands remain available as manual overrides
+
+### `/project-manager` (mandatory workflow mode)
+
+Invoking **`/project-manager`** binds **Project Manager mode** for the session: read `.agents/rules/agent-mode.md`, then **fully execute** `.agents/skills/project-manager/SKILL.md` including § **Slash invocation (mandatory)**. Follow Session orchestration and routing table; do not skip phases or implement outside child skills.
 
 ## Greenfield policy
 
@@ -79,12 +120,12 @@ Do not reuse one approval for another gate. Never auto-deploy.
 You MUST read and strictly obey all override rules defined in `.agents/rules/agent-mode.md` before taking any planning or execution actions.
 
 1. No application coding from a raw requirement.
-2. Develop only when `validation.status == passed` and `APPROVED_SPEC_PACKAGE` (plus `APPROVED_DEVELOP` when high-risk policy requires it).
+2. Develop only when `validation.status == passed` and spec package approval is recorded (plus develop approval when high-risk policy requires it).
 3. Develop follows `tasks.md` / `execution.current_task` and referenced design/acceptance.
 4. Only `review` may mark a task `done`.
 5. QA is acceptance-driven with max **3** auto-fix attempts.
-6. Converge does not mark `done`; user issues `APPROVED_USER_REVIEW`.
-7. Deploy requires explicit command + `APPROVED_DEPLOY`.
+6. Converge does not mark `done`; user confirms user review (natural language or token).
+7. Deploy requires explicit command + deploy confirmation (natural language or token).
 
 ## Risk levels (analyze)
 
@@ -95,12 +136,12 @@ You MUST read and strictly obey all override rules defined in `.agents/rules/age
 
 ## Skills
 
-| Folder | Skills |
+| Path | Content |
 |---|---|
-| `templates/skills/workflow/` | `project-manager`, `triage`, `grill-me`, `analyze`, `requirements`, `adr`, `design`, `tasks`, `acceptance`, `spec-review`, `spec`, `develop`, `review`, `qa`, `converge`, `deploy` |
-| `templates/skills/utility/` | `onboarding`, `handoff`, `caveman`, `synthesize-design-doc`, `qa-issues` |
+| `templates/skills/<name>/SKILL.md` | Workflow + utility skill bodies (21 skills) |
+| `templates/commands/<name>.md` | Canonical slash commands (flat; adapters emit per agent) |
 
-Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/commands` → `.agents/skills`; Cursor `.cursor/rules/*.mdc` + `ai-workflow.mdc` (skill body in `.agents/skills` only — no `.cursor/skills` / `.gemini/skills` mirrors).
+Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/commands` → `.agents/skills`; Cursor `.cursor/rules/*.mdc` (skill body in `.agents/skills` only — no `.cursor/skills` / `.gemini/skills` mirrors).
 
 ## Language
 

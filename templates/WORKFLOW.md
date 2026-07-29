@@ -38,11 +38,23 @@ Schema: `templates/.agents/schemas/spec-package-manifest.schema.json`
 - Never auto-deploy.
 
 ## Dual mode
-- **`/project-manager`**: state-machine orchestrator for the Spec Package lifecycle.
+
+### Auto-intake (default in onboarded repos)
+
+Describe requirements in natural language — no slash required. Agent reads `.agents/skills/project-manager/SKILL.md`; PM routes by `manifest.status`. See `AGENTS.md` § Auto-intake.
+
+### Slash overrides
+
+- **`/project-manager`**: **mandatory PM mode** — fully execute skill § Slash invocation (mandatory); Session orchestration; no skipping phases
 - **`/grill-me`**: deep clarification into package `discovery.md`.
+- Other workflow skills (`/triage`, `/develop`, `/qa`, …) remain available as manual overrides.
+
+### Approvals (natural language)
+
+At each gate, agent asks a confirmation question; user replies yes/no, có/không, đồng ý/từ chối, or natural language. Gate IDs (`APPROVED_*`) are internal; exact tokens still work. Contract § 5.4.1 · `.agents/templates/APPROVAL-CONFIRMATION-template.md`.
 
 ## Deploy
-Separate from PM. Requires `manifest.status == done` and `APPROVED_DEPLOY`.
+Separate from PM. Requires `manifest.status == done` and deploy confirmation (natural language or `APPROVED_DEPLOY`).
 
 ## Naming & id allocation
 

@@ -160,6 +160,27 @@ APPROVED_DEPLOY
 - Do not use one approval keyword for multiple gates.
 - Legacy keyword `APPROVED` may be accepted only during a compatibility period; internal state must map to a concrete approval type.
 
+### 5.4.1 User confirmation (natural language)
+
+Approval gate IDs (`APPROVED_*`) are **internal** identifiers. Users do **not** need to type them.
+
+1. At each active gate, the agent **must** ask **one** clear confirmation question (Vietnamese default; follow the user’s chat language).
+2. Map the user’s reply to the **active gate only** (by `manifest.status` + skill context). Do not apply a generic “yes” to the wrong gate.
+3. **Affirmative** (non-exhaustive): `yes`, `y`, `ok`, `approve`, `approved`, `có`, `đồng ý`, `dong y`, `chấp nhận`, `được`, `triển khai`, `nghiệm thu`, `deploy`, `phê duyệt`, …
+4. **Negative**: `no`, `n`, `không`, `khong`, `từ chối`, `tu choi`, `reject`, `chưa`, `chưa đồng ý`, …
+5. **Ambiguous** → one yes/no follow-up; do **not** record approval.
+6. **Reject** → `APPROVAL_REJECTED` (or gate-specific reject); do **not** set `approval.*.status` to `approved`.
+7. **Exact tokens** `APPROVED_*` → explicit affirmative for the matching gate only (backward compatible).
+8. Record manifest: `approved_by: user`, `approved_at: <ISO-8601>`. Never store the user’s raw message as the approval type.
+9. Prompt templates: `.agents/templates/APPROVAL-CONFIRMATION-template.md`
+
+| Gate ID | Active when | Manifest field on affirm |
+|---|---|---|
+| `APPROVED_SPEC_PACKAGE` | `status == awaiting_approval`, spec-review PASSED | `approval.spec_package` + `status: approved` |
+| `APPROVED_DEVELOP` | high-risk policy, develop approval required before code | `approval.develop` |
+| `APPROVED_USER_REVIEW` | `status == awaiting_user_review`, converge PASSED | `approval.user_review` + `status: done` |
+| `APPROVED_DEPLOY` | explicit deploy request, `status == done` | `approval.deploy` |
+
 ---
 
 ## 5.5 Package readiness (implementation-ready)

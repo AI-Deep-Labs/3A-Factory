@@ -17,6 +17,10 @@ Only create or update Spec Package artifacts.
 Do **not** write requirements, design, tasks, acceptance, or code.  
 Do **not** invent a solution.
 
+## Auto-intake note
+
+May be invoked by `project-manager` during auto-intake (natural-language intake in onboarded repos). No separate `/triage` required when PM routes here.
+
 ## Package resolution contract
 1. If user/context provides a valid package path under `docs/tasks/`, use it.
 2. Else if a `REQ ID` is given, find exactly one directory `docs/tasks/REQ-<NNNNNN>-*/`.

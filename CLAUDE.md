@@ -22,7 +22,9 @@ Greenfield: no legacy `docs/*` feature lifecycle paths; no migration tooling.
 Claude-specific:
 - Skills: `.claude/skills/<skill-name>/SKILL.md`
 - Commands: `.claude/commands/*.md`
-- Recommended: `/onboarding`, `/project-manager`, `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`, `/qa-issues`
+- **Auto-intake**: in an onboarded repo, describe requirements in natural language — agent reads `.agents/skills/project-manager/SKILL.md` (see `AGENTS.md` § Auto-intake); slash optional for intake
+- **Approvals**: at each gate, agent asks a confirmation question; reply yes/no, có/không, or natural language — see contract § 5.4.1 (tokens optional)
+- Slash overrides (when needed): `/onboarding`, `/handoff`, `/caveman`, `/synthesize-design-doc`, `/qa-issues`, **`/project-manager`** (mandatory PM mode — full workflow orchestration), `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`
 
 **CRITICAL**: Before taking any actions, you must read `.agents/rules/agent-mode.md` to understand your strict constraints regarding internal thinking loops.
 

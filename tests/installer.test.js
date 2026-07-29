@@ -73,6 +73,8 @@ describe('installer smoke', () => {
         assert.match(claudeMd, /\.agents\/rules\/agent-mode\.md/);
         assert.ok(fs.existsSync(path.join(tmp, '.claude/skills/develop/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.claude/skills/plan')));
+        const pmClaude = fs.readFileSync(path.join(tmp, '.claude/commands/project-manager.md'), 'utf8');
+        assert.match(pmClaude, /MANDATORY PM MODE/);
       }
       if (agent === 'gemini') {
         const geminiMd = fs.readFileSync(path.join(tmp, 'GEMINI.md'), 'utf8');
@@ -83,6 +85,8 @@ describe('installer smoke', () => {
         const toml = fs.readFileSync(path.join(tmp, '.gemini/commands/triage.toml'), 'utf8');
         assert.match(toml, /^description = "/);
         assert.match(toml, /\.agents\/skills\/triage\/SKILL\.md/);
+        const pmGemini = fs.readFileSync(path.join(tmp, '.gemini/commands/project-manager.toml'), 'utf8');
+        assert.match(pmGemini, /MANDATORY PM MODE/);
       }
       if (agent === 'cursor') {
         const workflow = fs.readFileSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc'), 'utf8');
@@ -98,6 +102,9 @@ describe('installer smoke', () => {
         assert.match(rule, /alwaysApply: false/);
         assert.match(rule, /# Triage/);
         assert.doesNotMatch(rule, /^name: triage$/m);
+        const pmRule = fs.readFileSync(path.join(tmp, '.cursor/rules/project-manager.mdc'), 'utf8');
+        assert.match(pmRule, /MANDATORY PM MODE/);
+        assert.match(pmRule, /Slash invocation \(mandatory\)/);
         const shared = fs.readFileSync(path.join(tmp, '.agents/skills/triage/SKILL.md'), 'utf8');
         assert.match(shared, /^---\nname: triage\n/);
         assert.match(shared, /disable-model-invocation: true/);

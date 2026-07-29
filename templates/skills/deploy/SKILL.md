@@ -19,13 +19,13 @@ Execute an **explicit** user deploy request after the package is `done` and depl
 ## Hard gates
 ```text
 manifest.status == done
-approval.deploy.status == approved
+approval.deploy.status == approved   (after user confirmation)
 explicit deploy command / env provided
 qa.converge == passed (expected prior to done)
 ```
-If deploy approval missing → `DEPLOY_APPROVAL_REQUIRED`.
+If deploy approval missing → ask deploy confirmation question (contract § 5.4.1, `.agents/templates/APPROVAL-CONFIRMATION-template.md`); stop with `DEPLOY_APPROVAL_REQUIRED` until user confirms (natural language or `APPROVED_DEPLOY`).
 
-On recording deploy approval:
+On recording deploy approval (after user confirms):
 ```yaml
 approval:
   deploy:
@@ -36,11 +36,12 @@ approval:
 
 ## Process
 1. Resolve Spec Package under `docs/tasks/`.
-2. Confirm env + gates.
-3. List deploy order from design/tasks/analysis.
-4. Prepare rollback per step.
-5. Execute via project conventions.
-6. Write `docs/tasks/<PACKAGE>/release/release-notes.md`.
+2. Confirm env + gates (except deploy approval — prompt if missing).
+3. If `approval.deploy.status != approved`, ask deploy confirmation question; parse natural language or token; on reject → stop.
+4. List deploy order from design/tasks/analysis.
+5. Prepare rollback per step.
+6. Execute via project conventions.
+7. Write `docs/tasks/<PACKAGE>/release/release-notes.md`.
 
 ## Failure states
 ```text

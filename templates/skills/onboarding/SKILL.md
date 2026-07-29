@@ -141,7 +141,7 @@ Keep it short:
 1. **1-line**: what this repo is
 2. **5-minute**: tasks / inputs / outputs / key files
 3. **Scaffolded**: `docs/` paths + agent files created/updated
-4. **Next**: `/project-manager "<requirement>"` or `/grill-me`
+4. **Next**: mô tả yêu cầu bằng ngôn ngữ tự nhiên — `project-manager` tự route (xem `AGENTS.md` § Auto-intake); slash (`/grill-me`, …) vẫn dùng được khi cần override
 
 ---
 
@@ -153,7 +153,7 @@ Keep it short:
 - [ ] `CLAUDE.md` and/or `GEMINI.md` (and AGENTS if present) contain project context  
 - [ ] `docs/project_overview.md` created/updated (**Vietnamese**)  
 - [ ] No artifacts outside the current repo  
-- [ ] User knows the next command
+- [ ] User knows how to start the next REQ (natural language or slash override)
 
 
 

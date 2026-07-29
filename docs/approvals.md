@@ -1,8 +1,28 @@
 # Approval Reference
 
-Version **3.0.0**. Token tiếng Anh; giải thích tiếng Việt.
+Version **3.1.0-rc.2**. Gate IDs tiếng Anh (nội bộ); giải thích tiếng Việt.
 
-Agent **không** tự ghi approval. Chỉ user (hoặc quy trình người được ủy quyền) mới được coi là approve.
+Agent **không** tự ghi approval. Chỉ user (hoặc quy trình được ủy quyền) mới được coi là approve.
+
+## Xác nhận tự nhiên (mặc định)
+
+User **không cần** gõ token `APPROVED_*`. Tại mỗi gate, agent hỏi **một câu xác nhận**; user trả lời:
+
+- **Đồng ý:** yes, có, đồng ý, ok, phê duyệt, nghiệm thu, …
+- **Từ chối:** no, không, từ chối, chưa, …
+- Hoặc câu tự nhiên tương đương
+
+Agent map câu trả lời vào **gate đang active** (theo `manifest.status`). Token literal vẫn hợp lệ cho power users.
+
+Contract: `.agents/contracts/spec-package.md` § **5.4.1**  
+Câu hỏi mẫu: `.agents/templates/APPROVAL-CONFIRMATION-template.md`
+
+| Gate (internal) | Câu hỏi mẫu (VN) |
+|---|---|
+| `APPROVED_SPEC_PACKAGE` | Spec Package đã pass review. Bạn **phê duyệt spec** để bắt đầu develop không? |
+| `APPROVED_DEVELOP` | Feature **high-risk**. Bạn **đồng ý bắt đầu implement** không? |
+| `APPROVED_USER_REVIEW` | Converge đã PASS. Bạn **nghiệm thu** feature này không? |
+| `APPROVED_DEPLOY` | Bạn **xác nhận deploy** lên `{env}` không? |
 
 ---
 
@@ -20,7 +40,7 @@ status == awaiting_approval (hoặc tương đương đã sẵn sàng approve)
 ### Hiệu lực
 
 - Manifest: `approval.spec_package` + status → `approved`.
-- Mở quyền `/develop` / execution.
+- Mở quyền develop / execution.
 
 ### Ai approve
 
@@ -36,7 +56,7 @@ Approve trùng khi đã approved: no-op an toàn / ghi nhận đã có; không b
 
 ### Rejection
 
-`REJECTED` → dừng; hỏi có re-analyze từ đầu không.
+User từ chối → `APPROVAL_REJECTED`; không set approved; hỏi có re-analyze từ đầu không nếu cần.
 
 ---
 
@@ -48,7 +68,7 @@ Approve trùng khi đã approved: no-op an toàn / ghi nhận đã có; không b
 
 ### Điều kiện
 
-- Spec Package đã `APPROVED_SPEC_PACKAGE`.
+- Spec Package đã approved.
 - Risk/policy đánh dấu cần develop approval.
 
 ### Hiệu lực
@@ -58,7 +78,7 @@ Approve trùng khi đã approved: no-op an toàn / ghi nhận đã có; không b
 
 ### Không thay thế
 
-Không thay `APPROVED_SPEC_PACKAGE` hay `APPROVED_DEPLOY`.
+Không thay spec package approval hay deploy approval.
 
 ---
 
@@ -82,11 +102,11 @@ User nghiệm thu feature.
 
 ### Không thay thế
 
-**Không** dùng token này thay `APPROVED_DEPLOY`.
+**Không** dùng gate này thay deploy approval.
 
 ### Rejection
 
-User reject → không `done`; ghi lý do; có thể quay QA/repair hoặc cập nhật package.
+User từ chối → không `done`; ghi lý do; có thể quay QA/repair hoặc cập nhật package.
 
 ---
 
@@ -95,7 +115,7 @@ User reject → không `done`; ghi lý do; có thể quay QA/repair hoặc cập
 ### Điều kiện
 
 - User **chủ động** gọi deploy.
-- Token `APPROVED_DEPLOY` riêng cho lần deploy đó (theo skill/deploy policy).
+- Deploy confirmation (tự nhiên hoặc token) cho lần deploy đó.
 
 ### Hiệu lực
 
@@ -108,7 +128,7 @@ User / release owner.
 
 ### Invalidation / duplicate
 
-Theo skill deploy: thiếu token → BLOCKED. Không suy diễn từ `APPROVED_USER_REVIEW`.
+Theo skill deploy: thiếu confirmation → BLOCKED. Không suy diễn từ user review approval.
 
 ---
 
@@ -117,7 +137,7 @@ Theo skill deploy: thiếu token → BLOCKED. Không suy diễn từ `APPROVED_U
 | Rule | Behavior |
 |---|---|
 | Không auto-approve | Agent không tự set approved |
-| Không đổi token | Mỗi gate một token |
+| Gate IDs nội bộ | `APPROVED_*` trong manifest; user trả lời tự nhiên |
 | Manifest là truth | Field approval trên `manifest.yaml` |
 | Re-approval | Material change → invalidate Spec Package approval |
-| Deploy | Luôn cần `APPROVED_DEPLOY` |
+| Deploy | Luôn cần deploy confirmation riêng |

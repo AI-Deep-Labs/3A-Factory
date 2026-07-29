@@ -5,6 +5,30 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.1.0-rc.2] - 2026-07-29
+
+Pre-release candidate: **workflow UX (auto-intake, natural approvals, mandatory PM slash) + flat skills/commands + repo cleanup**.
+
+### Added
+
+- **Auto-intake:** onboarded repos accept natural-language requirements; agent executes `project-manager` and routes by `manifest.status` (`AGENTS.md` § Auto-intake).
+- **Natural language approvals:** contract § 5.4.1 — confirmation questions at each gate; yes/no, có/không, or natural language (tokens optional). Template `APPROVAL-CONFIRMATION-template.md`.
+- **`/project-manager` mandatory PM mode:** slash binds MANDATORY PM MODE — full skill execution, session orchestration PM → child → PM, no phase skip (`templates/commands/project-manager.md`).
+
+### Changed
+
+- **Authoring layout:** `templates/skills/<name>/SKILL.md` + canonical `templates/commands/<name>.md` (flat).
+- Installer: copy-only skills; agent command adapters (`scripts/install/command-adapters.js`) emit `.mdc` / `.md` / `.toml`.
+- Removed legacy template trees: `templates/skills/workflow/`, `templates/skills/utility/`, `templates/.cursor/`.
+- Build bundle **70 files** (was 48 in 3.1.0-rc.1).
+- Package version set to **3.1.0-rc.2**.
+- Docs, validation, tests aligned; `.gitignore` adds `.vs/`; repo cleanup (legacy dirs, one-shot migration script).
+
+### Notes
+
+- No breaking change to consumer runtime paths or Spec Package contract semantics.
+- Upgrade: `npx 3a-factory@3.1.0-rc.2 --agent=<agent> --force`.
+
 ## [3.1.0-rc.1] - 2026-07-28
 
 Pre-release candidate: **Core Rules Hub + Agent Pointers** (Phase 1) — centralize agent override constraints so all agents follow the established workflow instead of default internal planning modes.

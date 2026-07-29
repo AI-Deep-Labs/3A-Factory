@@ -96,4 +96,4 @@ Follow SPEC-REVIEW-template; Final Decision must be PASSED or FAILED.
 - Result `FAILED` with actionable blockers routed to owning skills
 
 ## Stop condition
-Print review path + result. If PASSED → ask user for `APPROVED_SPEC_PACKAGE` (via `spec` or chat). Do **not** call Develop.
+Print review path + result. If PASSED → ask **confirmation question** for spec package approval (contract § 5.4.1; template `APPROVAL-CONFIRMATION-template.md`). Do **not** call Develop.

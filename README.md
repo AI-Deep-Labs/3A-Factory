@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.1.0--rc.1-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.1.0--rc.2-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (greenfield).
 
@@ -74,15 +74,17 @@ triage
 ## Quick Start
 
 1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
-2. Chạy `/onboarding` nếu repo mới.
-3. `/triage` yêu cầu → tạo package dưới `docs/tasks/`.
-4. `/grill-me` nếu còn ambiguity → `/analyze`.
-5. `/spec` (orchestrator) hoàn thiện requirements → ADR? → design → tasks → acceptance → spec-review.
-6. User: `APPROVED_SPEC_PACKAGE`.
-7. `/project-manager` chọn task → `/develop` → `/review` (lặp đến hết task).
-8. `/qa` → (repair loop nếu cần) → `/converge`.
-9. User: `APPROVED_USER_REVIEW` → `done`.
-10. Deploy chỉ khi user gọi `/deploy` + `APPROVED_DEPLOY`.
+2. Chạy `/onboarding` (hoặc mô tả "onboard repo này") nếu repo mới.
+3. **Mô tả yêu cầu bằng ngôn ngữ tự nhiên** — `project-manager` tự phát hiện repo đã onboard và route theo canonical workflow (triage → … → qa → converge).
+4. `/grill-me` nếu còn ambiguity (PM cũng tự route khi cần).
+5. `/spec` hoặc PM orchestrate: requirements → ADR? → design → tasks → acceptance → spec-review.
+6. Agent hỏi xác nhận spec → user trả lời **có/không** (hoặc đồng ý/từ chối).
+7. PM chọn task → develop → review (lặp đến hết task).
+8. QA → (repair loop nếu cần) → converge.
+9. Agent hỏi nghiệm thu → user xác nhận → `done`.
+10. Deploy: `/deploy` + xác nhận deploy (có/không).
+
+Slash commands (`/triage`, `/develop`, …) vẫn dùng được như **override thủ công** khi cần.
 
 ## Commands
 
@@ -103,24 +105,31 @@ triage
 /qa
 /converge
 /deploy
+/onboarding
+/handoff
+/caveman
+/synthesize-design-doc
+/qa-issues
 ```
 
 **Không có:** `/plan`, migration/resolver commands.
 
-## Approval Tokens
+## Approval gates
 
-| Token | Khi nào |
+Tại mỗi gate, agent **hỏi xác nhận**; user trả lời có/không, đồng ý/từ chối, hoặc ngôn ngữ tự nhiên. Token `APPROVED_*` là ID nội bộ (vẫn dùng được nếu muốn).
+
+| Gate (internal) | Khi nào |
 |---|---|
-| `APPROVED_SPEC_PACKAGE` | Sau spec-review PASSED — bắt buộc trước Develop |
-| `APPROVED_DEVELOP` | Khi high-risk policy yêu cầu |
-| `APPROVED_USER_REVIEW` | Sau converge PASSED — chuyển `done` |
-| `APPROVED_DEPLOY` | Trước mọi deploy — tách biệt user review |
+| Spec package | Sau spec-review PASSED — trước develop |
+| Develop | High-risk policy yêu cầu |
+| User review | Sau converge PASSED |
+| Deploy | Trước mọi deploy — tách biệt user review |
 
 Chi tiết: [docs/approvals.md](docs/approvals.md).
 
 ## Safety Guarantees
 
-- Không code trước `APPROVED_SPEC_PACKAGE`.
+- Không code trước khi user xác nhận spec package approval.
 - Không auto-approve / auto-deploy.
 - Không commit/push mặc định.
 - Installer không tạo feature package (`docs/tasks/`), không pre-create `docs/decisions` / `docs/misc`, và không ghi `.3a-factory/`.
@@ -145,6 +154,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
+- [Release notes 3.1.0-rc.2](release-notes/3.1.0-rc.2.md)
 - [Release notes 3.1.0-rc.1](release-notes/3.1.0-rc.1.md)
 - [Release notes 3.0.0](release-notes/3.0.0.md)
 - [Release checklist](RELEASE-CHECKLIST.md)
@@ -167,7 +177,7 @@ Cấp số REQ/ADR: agent tự liệt kê thư mục `docs/tasks/REQ-*` rồi `n
 | shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas,rules,skills}`, `docs/` |
 | claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
 | gemini | `GEMINI.md`, `.gemini/commands` → `.agents/skills` |
-| cursor | `.cursor/rules/*.mdc` (skills) + `ai-workflow.mdc`; body in `.agents/skills` |
+| cursor | `.cursor/rules/*.mdc` (from `templates/commands/`); body in `.agents/skills` |
 
 ## License
 

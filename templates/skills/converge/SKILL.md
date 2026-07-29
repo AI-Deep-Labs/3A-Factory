@@ -68,7 +68,7 @@ PASSED:
 status: awaiting_user_review
 qa.converge: passed
 ```
-Ask user for `APPROVED_USER_REVIEW`.  
+Ask **user review confirmation question** (contract § 5.4.1; `.agents/templates/APPROVAL-CONFIRMATION-template.md`).  
 Do **not** set `done`. Do **not** deploy.
 
 ## Failure states

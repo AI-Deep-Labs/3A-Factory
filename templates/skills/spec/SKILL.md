@@ -47,7 +47,7 @@ resolve package
 → acceptance
 → synchronize task acceptance references
 → spec-review
-→ request APPROVED_SPEC_PACKAGE
+→ ask spec package confirmation (contract § 5.4.1)
 → stop
 ```
 
@@ -75,7 +75,8 @@ resolve package
 Do not fix by violating ownership.
 
 ## Approval handling (producer phase)
-When the user says `APPROVED_SPEC_PACKAGE` in this package context:
+
+When the user **confirms spec package approval** (natural language per contract § 5.4.1 or exact `APPROVED_SPEC_PACKAGE`) in this package context:
 
 **Allow** update only if:
 - `validation.status == passed`
@@ -103,7 +104,7 @@ Print:
 - Package summary (id, slug, risk, status)
 - Artifact paths under `docs/tasks/REQ-…/`
 - Validation result
-- Explicit request for user to reply: `APPROVED_SPEC_PACKAGE`
+- Confirmation question for spec package approval (`.agents/templates/APPROVAL-CONFIRMATION-template.md` — do **not** require user to type a token)
 
 **Stop. Do not call Develop, review, qa, or deploy.**
 

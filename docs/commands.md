@@ -1,6 +1,12 @@
 # Command Reference
 
-Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.0.0**. Không có `/plan`.
+Chỉ document slash commands có trong `templates/commands/`. Version **3.1.0-rc.2**. Không có `/plan`.
+
+**Nguồn authoring:** `templates/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
+
+**Auto-intake:** Trong repo đã onboard, mô tả yêu cầu bằng ngôn ngữ tự nhiên — agent đọc `.agents/skills/project-manager/SKILL.md` và route theo `manifest.status`. Slash commands bên dưới là **override thủ công** (không bắt buộc cho intake). Chi tiết: `AGENTS.md` § Auto-intake.
+
+**Approvals:** Agent hỏi xác nhận tại mỗi gate; user trả lời có/không hoặc tự nhiên — không cần gõ token `APPROVED_*`. Chi tiết: `docs/approvals.md`, contract § 5.4.1.
 
 ---
 
@@ -178,16 +184,17 @@ Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.
 
 | Field | Content |
 |---|---|
-| Purpose | Điều phối execution: chọn task, gọi develop/review/qa/converge |
-| When to use | Sau `APPROVED_SPEC_PACKAGE` |
-| Inputs | Approved package |
-| Outputs | Next action |
-| Artifacts changed | Manifest execution pointers |
-| Manifest transitions | theo phase execution |
-| Approval required | Spec package approved; develop approval nếu policy |
-| Failure states | Not approved / blocked |
-| Stop condition | Theo gate hiện tại |
-| Example | `/project-manager` |
+| Purpose | Điều phối **toàn bộ** lifecycle theo manifest — bắt buộc PM mode |
+| When to use | Bất kỳ lúc nào cần ép agent chạy canonical workflow; sau onboarding |
+| Inputs | Optional: requirement, REQ id, package path, approval response |
+| Outputs | Next routed skill + manifest/task status |
+| Artifacts changed | Manifest execution pointers (PM-only fields) |
+| Manifest transitions | Theo routing table — **không skip phase** |
+| Approval required | Theo gate active (spec / develop / user review) |
+| Failure states | Not onboarded / not approved / blocked / PACKAGE_CONFLICT |
+| Stop condition | PM stop conditions (approval wait, grill-me, blocked, …) |
+| **Mandatory** | Agent phải đọc `.agents/rules/agent-mode.md` + full `project-manager` SKILL; Session orchestration PM → child → PM |
+| Example | `/project-manager` hoặc `/project-manager Thêm export Excel` |
 
 ---
 
@@ -283,3 +290,15 @@ Chỉ document command tồn tại trong runtime (skills/workflow). Version **3.
 /migrate-spec-package
 /resolve-spec-package
 ```
+
+---
+
+## Utility commands
+
+| Command | Purpose |
+|---|---|
+| `/onboarding` | Scaffold repo lần đầu — detect project, fill `docs/project_overview.md` |
+| `/handoff` | Ghi handoff note vào `docs/misc/` |
+| `/caveman` | Brainstorm nhanh trước khi formalize spec |
+| `/synthesize-design-doc` | Tổng hợp design doc từ artifacts hiện có |
+| `/qa-issues` | Ghi QA issues vào `docs/misc/` khi user reject review |
