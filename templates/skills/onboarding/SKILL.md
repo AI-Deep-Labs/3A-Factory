@@ -1,6 +1,6 @@
 ---
 name: onboarding
-description: Onboard ONE repo into 3A-Factory — create docs/, agent context (CLAUDE/GEMINI/AGENTS), explore codebase, write docs/project_overview.md. Create nothing outside the current repo.
+description: Onboard ONE repo into 3A-Factory — create docs/, agent context for the CURRENT agent only, explore codebase, write docs/project_overview.md. Create nothing outside the current repo.
 disable-model-invocation: true
 argument-hint: "[optional hints about stack/repo role]"
 ---
@@ -12,7 +12,19 @@ argument-hint: "[optional hints about stack/repo role]"
 1. Bring **one repo** onto the full 3A-Factory workflow.
 2. Provide enough **project context** for later agent work (`project-manager` / `grill-me` / …).
 3. Create `docs/` **inside the current repo**.
-4. Create / extend / update `CLAUDE.md` and/or `GEMINI.md` and other agent-readable files **in the same repo** (do not wipe user-authored content — only add missing sections).
+4. Create / extend / update the agent context file **for the current agent only** (do not wipe user-authored content — only add missing sections).
+
+## Agent detection
+
+Determine which agent is running **this session**:
+
+| Agent | Detection | Context file |
+|---|---|---|
+| **Claude** | Claude Code / `.claude/` present / user stated | `CLAUDE.md` |
+| **Gemini** | Gemini CLI / `.gemini/` present / user stated | `GEMINI.md` |
+| **Cursor** | Cursor IDE / `.cursor/` present / user stated | None (Cursor reads `AGENTS.md` + `.cursor/rules/`) |
+
+**Rule:** Only create/update the context file for the **detected agent**. `AGENTS.md` is always shared (all agents read it). Do **not** create `CLAUDE.md` when running in Gemini, do **not** create `GEMINI.md` when running in Claude or Cursor, etc.
 
 ## Hard scope
 
@@ -72,32 +84,30 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
 
 ## Phase C — Agent context files
 
-Update **at the root of the repo being onboarded**:
+Update **at the root of the repo being onboarded**. Only create/update files relevant to the **current agent** (see § Agent detection above).
 
-### `CLAUDE.md` (Claude or multi-tool)
-
-- Create or **append** missing sections; do not delete user-written content.
-- Fill: repo role, stack, internal deps, build/test/run, deploy notes, optional safety thresholds, pointer to `AGENTS.md` + 3A-Factory pipeline.
-- Replace `[DETECTED_*]` placeholders with confirmed values / labeled inferences.
-
-
-
-### `GEMINI.md` (if Gemini is used)
-
-- Same idea as `CLAUDE.md` — enough for Gemini CLI to know stack, commands, deploy.
-
-
-
-### `AGENTS.md` / `WORKFLOW.md`
+### `AGENTS.md` / `WORKFLOW.md` (always — shared by all agents)
 
 - If installer copied them: **fill** project context; do not break 3a-factory hard gates / lifecycle.
 - If missing: install the package first (Phase B), then fill.
 
+### `CLAUDE.md` (only if current agent is Claude)
 
+- Create or **append** missing sections; do not delete user-written content.
+- Fill: repo role, stack, internal deps, build/test/run, deploy notes, optional safety thresholds, pointer to `AGENTS.md` + 3A-Factory pipeline.
+- Replace `[DETECTED_*]` placeholders with confirmed values / labeled inferences.
+- **Do not create** if agent is Gemini or Cursor.
 
-### Cursor
+### `GEMINI.md` (only if current agent is Gemini)
+
+- Same idea as `CLAUDE.md` — enough for Gemini CLI to know stack, commands, deploy.
+- **Do not create** if agent is Claude or Cursor.
+
+### Cursor (only if current agent is Cursor)
 
 - Ensure `.cursor/rules/ai-workflow.mdc` (and skill rules) exist after install; do not invent rules that contradict `AGENTS.md`.
+- Cursor does **not** have a standalone context file like `CLAUDE.md` — it reads `AGENTS.md` + rules.
+- **Do not create** `CLAUDE.md` or `GEMINI.md`.
 
 Instruction/skill language stays English. **Content written into** `docs/` **(including overview) must be Vietnamese.**
 
@@ -149,10 +159,11 @@ Keep it short:
 
 ## Output checklist
 
-- [ ] `docs/{requirements,designs,reviews,qa,release-notes}/` exist in this repo  
-- [ ] `CLAUDE.md` and/or `GEMINI.md` (and AGENTS if present) contain project context  
-- [ ] `docs/project_overview.md` created/updated (**Vietnamese**)  
-- [ ] No artifacts outside the current repo  
+- [ ] `docs/` exists in this repo (no legacy lifecycle folders pre-created)
+- [ ] `AGENTS.md` filled with project context
+- [ ] Agent-specific context file created/updated **only for current agent** (Claude → `CLAUDE.md`, Gemini → `GEMINI.md`, Cursor → rules only)
+- [ ] `docs/project_overview.md` created/updated (**Vietnamese**)
+- [ ] No artifacts outside the current repo; no context files for other agents
 - [ ] User knows how to start the next REQ (natural language or slash override)
 
 

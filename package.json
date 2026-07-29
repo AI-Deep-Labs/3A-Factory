@@ -1,6 +1,6 @@
 {
   "name": "3a-factory",
-  "version": "3.1.0-rc.2",
+  "version": "3.1.0-rc.3",
   "description": "Greenfield Feature-local Spec Package workflow for Claude, Gemini, and Cursor (3A-Factory)",
   "repository": {
     "type": "git",

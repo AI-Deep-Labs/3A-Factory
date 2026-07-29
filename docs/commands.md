@@ -1,6 +1,6 @@
 # Command Reference
 
-Chỉ document slash commands có trong `templates/commands/`. Version **3.1.0-rc.2**. Không có `/plan`.
+Chỉ document slash commands có trong `templates/commands/`. Version **3.1.0-rc.3**. Không có `/plan`.
 
 **Nguồn authoring:** `templates/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
 
