@@ -1,6 +1,6 @@
 # Command Reference
 
-Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.2**. Không có `/plan`.
+Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.3**. Không có `/plan`.
 
 **Nguồn authoring:** `.agents/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
 

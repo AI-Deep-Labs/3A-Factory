@@ -1,5 +1,11 @@
 # Breaking Changes
 
+## 3.2.3
+
+**Không breaking.** Patch trên dòng 3.2.0: nâng cấp cấu trúc declarative nâng cao cho skill Specification Synthesizer. Consumer: `npx 3a-factory@3.2.3 --agent=<agent> --force`.
+
+---
+
 ## 3.2.2
 
 **Không breaking.** Patch trên dòng 3.2.0: nâng cấp skill Specification Synthesizer (từ synthesize-design-doc) với declarative architecture. Consumer: `npx 3a-factory@3.2.2 --agent=<agent> --force`.
