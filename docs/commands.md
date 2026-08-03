@@ -1,6 +1,6 @@
 # Command Reference
 
-Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.1**. Không có `/plan`.
+Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.2**. Không có `/plan`.
 
 **Nguồn authoring:** `.agents/commands/<name>.md` → installer emit `.cursor/rules/*.mdc`, `.claude/commands/*.md`, `.gemini/commands/*.toml`.
 
@@ -300,5 +300,5 @@ Chỉ document slash commands có trong `.agents/commands/`. Version **3.2.1**. 
 | `/onboarding` | Scaffold repo lần đầu — detect project, fill `docs/project_overview.md` |
 | `/handoff` | Ghi handoff note vào `docs/misc/` |
 | `/caveman` | Brainstorm nhanh trước khi formalize spec |
-| `/synthesize-design-doc` | Tổng hợp design doc từ artifacts hiện có |
+| `/specification-synthesizer` | Tổng hợp design doc từ artifacts hiện có |
 | `/qa-issues` | Ghi QA issues vào `docs/misc/` khi user reject review |

@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.2.1-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.2.2-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI Agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (SDLC greenfield).
 
@@ -108,7 +108,7 @@ Slash commands (`/triage`, `/develop`, …) vẫn dùng được như **override
 /onboarding
 /handoff
 /caveman
-/synthesize-design-doc
+/specification-synthesizer
 /qa-issues
 ```
 
@@ -154,7 +154,7 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
-- [Release notes 3.2.1](release-notes/3.2.1.md)
+- [Release notes 3.2.2](release-notes/3.2.2.md)
 - [Release notes 3.2.0](release-notes/3.2.0.md)
 - [Release notes 3.0.0](release-notes/3.0.0.md)
 - [Release checklist](RELEASE-CHECKLIST.md)

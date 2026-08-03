@@ -24,7 +24,7 @@ Claude-specific:
 - Commands: `.claude/commands/*.md`
 - **Auto-intake**: in an onboarded repo, NL **lifecycle / continue REQ / approval** → `project-manager` (`AGENTS.md` § Auto-intake Intent gate). Q&A / explain code / step slash → do **not** open PM
 - **Approvals**: at each gate, agent asks a confirmation question; reply yes/no, có/không, or natural language — see contract § 5.4.1 (tokens optional)
-- Slash overrides (when needed): `/onboarding`, `/handoff`, `/caveman`, `/synthesize-design-doc`, `/qa-issues`, **`/project-manager`** (mandatory PM mode — full workflow orchestration), `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`
+- Slash overrides (when needed): `/onboarding`, `/handoff`, `/caveman`, `/specification-synthesizer`, `/qa-issues`, **`/project-manager`** (mandatory PM mode — full workflow orchestration), `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`
 
 **CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read `.agents/rules/agent-mode.md` (scoped — see **When these rules apply**). Skip Spec Package-forcing rules for Q&A / explain code / meta / bypass / non-PM step slash.
 

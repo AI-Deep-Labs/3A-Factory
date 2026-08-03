@@ -40,7 +40,7 @@ const WORKFLOW_SKILLS = [
 
 const UTILITY_SKILLS = [
 
-  'onboarding', 'handoff', 'caveman', 'synthesize-design-doc', 'qa-issues'
+  'onboarding', 'handoff', 'caveman', 'specification-synthesizer', 'qa-issues'
 
 ];
 

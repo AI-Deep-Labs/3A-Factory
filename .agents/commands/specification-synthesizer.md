@@ -1,10 +1,9 @@
 ---
-name: synthesize-design-doc
-description: Convert conversation context into BRD/TDD/spec/handoff under docs/ (handoff → docs/misc/compact). Use when the user asks to summarize or synthesize design docs.
-disable-model-invocation: true
+name: specification-synthesizer
+description: "Convert conversation context into BRD/TDD/spec/handoff under docs/ (handoff → docs/misc/compact). Use when the user asks to summarize or synthesize design docs."
 ---
 
-# Synthesize Design Document
+# Specification Synthesizer
 
 ## Purpose
 Analyze the full client–AI conversation (scattered Q&A, unfinished technical decisions), then normalize it into a professional design/requirements document for Business, Product, Dev, QA, and Architect stakeholders.

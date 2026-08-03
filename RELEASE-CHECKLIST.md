@@ -1,4 +1,4 @@
-# Release Checklist — 3.2.1
+# Release Checklist — 3.2.2
 
 ## Architecture
 
@@ -54,20 +54,20 @@
 
 ## Documentation
 
-- [x] README (badge 3.2.1 + Quick Start Intent gate)
+- [x] README (badge 3.2.2 + Quick Start Intent gate)
 - [x] Architecture
 - [x] Workflow
 - [x] Commands
 - [x] Approvals
-- [x] Breaking changes (no new break in 3.2.1)
-- [x] Changelog (`[3.2.1] - 2026-07-30`)
-- [x] Release notes `release-notes/3.2.1.md`
+- [x] Breaking changes (no new break in 3.2.2)
+- [x] Changelog (`[3.2.2] - 2026-07-30`)
+- [x] Release notes `release-notes/3.2.2.md`
 - [x] Example package
 - [x] Stale `templates/.agents/` path strings cleaned
 
 ## Release Safety
 
-- [x] Version `3.2.1`
+- [x] Version `3.2.2`
 - [x] Publish content correct (`npm pack --dry-run`)
 - [x] No secrets in bundle
 - [x] No local `docs/tasks/` in package

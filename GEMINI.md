@@ -27,7 +27,7 @@ Gemini-specific:
 - **Auto-intake**: in an onboarded repo, NL **lifecycle / continue REQ / approval** → `project-manager` (`AGENTS.md` § Auto-intake Intent gate). Q&A / explain code / step slash → do **not** open PM
 - **Approvals**: confirmation questions at each gate; natural language or `APPROVED_*` tokens — contract § 5.4.1
 - **`/project-manager`**: mandatory PM mode — fully execute skill § Slash invocation (mandatory)
-- Utility slashes: `/onboarding`, `/handoff`, `/caveman`, `/synthesize-design-doc`, `/qa-issues`
+- Utility slashes: `/onboarding`, `/handoff`, `/caveman`, `/specification-synthesizer`, `/qa-issues`
 
 **CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read `.agents/rules/agent-mode.md` (scoped — see **When these rules apply**). Skip Spec Package-forcing rules for Q&A / explain code / meta / bypass / non-PM step slash.
 

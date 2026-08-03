@@ -1,5 +1,11 @@
 # Breaking Changes
 
+## 3.2.2
+
+**Không breaking.** Patch trên dòng 3.2.0: nâng cấp skill Specification Synthesizer (từ synthesize-design-doc) với declarative architecture. Consumer: `npx 3a-factory@3.2.2 --agent=<agent> --force`.
+
+---
+
 ## 3.2.1
 
 **Không breaking.** Patch trên dòng 3.2.0: Intent gate auto-intake, scoped `agent-mode`, PM model-invocation, cleanup template orphan. Consumer: `npx 3a-factory@3.2.1 --agent=<agent> --force`.
