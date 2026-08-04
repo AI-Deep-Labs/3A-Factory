@@ -1,7 +1,6 @@
 ---
 name: tasks
 description: Write Execution Truth tasks.md inside a Spec Package with TASK IDs, dependencies, file scope, and requirement/design/acceptance references.
-disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 

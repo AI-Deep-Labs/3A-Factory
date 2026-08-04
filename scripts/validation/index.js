@@ -231,7 +231,6 @@ function validateGovernanceConsistency() {
     'AGENTS.md',
     'CLAUDE.md',
     'GEMINI.md',
-    '.agents/WORKFLOW.md',
     '.agents/commands/ai-workflow.md',
     '.agents/contracts/spec-package.md',
     'README.md'
@@ -334,9 +333,12 @@ function validateAdapterParity() {
       if (!text.includes(needle)) details.push(`${marker}: missing ${needle}`);
     }
   }
+  const REQUIRED_COMMANDS = ['deploy', 'grill-me', 'project-manager', 'onboarding', 'handoff', 'caveman', 'qa-issues', 'specification-synthesizer'];
   for (const skill of REQUIRED_SKILLS) {
     if (!exists(skillPath(skill))) details.push(`missing skill ${skill}`);
-    if (!exists(commandPath(skill))) details.push(`missing command ${skill}`);
+  }
+  for (const cmd of REQUIRED_COMMANDS) {
+    if (!exists(commandPath(cmd))) details.push(`missing command ${cmd}`);
   }
   if (!exists(commandPath('ai-workflow'))) details.push('missing command ai-workflow');
   return details.length

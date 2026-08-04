@@ -6,7 +6,7 @@ cursorAlwaysApply: true
 
 # 3A-Factory Workflow (Cursor)
 
-Read `AGENTS.md` and `WORKFLOW.md` before making changes.
+Read `AGENTS.md` before making changes.
 
 **Spec is a Feature-local Spec Package, not a single document.**
 

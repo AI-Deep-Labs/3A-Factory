@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.2.3-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-3.3.0-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI Agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (SDLC greenfield).
 
@@ -9,8 +9,8 @@
 
 - **Mục tiêu:** Chuẩn hóa cách agent thu thập yêu cầu, thiết kế, chia task, implement, review, QA và nghiệm thu — với traceability và approval rõ ràng.
 - **Đối tượng:** Team dùng AI coding agents để giao hàng feature có kiểm soát.
-- **Supported agents:** Claude Code, Gemini CLI, Cursor.
-- **Kiến trúc:** Greenfield — không hỗ trợ legacy workflow / migration / `/plan`.
+- **Supported agents:** Claude Code, Gemini CLI, Cursor, Antigravity, Other Agents
+- **Kiến trúc:** Agentic Supervisor / Worker Workflow. Các Agent sẽ tự động chuyển trạng thái nội bộ, người dùng chỉ cần ra lệnh ở cấp độ High-level.
 
 ## Core Principle
 
@@ -38,7 +38,7 @@ docs/tasks/
     └── release/
 ```
 
-Project-wide ADR: `docs/decisions/` (tạo khi `/adr` project-wide ghi file). Global misc: `docs/misc/` (tạo khi handoff / qa-issues ghi file). Overview: `docs/project_overview.md` (onboarding).
+Project-wide ADR: `docs/decisions/`. Global misc: `docs/misc/`. Overview: `docs/project_overview.md` (onboarding).
 
 ## Artifact Ownership
 
@@ -50,101 +50,64 @@ acceptance.md   = Verification Truth
 manifest.yaml   = Package State Truth
 ```
 
-## Canonical Workflow
+## Agentic Workflow (Supervisor / Worker)
+
+Khác với các workflow thủ công, 3A-Factory vận hành theo cơ chế **điều phối tự động (Orchestration)** thông qua Supervisor là `project-manager`. 
 
 ```text
-triage
-→ grill-me if unclear
-→ analyze
-→ build/refine Spec Package
-→ spec-review
-→ APPROVED_SPEC_PACKAGE
-→ project-manager
-→ develop task-by-task
-→ review per task
-→ repeat until all tasks done
-→ qa
-→ bounded repair loop (max 3)
-→ converge
-→ APPROVED_USER_REVIEW
-→ done
-→ deploy only with APPROVED_DEPLOY
+Mô tả yêu cầu tự nhiên (Auto-intake) / `/project-manager`
+├── Triage (Phân loại)
+├── Phân tích & Lập Spec Package (Requirements → ADR → Design → Tasks → Acceptance)
+├── Chờ Approval (Xác nhận cấu trúc Spec)
+├── Phát triển theo từng Task (Develop ↔ Review)
+├── Đảm bảo chất lượng (QA & Repair Loops)
+├── Hội tụ (Converge)
+└── Chờ User Approval
+    └── Done → Deploy (Chỉ khi User gọi `/deploy`)
 ```
 
 ## Quick Start
 
 1. Cài tooling vào repo đích: `npx 3a-factory --agent=cursor` (hoặc `claude` / `gemini` / `all`).
 2. Chạy `/onboarding` (hoặc mô tả "onboard repo này") nếu repo mới.
-3. **Mô tả yêu cầu lifecycle bằng ngôn ngữ tự nhiên** (feature/bug/change…) — `project-manager` tự route theo Intent gate (`AGENTS.md` § Auto-intake). Q&A / giải thích code / slash bước → **không** mở PM.
-4. `/grill-me` nếu còn ambiguity (PM cũng tự route khi cần).
-5. `/spec` hoặc PM orchestrate: requirements → ADR? → design → tasks → acceptance → spec-review.
-6. Agent hỏi xác nhận spec → user trả lời **có/không** (hoặc đồng ý/từ chối).
-7. PM chọn task → develop → review (lặp đến hết task).
-8. QA → (repair loop nếu cần) → converge.
-9. Agent hỏi nghiệm thu → user xác nhận → `done`.
-10. Deploy: `/deploy` + xác nhận deploy (có/không).
+3. **Bắt đầu công việc mới:** Chỉ cần **mô tả yêu cầu bằng ngôn ngữ tự nhiên** (feature/bug/change…). Khối Intent Gate sẽ tự động kích hoạt `project-manager` để điều phối toàn bộ vòng đời.
+4. `/grill-me` nếu bạn muốn Agent chủ động "chất vấn" để làm rõ các yêu cầu mơ hồ.
+5. Tại mỗi chốt chặn (Gate), Agent sẽ dừng lại hỏi ý kiến. Bạn chỉ cần trả lời **có/không** (hoặc đồng ý/từ chối).
+6. Khi mọi Task đã hoàn thiện và QA pass, Agent sẽ yêu cầu nghiệm thu (User Approval).
+7. Giao hàng: Gọi `/deploy` + xác nhận.
 
-Slash commands (`/triage`, `/develop`, …) vẫn dùng được như **override thủ công** khi cần.
+## Commands (Lệnh cho Người Dùng)
 
-## Commands
+Người dùng chỉ cần tương tác qua các **Entry Point & Utility Commands** dưới đây. Toàn bộ các bước kỹ thuật nội bộ (như viết spec, chia task, code, review) đều do `project-manager` gọi dưới dạng Native Tools.
 
 ```text
-/triage
-/grill-me
-/analyze
-/requirements
-/adr
-/design
-/tasks
-/acceptance
-/spec-review
-/spec
-/project-manager
-/develop
-/review
-/qa
-/converge
-/deploy
-/onboarding
-/handoff
-/caveman
-/specification-synthesizer
-/qa-issues
+/project-manager           # Ép buộc khởi động luồng Supervisor (Dành cho session mới)
+/deploy                    # Triển khai hệ thống (Chỉ chạy khi đã qua nghiệm thu)
+/onboarding                # Đưa 1 Repo mới vào quy trình 3A-Factory
+/handoff                   # Bàn giao bối cảnh hiện tại cho Session/Agent khác
+/caveman                   # Kích hoạt chế độ trả lời siêu ngắn gọn (Tiết kiệm token)
+/qa-issues                 # Mở danh sách theo dõi QA Issues
+/specification-synthesizer # Phân tách, hợp nhất tài liệu Spec bằng cấu trúc Declarative
+/grill-me                  # Yêu cầu Agent chất vấn người dùng để làm rõ yêu cầu
 ```
-
-**Không có:** `/plan`, migration/resolver commands.
 
 ## Approval gates
 
-Tại mỗi gate, agent **hỏi xác nhận**; user trả lời có/không, đồng ý/từ chối, hoặc ngôn ngữ tự nhiên. Token `APPROVED_*` là ID nội bộ (vẫn dùng được nếu muốn).
+Tại mỗi gate, agent **hỏi xác nhận**; user trả lời có/không, đồng ý/từ chối, hoặc ngôn ngữ tự nhiên. 
 
 | Gate (internal) | Khi nào |
 |---|---|
-| Spec package | Sau spec-review PASSED — trước develop |
-| Develop | High-risk policy yêu cầu |
-| User review | Sau converge PASSED |
-| Deploy | Trước mọi deploy — tách biệt user review |
-
-Chi tiết: [docs/approvals.md](docs/approvals.md).
+| Spec package | Sau spec-review PASSED — trước khi bắt đầu code (develop) |
+| Develop | (Tùy chọn) Khi thay đổi chạm vào High-risk policy |
+| User review | Sau converge PASSED (Nghiệm thu toàn bộ) |
+| Deploy | Trước mọi hành động deploy (Tách biệt hoàn toàn với code) |
 
 ## Safety Guarantees
 
-- Không code trước khi user xác nhận spec package approval.
+- Không code trước khi user xác nhận Spec package approval.
 - Không auto-approve / auto-deploy.
 - Không commit/push mặc định.
-- Installer không tạo feature package (`docs/tasks/`), không pre-create `docs/decisions` / `docs/misc`, và không ghi `.3a-factory/`.
-- Greenfield: không legacy workflow, không migration tooling.
-
-## Development Commands
-
-```bash
-npm run build
-npm test
-npm run validate
-npm run test:installer
-npm run test:workflow
-npm run ci
-```
+- Installer không tạo feature package (`docs/tasks/`), không pre-create `docs/decisions` / `docs/misc`.
 
 ## Tài liệu thêm
 
@@ -154,10 +117,10 @@ npm run ci
 - [Approvals](docs/approvals.md)
 - [Breaking changes](BREAKING-CHANGES.md)
 - [Changelog](CHANGELOG.md)
+- [Release notes 3.3.0](release-notes/3.3.0.md)
 - [Release notes 3.2.3](release-notes/3.2.3.md)
 - [Release notes 3.2.0](release-notes/3.2.0.md)
 - [Release notes 3.0.0](release-notes/3.0.0.md)
-- [Release checklist](RELEASE-CHECKLIST.md)
 - [Example package](examples/spec-packages/REQ-000001-example-feature/)
 
 ## Install (agents)
@@ -168,16 +131,18 @@ npx 3a-factory --agent=gemini,cursor --force
 npx 3a-factory --target=all --dry-run
 ```
 
-Luôn truyền `--agent=…` (hoặc `--target=all`) khi muốn scaffold. npm `postinstall` **không** ghi file vào repo — tránh `npx … --agent=gemini` vô tình cài cả ba agent.
+Luôn truyền `--agent=…` (hoặc `--target=all`) khi muốn scaffold. npm `postinstall` **không** tự động ghi file vào repo.
 
-Cấp số REQ/ADR: agent tự liệt kê thư mục `docs/tasks/REQ-*` rồi `next = max + 1` (không có → `000001`). Không chạy script phụ; không lấy số từ example trong `.agents/`.
+### Skills & Tool Mapping
 
-| Selection | Paths |
-|---|---|
-| shared | `AGENTS.md`, `WORKFLOW.md`, `.agents/{templates,contracts,schemas,rules,skills}`, `docs/` |
-| claude | `CLAUDE.md`, `.claude/skills`, `.claude/commands` |
-| gemini | `GEMINI.md`, `.gemini/commands` → `.agents/skills` |
-| cursor | `.cursor/rules/*.mdc` (from `.agents/commands/`); body in `.agents/skills` |
+Kiến trúc phân bổ thư mục khi bạn cài đặt:
+
+| Tool | Native files | Notes |
+|---|---|---|
+| Mặc định (Tất cả) | `AGENTS.md`, `docs/`, `.agents/{contracts, schemas}` | Share Context Rule gốc. |
+| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skill + Slash commands + System Prompt. |
+| Gemini CLI | `.gemini/commands/*.toml` → trỏ tới `.agents/skills`, `GEMINI.md` | Single skill body (Dùng chung ruột với Cursor). |
+| Cursor | `.cursor/rules/*.mdc` + `ai-workflow.mdc` | Đọc rule qua Prompt, không có native folder skill. |
 
 ## License
 

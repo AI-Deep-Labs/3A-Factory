@@ -79,20 +79,18 @@ describe('installer smoke', () => {
         const pmClaude = fs.readFileSync(path.join(tmp, '.claude/commands/project-manager.md'), 'utf8');
         assert.match(pmClaude, /MANDATORY PM MODE/);
         assert.match(pmClaude, /Session orchestration/);
-        const triageClaude = fs.readFileSync(path.join(tmp, '.claude/commands/triage.md'), 'utf8');
-        assert.match(triageClaude, /# Triage/);
-        assert.match(triageClaude, /Classify a raw request/);
+        const onboardingClaude = fs.readFileSync(path.join(tmp, '.claude/commands/onboarding.md'), 'utf8');
+        assert.match(onboardingClaude, /# Onboarding/);
       }
       if (agent === 'gemini') {
         const geminiMd = fs.readFileSync(path.join(tmp, 'GEMINI.md'), 'utf8');
         assert.match(geminiMd, /\.agents\/rules\/agent-mode\.md/);
-        assert.ok(fs.existsSync(path.join(tmp, '.gemini/commands/converge.toml')));
+        assert.ok(fs.existsSync(path.join(tmp, '.gemini/commands/project-manager.toml')));
         assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/converge/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.gemini/skills')));
-        const toml = fs.readFileSync(path.join(tmp, '.gemini/commands/triage.toml'), 'utf8');
+        const toml = fs.readFileSync(path.join(tmp, '.gemini/commands/onboarding.toml'), 'utf8');
         assert.match(toml, /^description = "/);
-        assert.match(toml, /# Triage/);
-        assert.match(toml, /Classify a raw request/);
+        assert.match(toml, /# Onboarding/);
         const pmGemini = fs.readFileSync(path.join(tmp, '.gemini/commands/project-manager.toml'), 'utf8');
         assert.match(pmGemini, /MANDATORY PM MODE/);
       }
@@ -100,22 +98,22 @@ describe('installer smoke', () => {
         const workflow = fs.readFileSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc'), 'utf8');
         assert.match(workflow, /\.agents\/rules\/agent-mode\.md/);
         assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/ai-workflow.mdc')));
-        assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/triage.mdc')));
+        assert.ok(fs.existsSync(path.join(tmp, '.cursor/rules/project-manager.mdc')));
         assert.ok(fs.existsSync(path.join(tmp, '.agents/skills/tasks/SKILL.md')));
         assert.ok(!fs.existsSync(path.join(tmp, '.cursor/skills')));
         assert.ok(!fs.existsSync(path.join(tmp, '.cursor/commands')));
-        const rule = fs.readFileSync(path.join(tmp, '.cursor/rules/triage.mdc'), 'utf8');
+        const rule = fs.readFileSync(path.join(tmp, '.cursor/rules/onboarding.mdc'), 'utf8');
         assert.match(rule, /description: "/);
         assert.match(rule, /globs: \*/);
         assert.match(rule, /alwaysApply: false/);
-        assert.match(rule, /# Triage/);
-        assert.doesNotMatch(rule, /^name: triage$/m);
+        assert.match(rule, /# Onboarding/);
+        assert.doesNotMatch(rule, /^name: onboarding$/m);
         const pmRule = fs.readFileSync(path.join(tmp, '.cursor/rules/project-manager.mdc'), 'utf8');
         assert.match(pmRule, /MANDATORY PM MODE/);
         assert.match(pmRule, /Slash invocation \(mandatory\)/);
         const shared = fs.readFileSync(path.join(tmp, '.agents/skills/triage/SKILL.md'), 'utf8');
         assert.match(shared, /^---\nname: triage\n/);
-        assert.match(shared, /disable-model-invocation: true/);
+        assert.match(shared, /argument-hint:/);
         const pmSkill = fs.readFileSync(path.join(tmp, '.agents/skills/project-manager/SKILL.md'), 'utf8');
         assert.match(pmSkill, /AUTO-ACTIVATE/);
         assert.match(pmSkill, /DO NOT activate/);

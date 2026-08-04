@@ -1,7 +1,6 @@
 ---
 name: requirements
 description: Write Business Truth requirements.md inside a Spec Package from raw, discovery, and analysis. No design, tasks, or code.
-disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 

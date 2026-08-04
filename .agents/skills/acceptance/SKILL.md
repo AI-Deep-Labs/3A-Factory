@@ -1,7 +1,6 @@
 ---
 name: acceptance
 description: Write Verification Truth acceptance.md inside a Spec Package; sync PENDING_ACCEPTANCE references in tasks.md without changing task scope.
-disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 

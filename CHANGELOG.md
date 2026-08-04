@@ -5,6 +5,23 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [3.3.0] - 2026-08-04
+
+Minor architectural cleanup — removed 13 redundant user-invoked slash commands and integrated `WORKFLOW.md` into primary Agent governance files.
+
+### Changed
+
+- **Removed Commands:** Deleted 13 redundant slash commands for internal workflow steps (`triage`, `analyze`, `spec`, `develop`, etc.) to clean up the user command interface. Only entry points and utility commands (`project-manager`, `deploy`, `onboarding`, `handoff`, `caveman`, `qa-issues`, `specification-synthesizer`, `grill-me`) remain.
+- **Enabled Model Invocation:** Removed the `disable-model-invocation: true` flag from the 13 internal skills, allowing the AI agent to natively invoke these workflow steps as tools under `project-manager`.
+- **Consolidated Governance:** Removed `.agents/WORKFLOW.md` and integrated its Tool Mapping section into `AGENTS.md` to reduce token overhead and provide a single source of truth.
+- **Installer and Validation:** Updated build scripts, validation scripts, and tests to accommodate the removal of internal slash commands and `WORKFLOW.md`.
+- Package version set to **3.3.0**.
+
+### Notes
+
+- Upgrade: `npx 3a-factory@3.3.0 --agent=<agent> --force`.
+- Details: [release-notes/3.3.0.md](release-notes/3.3.0.md).
+
 ## [3.2.3] - 2026-08-03
 
 Patch on the 3.2.0 GA line — significantly improved `specification-synthesizer` with strict declarative structure.

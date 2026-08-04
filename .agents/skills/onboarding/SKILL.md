@@ -86,7 +86,7 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
 
 Update **at the root of the repo being onboarded**. Only create/update files relevant to the **current agent** (see § Agent detection above).
 
-### `AGENTS.md` / `WORKFLOW.md` (always — shared by all agents)
+### `AGENTS.md` (always — shared by all agents)
 
 - If installer copied them: **fill** project context; do not break 3a-factory hard gates / lifecycle.
 - If missing: install the package first (Phase B), then fill.

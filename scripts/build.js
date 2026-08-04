@@ -54,8 +54,6 @@ const REQUIRED_ARTIFACTS = [
 
   'GEMINI.md',
 
-  '.agents/WORKFLOW.md',
-
   '.agents/rules/agent-mode.md',
 
   '.agents/contracts/spec-package.md',
@@ -314,7 +312,7 @@ function main() {
 
     else if (rel.includes('/templates/')) type = 'template';
 
-    else if (['AGENTS.md', 'CLAUDE.md', 'GEMINI.md', '.agents/WORKFLOW.md'].includes(rel)) {
+    else if (['AGENTS.md', 'CLAUDE.md', 'GEMINI.md'].includes(rel)) {
 
       type = 'governance';
 

@@ -1,7 +1,6 @@
 ---
 name: analyze
 description: Impact and risk analysis into docs/tasks/.../analysis.md; set risk and ADR recommendation; status analyzed.
-disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 

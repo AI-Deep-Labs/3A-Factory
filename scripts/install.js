@@ -246,7 +246,7 @@ Notes:
   Always pass --agent=... when invoking the CLI (or omit to install all agents intentionally).
 
 Always installs (shared):
-  AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/
+  AGENTS.md, .agents/{templates,contracts,schemas,skills}, docs/
 
 Per agent:
   claude  → CLAUDE.md, .claude/skills (mirror), .claude/commands (from .agents/commands)
@@ -342,7 +342,6 @@ const SPEC_PACKAGE_TEMPLATES = [
 
 const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
-  { src: '.agents/WORKFLOW.md', dest: 'WORKFLOW.md' },
   {
     src: '.agents/contracts/spec-package.md',
     dest: '.agents/contracts/spec-package.md'
@@ -573,7 +572,7 @@ try {
     console.log(`Backups:      ${stats.backups}`);
     console.log(`Unchanged:    ${stats.unchanged}`);
     console.log(`Conflicts:    ${stats.conflicts}`);
-    console.log(`Shared:       AGENTS.md, WORKFLOW.md, .agents/{templates,contracts,schemas,skills}, docs/`);
+    console.log(`Shared:       AGENTS.md, .agents/{templates,contracts,schemas,skills}, docs/`);
     console.log(`Note:         Installer does not create docs/tasks/ packages, docs/decisions, or docs/misc.`);
   }
 

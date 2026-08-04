@@ -1,7 +1,6 @@
 ---
 name: spec-review
 description: Validate a Feature-local Spec Package for completeness, traceability, and readiness; write spec-review.md; set awaiting_approval on PASSED. Does not approve or write code.
-disable-model-invocation: true
 argument-hint: "[REQ-<NNNNNN>-<slug> or package path]"
 ---
 

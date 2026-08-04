@@ -131,14 +131,17 @@ When the turn is lifecycle / continue-REQ / approval / `/project-manager` / alre
 - **Low**: localized addition; no contract/schema/auth/deploy.
 - Payment/order is **not** automatically high.
 
-## Skills
+## Skills & Tool Mapping
 
-| Path | Content |
-|---|---|
-| `.agents/skills/<name>/SKILL.md` | Workflow + utility skill bodies (21 skills) |
-| `.agents/commands/<name>.md` | Canonical slash commands (flat; adapters emit per agent) |
+- `.agents/skills/<name>/SKILL.md`: Workflow + utility skill bodies (21 skills)
+- `.agents/commands/<name>.md`: Canonical slash commands (8 commands for entry points and utilities)
 
-Runtime paths: Claude `.claude/skills` + `.claude/commands`; Gemini `.gemini/commands` → `.agents/skills`; Cursor `.cursor/rules/*.mdc` (skill body in `.agents/skills` only — no `.cursor/skills` / `.gemini/skills` mirrors).
+| Tool | Native files | Notes |
+|---|---|---|
+| Claude Code | `.claude/skills`, `.claude/commands`, `CLAUDE.md` | Skills + slash commands |
+| Gemini CLI | `.gemini/commands/*.toml` → `.agents/skills`, `GEMINI.md` | Slash entry; single skill body |
+| Cursor | `.cursor/rules/*.mdc` + `ai-workflow.mdc`; skill body in `.agents/skills` | Requestable rules; no `.cursor/skills` mirror |
+
 
 ## Language
 
