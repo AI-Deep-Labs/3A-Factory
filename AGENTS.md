@@ -93,8 +93,9 @@ If any marker is missing → `ONBOARDING_REQUIRED` → read `.agents/skills/onbo
 1. Read `.agents/rules/agent-mode.md` (applicable — see that file’s scope)
 2. Read and execute `.agents/skills/project-manager/SKILL.md` with the user message as input
 3. PM selects the child skill per routing table + `manifest.yaml`
-4. After each child skill, **return to PM** until a PM stop condition
-5. Slash commands remain available as manual overrides
+4. **CRITICAL AGENT OVERRIDE: PM MUST NEVER EXECUTE CHILD SKILLS DIRECTLY.** The PM must spawn an isolated sub-agent (via `invoke_subagent` or Cursor Composer) to execute the task. DO NOT act as the developer, reviewer, or QA yourself.
+5. After each child skill returns a report, **return to PM** until a PM stop condition.
+6. Slash commands remain available as manual overrides.
 
 ### `/project-manager` (mandatory workflow mode)
 

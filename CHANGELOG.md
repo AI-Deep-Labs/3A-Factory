@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.1] - 2026-08-04
+
+Hotfix to strictly enforce Sub-agent orchestration.
+
+### Changed
+
+- **Hard Gates Added:** Added explicit negative constraints (`CRITICAL ANTI-BYPASS RULES`) to `AGENTS.md` and `project-manager/SKILL.md` to absolutely forbid the PM from executing child skills (e.g., `develop`, `qa`) directly. This forces the LLM to use `invoke_subagent` and prevents "context bypassing".
+
 ## [4.0.0] - 2026-08-04
 
 Enterprise Grade Sub-Agent Orchestration — transformed `project-manager` into a pure Supervisor that delegates to 6 distinct Sub-agents for complete context isolation and zero bias.

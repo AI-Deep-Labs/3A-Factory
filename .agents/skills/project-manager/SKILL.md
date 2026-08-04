@@ -97,6 +97,10 @@ PM → Read manifest → Determine next phase (e.g. 'develop') → Read subagent
    → Wait for Sub-agent to return a pass/fail report → PM updates `manifest.yaml` → Loop ...
 ```
 
+**CRITICAL ANTI-BYPASS RULES FOR PM:**
+- **STRICTLY FORBIDDEN:** You MUST NOT execute the logic of child skills (e.g., `develop`, `review`, `qa`) yourself. Even if you have the ability or tools to do so, you MUST delegate.
+- **ZERO BIAS ENFORCEMENT:** You are a Supervisor. You read state, you spawn Sub-agents, you wait for reports, and you update the state. You DO NOT write application code or perform code reviews yourself.
+
 - **PM is the sole mutator:** Sub-agents only return reports. PM is the ONLY agent allowed to modify `manifest.yaml` statuses.
 - Natural stops: approval wait, `grill-me` (one question per turn), `awaiting_user_review`, `blocked`, `PACKAGE_CONFLICT`, `ONBOARDING_REQUIRED`, user stop.
 - Do **not** auto-deploy; do **not** auto-approve.
