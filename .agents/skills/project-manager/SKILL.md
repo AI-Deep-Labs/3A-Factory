@@ -86,13 +86,18 @@ If any check fails → `ONBOARDING_REQUIRED` (do not triage or create packages).
 
 PM decides the next step **by manifest state** (routing table below — no extra logic).
 
-Loop until a stop condition:
+**Sub-Agent Orchestration Loop (v4 Enterprise):**
+Instead of executing tasks yourself, PM delegates to specific Sub-agents mapped in `.agents/configs/subagents.json`.
 
 ```text
-PM → read and execute child skill SKILL.md → PM → …
+PM → Read manifest → Determine next phase (e.g. 'develop') → Read subagents.json
+   → Check IDE capability:
+      - If `invoke_subagent` tool exists (Gemini/Claude): PM calls tool, passing the mapped `.agents/agents/persona.md` as System Prompt and `.agents/skills/.../SKILL.md` as Task Prompt.
+      - If Cursor IDE: PM role-plays by loading the Persona + Skill into context and uses Composer/Agent mode to execute.
+   → Wait for Sub-agent to return a pass/fail report → PM updates `manifest.yaml` → Loop ...
 ```
 
-- After each child skill completes, return to PM and re-read `manifest.yaml` before the next route.
+- **PM is the sole mutator:** Sub-agents only return reports. PM is the ONLY agent allowed to modify `manifest.yaml` statuses.
 - Natural stops: approval wait, `grill-me` (one question per turn), `awaiting_user_review`, `blocked`, `PACKAGE_CONFLICT`, `ONBOARDING_REQUIRED`, user stop.
 - Do **not** auto-deploy; do **not** auto-approve.
 
@@ -148,9 +153,10 @@ manifest.status
 execution.current_task
 execution.last_activity_at
 execution.last_activity_by
+tasks.<TASK_ID>.status
 ```
 May set `status: implementing` when starting a task handoff to develop.  
-Must **not** set task status to `done`.
+**PM is now the ONLY agent allowed to set task status to `done`** (based on a PASS report from the `Reviewer` sub-agent).
 
 ## Blocker routing
 ```text

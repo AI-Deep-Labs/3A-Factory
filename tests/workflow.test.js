@@ -33,10 +33,10 @@ describe('workflow regression (static)', () => {
     assert.match(d, /APPROVAL_REQUIRED/);
   });
 
-  it('review alone marks task done', () => {
-    const r = skill('review');
-    assert.match(r, /task\.status:\s*done/);
-    assert.match(r, /Only this skill/i);
+  it('project-manager alone marks task done', () => {
+    const pm = skill('project-manager');
+    assert.match(pm, /tasks\.<TASK_ID>\.status/);
+    assert.match(pm, /ONLY agent allowed to set task status to `done`/i);
   });
 
   it('qa bounded loop and defect routing', () => {

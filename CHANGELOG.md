@@ -5,6 +5,28 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.0.0] - 2026-08-04
+
+Enterprise Grade Sub-Agent Orchestration — transformed `project-manager` into a pure Supervisor that delegates to 6 distinct Sub-agents for complete context isolation and zero bias.
+
+### Added
+
+- **DevCrew Personas:** Created `.agents/agents/` containing 6 specialized personas (`business-analyst`, `architect`, `developer`, `reviewer`, `qa-engineer`, `release-manager`) acting as System Prompts.
+- **Sub-Agent Registry:** Added `.agents/configs/subagents.json` to map personas to workflow skills (`inherit` model configuration).
+- **Architecture Documentation:** Added `docs/architecture/v4-subagent-orchestration.md` detailing the new multi-agent design.
+
+### Changed
+
+- **Delegated Orchestration:** `project-manager` now operates as a pure Supervisor, utilizing `invoke_subagent` (or IDE role-play) to spawn isolated sub-agents rather than executing tasks monolithicly.
+- **Manifest Mutator Restriction:** Sub-agents (`develop`, `review`, `qa`) are now strictly forbidden from mutating `manifest.yaml`. They only return pass/fail reports. `project-manager` is the sole state mutator.
+- **Installer Automation:** Updated `install.js` and `build.js` to automatically bundle and scaffold the new `agents` and `configs` directories into target projects.
+- Package version bumped to **4.0.0**.
+
+### Notes
+
+- Upgrade: `npx 3a-factory@4.0.0 --agent=<agent> --force`.
+- Details: [release-notes/4.0.0.md](release-notes/4.0.0.md).
+
 ## [3.3.0] - 2026-08-04
 
 Minor architectural cleanup — removed 13 redundant user-invoked slash commands and integrated `WORKFLOW.md` into primary Agent governance files.

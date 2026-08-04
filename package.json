@@ -1,7 +1,7 @@
 {
   "name": "3a-factory",
-  "version": "3.3.0",
-  "description": "Greenfield Feature-local Spec Package workflow for Claude, Gemini, and Cursor (3A-Factory)",
+  "version": "4.0.0",
+  "description": "Enterprise Feature-local Spec Package workflow for Claude, Gemini, and Cursor (3A-Factory)",
   "repository": {
     "type": "git",
     "url": "https://github.com/AI-Deep-Labs/3A-Factory.git"

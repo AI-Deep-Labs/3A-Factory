@@ -82,6 +82,14 @@ const REQUIRED_ARTIFACTS = [
 
   '.agents/templates/APPROVAL-CONFIRMATION-template.md',
 
+  '.agents/configs/subagents.json',
+  '.agents/agents/business-analyst.md',
+  '.agents/agents/architect.md',
+  '.agents/agents/developer.md',
+  '.agents/agents/reviewer.md',
+  '.agents/agents/qa-engineer.md',
+  '.agents/agents/release-manager.md',
+
   '.agents/commands/ai-workflow.md',
 
   '.agents/commands/project-manager.md',

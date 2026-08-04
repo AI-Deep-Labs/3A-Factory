@@ -67,34 +67,7 @@ Template: `.agents/templates/CODE-REVIEW-template.md` (Vietnamese body).
 Result: `PASSED` | `FAILED`.
 
 ## Manifest / task transitions
-On start:
-```yaml
-status: reviewing
-review:
-  status: pending
-  current_task: TASK-xxx
-```
-FAILED:
-```text
-task.status: in_progress
-manifest.status: implementing
-review.status: failed
-```
-Route back to `develop` (`REVIEW_BLOCKER`).
-
-PASSED:
-```text
-task.status: done
-execution.completed_tasks += TASK-xxx
-execution.current_task: null
-review.status: passed
-review.reviewed_at: <ISO-8601>
-```
-Then:
-- If any task still not done / ready remains → leave `status: implementing` (or `approved` if none in progress) for PM to select next task.
-- If **all** required tasks are `done` → `manifest.status: qa` and hand off to `qa` (do not silently run QA unless PM orchestration continues).
-
-**Only this skill** may move task `review` → `done`.
+Return a PASSED or FAILED report to `project-manager`. Do **not** update `manifest.yaml` yourself. `project-manager` will move the task to `done` or route back to `develop` based on your report.
 
 ## Failure states
 ```text
@@ -106,4 +79,4 @@ PACKAGE_CONFLICT
 ```
 
 ## Stop condition
-Print review path + PASSED/FAILED + next skill. Do not deploy. Do not mark package `done`.
+Return to `project-manager` with review path + PASSED/FAILED. Do not deploy. Do not mark package `done`.

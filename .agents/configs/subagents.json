@@ -1,0 +1,38 @@
+{
+  "business_analyst": {
+    "role": "Business Analyst / Product Owner",
+    "model": "inherit",
+    "persona_path": ".agents/agents/business-analyst.md",
+    "mapped_skills": ["triage", "grill-me", "analyze", "requirements"]
+  },
+  "architect": {
+    "role": "Software Architect",
+    "model": "inherit",
+    "persona_path": ".agents/agents/architect.md",
+    "mapped_skills": ["adr", "design", "tasks", "acceptance"]
+  },
+  "developer": {
+    "role": "Software Engineer",
+    "model": "inherit",
+    "persona_path": ".agents/agents/developer.md",
+    "mapped_skills": ["develop"]
+  },
+  "reviewer": {
+    "role": "Code Reviewer",
+    "model": "inherit",
+    "persona_path": ".agents/agents/reviewer.md",
+    "mapped_skills": ["review", "spec-review"]
+  },
+  "qa_engineer": {
+    "role": "QA Automation Engineer",
+    "model": "inherit",
+    "persona_path": ".agents/agents/qa-engineer.md",
+    "mapped_skills": ["qa"]
+  },
+  "release_manager": {
+    "role": "Release Manager",
+    "model": "inherit",
+    "persona_path": ".agents/agents/release-manager.md",
+    "mapped_skills": ["converge", "deploy"]
+  }
+}

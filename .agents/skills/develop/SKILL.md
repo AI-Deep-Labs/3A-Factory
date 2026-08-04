@@ -124,7 +124,7 @@ APPROVAL_REQUIRED
 - relevant codebase and tests
 
 ## Output contract
-Implementation evidence at `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md` + handoff to review.
+Implementation evidence at `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md`. Return a pass/fail report to `project-manager`. DO NOT update `manifest.yaml` yourself.
 
 ## Stop condition
-Hand off to `review` with evidence path. Do not start QA. Do not mark `done`. Greenfield only — require Spec Package.
+Hand off back to `project-manager` with evidence path. Do not start QA. Do not mark `done`. Greenfield only — require Spec Package.

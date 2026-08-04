@@ -99,7 +99,7 @@ qa.system_test: passed | not_required
 qa.uat: passed | not_required
 # clear qa.blockers
 ```
-Hand off to `converge`. Do **not** set `done`.
+Return a PASS report to `project-manager`. Do **not** update `manifest.yaml` yourself.
 
 ## Failure states
 ```text
@@ -110,7 +110,7 @@ QA_LOOP_LIMIT_REACHED
 ```
 
 ## Stop condition
-Print qa-summary path + result + next route. Remind converge is next on PASS. Never deploy.
+Return to `project-manager` with qa-summary path + result + next route. Never deploy.
 
 ## Compatibility
 Legacy `docs/qa/REQ-*-qa.md` path is not used for new Spec Package features.

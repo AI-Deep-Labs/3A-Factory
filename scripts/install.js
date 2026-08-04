@@ -311,6 +311,8 @@ const sharedDirs = [
   '.agents/schemas',
   '.agents/rules',
   '.agents/skills',
+  '.agents/agents',
+  '.agents/configs',
   'docs'
 ];
 
@@ -342,6 +344,13 @@ const SPEC_PACKAGE_TEMPLATES = [
 
 const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
+  { src: '.agents/configs/subagents.json', dest: '.agents/configs/subagents.json' },
+  { src: '.agents/agents/business-analyst.md', dest: '.agents/agents/business-analyst.md' },
+  { src: '.agents/agents/architect.md', dest: '.agents/agents/architect.md' },
+  { src: '.agents/agents/developer.md', dest: '.agents/agents/developer.md' },
+  { src: '.agents/agents/reviewer.md', dest: '.agents/agents/reviewer.md' },
+  { src: '.agents/agents/qa-engineer.md', dest: '.agents/agents/qa-engineer.md' },
+  { src: '.agents/agents/release-manager.md', dest: '.agents/agents/release-manager.md' },
   {
     src: '.agents/contracts/spec-package.md',
     dest: '.agents/contracts/spec-package.md'

@@ -1,7 +1,7 @@
 # 3a-factory
 
 [![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
-[![Version](https://img.shields.io/badge/version-3.3.0-blue.svg)](package.json)
+[![Version](https://img.shields.io/badge/version-4.0.0-blue.svg)](package.json)
 
 **3A-Factory** là bộ workflow template cho AI Agent (Claude Code, Gemini CLI, Cursor) nhằm vận hành vòng đời phát triển phần mềm theo kiến trúc **Feature-local Spec Package** (SDLC greenfield).
 
@@ -50,14 +50,22 @@ acceptance.md   = Verification Truth
 manifest.yaml   = Package State Truth
 ```
 
-## Agentic Workflow (Supervisor / Worker)
+## Agentic Workflow (Sub-Agent Orchestration v4)
 
-Khác với các workflow thủ công, 3A-Factory vận hành theo cơ chế **điều phối tự động (Orchestration)** thông qua Supervisor là `project-manager`. 
+Khác với các workflow thủ công hay mô hình nguyên khối, **3A-Factory v4** vận hành theo cơ chế **điều phối Sub-Agent (Delegated Orchestration)** đạt chuẩn Enterprise. 
+
+Supervisor là `project-manager` sẽ tự động phân rã công việc và gọi các **Sub-agents** chuyên biệt để đảm bảo tính độc lập, tránh thiên kiến (Zero Bias):
+- 🤵 **Business Analyst:** (triage, analyze, requirements)
+- 🏗️ **Software Architect:** (adr, design, tasks, acceptance)
+- 👨‍💻 **Software Engineer:** (develop)
+- 🕵️ **Code Reviewer:** (review, spec-review)
+- 🧪 **QA Automation:** (qa)
+- 🚀 **Release Manager:** (converge, deploy)
 
 ```text
 Mô tả yêu cầu tự nhiên (Auto-intake) / `/project-manager`
-├── Triage (Phân loại)
-├── Phân tích & Lập Spec Package (Requirements → ADR → Design → Tasks → Acceptance)
+├── Gọi [BA] → Triage (Phân loại)
+├── Gọi [Architect] → Phân tích & Lập Spec Package (Requirements → ADR → Design → Tasks → Acceptance)
 ├── Chờ Approval (Xác nhận cấu trúc Spec)
 ├── Phát triển theo từng Task (Develop ↔ Review)
 ├── Đảm bảo chất lượng (QA & Repair Loops)
@@ -112,6 +120,8 @@ Tại mỗi gate, agent **hỏi xác nhận**; user trả lời có/không, đ�
 ## Tài liệu thêm
 
 - [Architecture](docs/architecture/spec-package.md)
+- [Architectural Evaluation (v3)](docs/evaluations/v3-architect-evaluation.md)
+- [Sub-Agent Orchestration (v4)](docs/architecture/v4-subagent-orchestration.md)
 - [Workflow](docs/workflow.md)
 - [Commands](docs/commands.md)
 - [Approvals](docs/approvals.md)

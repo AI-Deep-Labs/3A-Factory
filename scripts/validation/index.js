@@ -132,8 +132,8 @@ function validateSkillContracts() {
     if (skill === 'develop' && !/APPROVED_SPEC_PACKAGE/.test(content)) {
       details.push('develop missing APPROVED_SPEC_PACKAGE gate');
     }
-    if (skill === 'review' && !/task\.status:\s*done/.test(content)) {
-      details.push('review must control task done');
+    if (skill === 'project-manager' && !/tasks\.<TASK_ID>\.status/.test(content)) {
+      details.push('project-manager must control task done');
     }
     if (skill === 'qa' && !/max = 3|max QA|Maximum attempts:\s*\*\*3\*\*|attempts.*3/i.test(content)) {
       details.push('qa missing bounded loop max 3');
