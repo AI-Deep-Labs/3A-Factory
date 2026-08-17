@@ -5,6 +5,32 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.0] - 2026-08-17
+
+Git Branch Safety & Commit-per-Task — bổ sung cơ chế quản lý nhánh Git bắt buộc và commit tự động theo từng task vào vòng lặp implement.
+
+### Added
+
+- **`branch-guard` skill** (`.agents/skills/branch-guard/SKILL.md`): Skill mới với 2 phase độc lập:
+  - **Phase A — Pre-develop:** Trước khi gọi developer lần đầu trong mỗi REQ, kiểm tra nhánh hiện tại. Cấm implement trực tiếp trên `main`, `staging`, `develop`. Tự động phát hiện dirty working tree và dừng chờ user xác nhận xử lý xong. Tạo nhánh feature từ `origin/main` theo naming convention `feat/`, `fix/`, `refactor/`, `imp/`, `vendor/` dựa trên type REQ suy luận từ `raw.md` + `analysis.md`.
+  - **Phase B — Commit-per-task:** Sau mỗi task được review PASSED, stage đúng file scope của task và tạo conventional commit. Không bao giờ push.
+- **`release-manager` skill** (`.agents/skills/release-manager/SKILL.md`): Skill orchestrator mỏng — điều phối branch-guard (pre-develop + commit), converge, và deploy.
+- **`git` section trong manifest** (`.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml`): Track `working_branch`, `branch_guard_status`, và `commits` (map TASK-NNN → commit hash) để resume chính xác khi session bị ngắt.
+
+### Changed
+
+- **`project-manager` skill:** Thêm 2 integration points bắt buộc:
+  1. **Branch Guard block** — chạy trước develop đầu tiên của mỗi REQ; detect & resume `awaiting_user_action` khi session resume.
+  2. **Commit Gate block** — chạy sau mỗi reviewer PASSED; đợi `COMMIT_DONE` + hash trước khi set task `done` và pick task tiếp theo.
+- **`release-manager` persona** (`.agents/agents/release-manager.md`): Mở rộng vai trò — từ Convergence & Deploy → bổ sung Branch Guard và Commit-per-Task.
+- **`subagents.json`:** `release_manager.mapped_skills` bổ sung `branch-guard` và `release-manager`.
+- Package version bumped to **4.1.0**.
+
+### Notes
+
+- Upgrade: `npx 3a-factory@4.1.0 --agent=<agent> --force`.
+- Details: [release-notes/4.1.0.md](release-notes/4.1.0.md).
+
 ## [4.0.1] - 2026-08-04
 
 Hotfix to strictly enforce Sub-agent orchestration.
