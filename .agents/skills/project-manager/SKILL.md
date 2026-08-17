@@ -151,6 +151,35 @@ High-risk + policy: `approval.develop.status == approved` else stop and run **De
 
 Failure tokens: `EXECUTION_BLOCKED`, `APPROVAL_REQUIRED`, `TASK_NOT_READY`, `TASK_DEPENDENCY_BLOCKED`, `TASK_REFERENCE_INVALID`, `PACKAGE_INVALID`.
 
+## Branch Guard (pre-develop) — mandatory
+
+**Trigger:** Before spawning the `developer` sub-agent for **the first time** in a REQ session.
+
+**Check condition:** `manifest.git.branch_guard_status != done`
+
+If condition is true:
+1. Spawn `release_manager` sub-agent (persona: `.agents/agents/release-manager.md`, skill: `.agents/skills/branch-guard/SKILL.md`) with task: **Phase A — pre-develop branch check** for this package.
+2. Wait for report:
+   - `BRANCH_READY` or `BRANCH_OK` → write manifest (PM writes):
+     ```yaml
+     git:
+       working_branch: <branch name from report, or current branch if BRANCH_OK>
+       branch_guard_status: done
+     ```
+     Then proceed to spawn `developer` sub-agent.
+   - `BRANCH_DIRTY` → write manifest:
+     ```yaml
+     git:
+       branch_guard_status: awaiting_user_action
+     ```
+     **Stop.** Ask user (one message):
+     > "Working tree có thay đổi chưa commit. Vui lòng stash, commit hoặc discard trước khi tiếp tục. Xác nhận khi xử lý xong."
+     When user confirms → re-spawn `release_manager` branch-guard Phase A. Do not proceed past a dirty tree.
+   - `BRANCH_TYPE_AMBIGUOUS` → relay the type-selection question to user; collect answer; re-invoke branch-guard with answer.
+3. If `branch_guard_status == awaiting_user_action` at session resume → immediately re-spawn branch-guard Phase A; do not skip.
+
+**If condition is false** (`branch_guard_status == done`): skip this block entirely; go directly to `developer`.
+
 ## Manifest updates (allowed)
 ```text
 manifest.status
@@ -158,9 +187,31 @@ execution.current_task
 execution.last_activity_at
 execution.last_activity_by
 tasks.<TASK_ID>.status
+git.working_branch
+git.branch_guard_status
+git.commits.<TASK_ID>
 ```
 May set `status: implementing` when starting a task handoff to develop.  
 **PM is now the ONLY agent allowed to set task status to `done`** (based on a PASS report from the `Reviewer` sub-agent).
+
+## Commit Gate (post-review) — mandatory
+
+**Trigger:** Immediately after `reviewer` sub-agent returns a **PASSED** report for `TASK-NNN`, before picking the next task or changing task status to `done`.
+
+1. Spawn `release_manager` sub-agent (persona: `.agents/agents/release-manager.md`, skill: `.agents/skills/release-manager/SKILL.md`) with task: **commit TASK-NNN** for this package.
+2. Wait for report:
+   - `COMMIT_DONE` → write manifest:
+     ```yaml
+     git:
+       commits:
+         TASK-NNN: <short commit hash>
+     ```
+     Then set `task.status: done` and continue to next task.
+   - `COMMIT_NOTHING_STAGED` → ask user one question:
+     > "Không có file nào được stage cho TASK-NNN. Đây có phải task không thay đổi code không? (có / không)"
+     - User xác nhận không có code → set `task.status: done`, note in manifest, continue.
+     - User nói có code → re-spawn `release_manager` commit.
+   - `COMMIT_BLOCKED` → log error; route to `branch-guard` Phase A first; then retry commit.
 
 ## Blocker routing
 ```text
@@ -242,6 +293,7 @@ One short line after each routed step.
 - No ready task while still implementing
 - Manifest conflict / `PACKAGE_CONFLICT`
 - `ONBOARDING_REQUIRED`
+- `BRANCH_DIRTY` reported by branch-guard — waiting for user to resolve working tree
 - User says stop
 
 ## Output contract

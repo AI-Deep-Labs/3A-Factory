@@ -64,3 +64,8 @@ qa:
   attempts: 0
   blockers: []
   last_run_at: null
+
+git:
+  working_branch: null          # feature branch name; set by branch-guard Phase A
+  branch_guard_status: pending  # pending | awaiting_user_action | done
+  commits: {}                   # map of TASK-NNN → short commit hash (set after each review PASSED)

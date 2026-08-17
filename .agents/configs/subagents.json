@@ -33,6 +33,6 @@
     "role": "Release Manager",
     "model": "inherit",
     "persona_path": ".agents/agents/release-manager.md",
-    "mapped_skills": ["converge", "deploy"]
+    "mapped_skills": ["branch-guard", "release-manager", "converge", "deploy"]
   }
 }
