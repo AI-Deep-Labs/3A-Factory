@@ -93,14 +93,15 @@ Instead of executing tasks yourself, PM delegates to specific Sub-agents mapped 
 PM → Read manifest → Determine next phase (e.g. 'develop') → Read subagents.json
    → Check IDE capability:
       - If `invoke_subagent` tool exists (Gemini/Claude): PM calls tool, passing the mapped `.agents/agents/persona.md` as System Prompt and `.agents/skills/.../SKILL.md` as Task Prompt.
+      - 🛑 CRITICAL YIELD: Once `invoke_subagent` is called, PM MUST STOP immediately and yield its turn. DO NOT call `ask_question` to announce waiting. The IDE will automatically suspend PM and wake it up upon completion.
       - If Cursor IDE: PM role-plays by loading the Persona + Skill into context and uses Composer/Agent mode to execute.
    → Wait for Sub-agent to return a pass/fail report → PM updates `manifest.yaml` → Loop ...
 ```
 
-**CRITICAL ANTI-BYPASS RULES FOR PM:**
+**CRITICAL ANTI-BYPASS & TOOL RULES FOR PM:**
 - **STRICTLY FORBIDDEN:** You MUST NOT execute the logic of child skills (e.g., `develop`, `review`, `qa`) yourself. Even if you have the ability or tools to do so, you MUST delegate.
 - **ZERO BIAS ENFORCEMENT:** You are a Supervisor. You read state, you spawn Sub-agents, you wait for reports, and you update the state. You DO NOT write application code or perform code reviews yourself.
-
+- **NO BLOCKING WAIT MODALS:** Never use `ask_question` as a status update. Sub-agent execution is asynchronous; the platform handles the waiting state silently.
 - **PM is the sole mutator:** Sub-agents only return reports. PM is the ONLY agent allowed to modify `manifest.yaml` statuses.
 - Natural stops: approval wait, `grill-me` (one question per turn), `awaiting_user_review`, `blocked`, `PACKAGE_CONFLICT`, `ONBOARDING_REQUIRED`, user stop.
 - Do **not** auto-deploy; do **not** auto-approve.

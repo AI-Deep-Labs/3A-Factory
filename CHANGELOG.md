@@ -5,6 +5,15 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.1] - 2026-08-24
+
+Hotfix: Async Yield Protocol & Tool Misuse Prevention — ngăn chặn lỗi Agent tự động gọi blocking UI modal để giả lập loading screen trong quá trình chạy Sub-agent.
+
+### Fixed
+
+- **Project Manager (`.agents/skills/project-manager/SKILL.md`)**: Thêm rule `CRITICAL YIELD` và `NO BLOCKING WAIT MODALS` vào Sub-Agent Orchestration Loop. Buộc PM phải ngừng ngay lập tức (yield turn) sau khi spawn `invoke_subagent` để trả luồng cho hệ thống Reactive Wakeup, chấm dứt tình trạng PM tự ý gọi tool `ask_question` phát thông báo chờ đợi.
+- **Agent Mode (`.agents/rules/agent-mode.md`)**: Thêm mục `Asynchronous Execution & Tool Invariants` áp dụng cho mọi Agent. Cấm tuyệt đối việc sử dụng tool chặn đồng bộ (`ask_question`) để giả lập giao diện trạng thái "please wait", "running..." trong bối cảnh chạy background.
+
 ## [4.1.0] - 2026-08-17
 
 Git Branch Safety & Commit-per-Task — bổ sung cơ chế quản lý nhánh Git bắt buộc và commit tự động theo từng task vào vòng lặp implement.
