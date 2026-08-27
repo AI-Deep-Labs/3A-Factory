@@ -22,9 +22,11 @@ Greenfield: no legacy `docs/*` feature lifecycle paths; no migration tooling.
 Claude-specific:
 - Skills: `.claude/skills/<skill-name>/SKILL.md`
 - Commands: `.claude/commands/*.md`
-- **Auto-intake**: in an onboarded repo, NL **lifecycle / continue REQ / approval** → `project-manager` (`AGENTS.md` § Auto-intake Intent gate). Q&A / explain code / step slash → do **not** open PM
+- **Auto-intake**: in an onboarded repo, ANY natural language request modifying code (feature/bug/change/tweak) MUST trigger `project-manager`. There are NO exceptions for "small tasks". Q&A / explain code / step slash → do **not** open PM.
 - **Approvals**: at each gate, agent asks a confirmation question; reply yes/no, có/không, or natural language — see contract § 5.4.1 (tokens optional)
 - Slash overrides (when needed): `/onboarding`, `/handoff`, `/caveman`, `/specification-synthesizer`, `/qa-issues`, **`/project-manager`** (mandatory PM mode — full workflow orchestration), `/grill-me`, `/triage`, `/analyze`, `/requirements`, `/adr`, `/design`, `/tasks`, `/acceptance`, `/spec-review`, `/spec`, `/develop`, `/review`, `/qa`, `/converge`, `/deploy`
+
+**CRITICAL TOOL INVARIANT**: The Root Agent is STRICTLY FORBIDDEN from using `write_to_file`, `replace_file_content`, or shell commands to edit application code directly. All code edits MUST be delegated to the `developer` subagent after creating an `APPROVED_SPEC_PACKAGE`.
 
 **CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read `.agents/rules/agent-mode.md` (scoped — see **When these rules apply**). Skip Spec Package-forcing rules for Q&A / explain code / meta / bypass / non-PM step slash.
 

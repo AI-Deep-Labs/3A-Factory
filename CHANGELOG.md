@@ -5,6 +5,14 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.1.2] - 2026-08-27
+
+Security & Strict Enforcement — Khóa quyền sửa code của Root Agent và thắt chặt Auto-intake để ngăn AI đi đường tắt.
+
+### Changed
+- **AGENTS.md, GEMINI.md, CLAUDE.md**: Bổ sung `Tool-Level Hard Invariants` cấm tuyệt đối Main/Root Agent sử dụng các tool chỉnh sửa mã nguồn ứng dụng (`write_to_file`, `replace_file_content`). Chỉ sub-agent `developer` mới được phép thao tác sau khi Spec Package đã được duyệt.
+- **Intent Gate**: Loại bỏ hoàn toàn ngoại lệ "task nhỏ" trong Auto-intake. Bắt buộc MỌI yêu cầu có thay đổi code (feature, bug, change, enhancement, tweak) phải đi qua `project-manager`.
+
 ## [4.1.1] - 2026-08-24
 
 Hotfix: Async Yield Protocol & Tool Misuse Prevention — ngăn chặn lỗi Agent tự động gọi blocking UI modal để giả lập loading screen trong quá trình chạy Sub-agent.

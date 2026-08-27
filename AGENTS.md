@@ -82,10 +82,10 @@ If any marker is missing → `ONBOARDING_REQUIRED` → read `.agents/skills/onbo
 
 | Call PM when | Do **not** call PM when |
 |---|---|
-| Feature / bug / change / enhancement | Pure Q&A, code explanation, ad-hoc review unrelated to a REQ |
+| ANY code modification (feature/bug/change/enhancement/tweak). NO EXCEPTIONS for "small tasks" or "clear contexts". | Pure Q&A, code explanation, ad-hoc review unrelated to a REQ |
 | Continue an existing REQ / `docs/tasks/…` path | Meta questions about tooling (unless user asks to run the workflow) |
 | Approval reply at an **active** gate (yes/no, có/không, `APPROVED_*`) | User already invoked a step slash (`/triage`, `/develop`, `/qa`, `/deploy`, `/qa-issues`, …) — that skill owns the turn |
-| | User asks to bypass the workflow |
+| | User explicitly asks to bypass the workflow |
 | | Ambiguous → ask one yes/no (open Spec Package vs answer only); do not triage until they choose workflow |
 
 ### After routing (Intent matched)
@@ -111,6 +111,13 @@ Invoking **`/project-manager`** binds **Project Manager mode** for the session: 
 - **No** `/plan` command.
 - **No** migration tooling or legacy resolver.
 - Installer never creates `docs/tasks/` and never runs the workflow.
+
+## Tool-Level Hard Invariants
+
+**STRICT PROHIBITION ON DIRECT CODING BY THE ROOT AGENT:**
+1. The **Main/Root Agent** is STRICTLY FORBIDDEN from using `write_to_file`, `replace_file_content`, or shell commands to modify application source code (e.g., `Libraries/`, `Presentation/`, `Plugins/`).
+2. The Root Agent may ONLY read files, create markdown documentation (`docs/tasks/REQ-*`), and spawn sub-agents (`invoke_subagent`).
+3. ALL application code modifications MUST be executed by the `developer` sub-agent, and ONLY after the `APPROVED_SPEC_PACKAGE` gate is passed.
 
 ## Hard gates
 

@@ -1,6 +1,6 @@
 {
   "name": "3a-factory",
-  "version": "4.1.1",
+  "version": "4.1.2",
   "description": "Enterprise Feature-local Spec Package workflow for Claude, Gemini, and Cursor (3A-Factory)",
   "repository": {
     "type": "git",

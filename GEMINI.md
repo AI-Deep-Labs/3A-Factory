@@ -24,10 +24,12 @@ Gemini-specific:
 - Skill body (single source): `.agents/skills/<name>/SKILL.md`
 - Installer does **not** create `.gemini/skills/` (avoid duplicate mirrors)
 - List: `/commands list` and `/skills list` (skills resolve from `.agents/skills`)
-- **Auto-intake**: in an onboarded repo, NL **lifecycle / continue REQ / approval** → `project-manager` (`AGENTS.md` § Auto-intake Intent gate). Q&A / explain code / step slash → do **not** open PM
+- **Auto-intake**: in an onboarded repo, ANY natural language request modifying code (feature/bug/change/tweak) MUST trigger `project-manager`. There are NO exceptions for "small tasks". Q&A / explain code / step slash → do **not** open PM.
 - **Approvals**: confirmation questions at each gate; natural language or `APPROVED_*` tokens — contract § 5.4.1
 - **`/project-manager`**: mandatory PM mode — fully execute skill § Slash invocation (mandatory)
 - Utility slashes: `/onboarding`, `/handoff`, `/caveman`, `/specification-synthesizer`, `/qa-issues`
+
+**CRITICAL TOOL INVARIANT**: The Root Agent is STRICTLY FORBIDDEN from using `write_to_file`, `replace_file_content`, or shell commands to edit application code directly. All code edits MUST be delegated to the `developer` subagent after creating an `APPROVED_SPEC_PACKAGE`.
 
 **CRITICAL**: When the turn is lifecycle / continue-REQ / approval / `/project-manager` / already in PM, read `.agents/rules/agent-mode.md` (scoped — see **When these rules apply**). Skip Spec Package-forcing rules for Q&A / explain code / meta / bypass / non-PM step slash.
 
