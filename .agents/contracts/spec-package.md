@@ -346,6 +346,81 @@ Do not write new feature review/QA evidence under legacy `docs/reviews` or `docs
 | `QA_LOOP_LIMIT_REACHED` | user/project-manager |
 | `CONVERGENCE_FAILURE` | owner per mismatch |
 | `DEPLOY_APPROVAL_REQUIRED` | user |
+| `CONFIG_PATH_INVALID` | user / platform engineer |
+| `CONFIG_MALFORMED` | user / platform engineer |
+| `PROJECT_NOT_SET` | onboarding / user |
+| `PROJECT_ALREADY_SET` | onboarding / user |
+
+---
+
+## 5.9 Path Resolution (spec_config override)
+
+All SDLC skills resolve the root directory for Spec Packages (`docs_root`) according to the configuration in `.agents/configs/spec_config.json`.
+
+### 5.9.1 Configuration file
+
+- Path: `.agents/configs/spec_config.json`
+- Installed by default by `scripts/install.js` with default scaffold values:
+  ```json
+  {
+    "override": false,
+    "project": "",
+    "path": ""
+  }
+  ```
+
+### 5.9.2 Configuration fields
+
+| Field | Type | Description |
+|---|---|---|
+| `override` | boolean | `false` = repo-local storage (default). `true` = external knowledge repository path. |
+| `project` | string | Project identifier / namespace. Set once during initial onboarding. Strictly immutable once set. |
+| `path` | string | Base filesystem path for external knowledge repository. |
+
+### 5.9.3 Resolution algorithm
+
+When any skill needs to locate, read, or create a Spec Package:
+
+1. Read `.agents/configs/spec_config.json`.
+2. **Default / Fallback evaluation**:
+   - If the file is missing,
+   - OR JSON parsing fails (`CONFIG_MALFORMED`),
+   - OR `override == false`:
+   - Set `docs_root = <repo_root>/docs/tasks/`.
+3. **Override evaluation (`override == true`)**:
+   - **Validate `project`**: Must be a non-empty string. If empty or not a string, halt with error token `PROJECT_NOT_SET`.
+   - **Validate `path`**: Must be a non-empty string, and the directory must exist and be accessible (readable/writable). If empty, non-existent, or inaccessible, halt with error token `CONFIG_PATH_INVALID`.
+   - **Standardize `path`**: Remove trailing slash (`/` or `\`).
+   - Set `docs_root = <path>/<project>/tasks/`.
+   - Ensure `<path>/<project>/tasks/` directory exists (create it recursively if not exists).
+4. **Package directory layout**:
+   - Package directory format: `docs_root/REQ-<NNNNNN>-<slug>/`
+   - Allocating IDs: List `docs_root/REQ-*` directory names and apply `next = max + 1` (none → `000001`).
+
+### 5.9.4 Project immutability
+
+- The `project` field is set once during initial repository onboarding (`/onboarding` Phase B).
+- Once set to a non-empty string, it is **strictly immutable**.
+- Any automated skill or agent action attempting to modify or overwrite an existing non-empty `project` value MUST be rejected:
+  - Preserve the existing non-empty value.
+  - Emit warning / log token `PROJECT_ALREADY_SET`.
+  - Continue workflow without modifying the configuration.
+
+### 5.9.5 Failure tokens
+
+| Token | Severity | Meaning | Action / Owner |
+|---|---|---|---|
+| `CONFIG_PATH_INVALID` | Blocker | `path` is empty, non-existent, or inaccessible. | Halt; prompt user / platform engineer to verify path and filesystem permissions. |
+| `CONFIG_MALFORMED` | Warning / Error | JSON parse error in `spec_config.json`. | Halt or safely fallback to repo-local storage per BR-001; prompt user to fix JSON. |
+| `PROJECT_NOT_SET` | Blocker | `override == true` but `project` field is empty. | Halt; prompt user to run `/onboarding` or configure `project`. |
+| `PROJECT_ALREADY_SET` | Warning | Attempt to overwrite an existing non-empty `project` name. | Reject overwrite, preserve existing value, emit warning token, continue. |
+
+### 5.9.6 Invariants
+
+- **Relative artifact references**: Manifest artifact references (`manifest.yaml`) remain relative paths within the package (e.g. `raw.md`, `requirements.md`, `design.md`, `tasks.md`, `acceptance.md`). The package layout inside `docs_root/REQ-<NNNNNN>-<slug>/` is identical regardless of override mode.
+- **Repository containment**: The `.agents/` configuration and tooling directory (including `.agents/configs/spec_config.json`, `.agents/contracts/`, `.agents/skills/`) always stays inside the repository and is never moved externally.
+- **Selective redirection**: Only Spec Package tasks documentation (equivalent to `docs/tasks/REQ-*`) is redirected to `<path>/<project>/tasks/`. All package artifacts, including review and QA evidence under `reviews/` and `qa/`, reside inside `docs_root/REQ-<NNNNNN>-<slug>/`.
+- **Repo-level documentation**: The repository's local `docs/` folder still exists for repository-specific overviews (e.g., `docs/project_overview.md`, repo-level architecture guides).
 
 ---
 
@@ -353,6 +428,7 @@ Do not write new feature review/QA evidence under legacy `docs/reviews` or `docs
 
 | Kind | Path |
 |---|---|
+| Spec config template | `.agents/configs/spec_config.json` |
 | Manifest JSON Schema | `.agents/schemas/spec-package-manifest.schema.json` |
 | Manifest template | `.agents/templates/SPEC-PACKAGE-MANIFEST-template.yaml` |
 | Requirements template | `.agents/templates/REQUIREMENTS-template.md` |
