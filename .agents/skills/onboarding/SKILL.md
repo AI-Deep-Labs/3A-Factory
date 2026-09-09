@@ -77,6 +77,15 @@ Batch questions (not one-at-a-time grilling), while scanning the repo:
   - Prompt / run 3a-factory install **into this repo** (`npx 3a-factory` or equivalent) for skills/commands/rules — **do not** clone extra repos.
   - Ensure agent-native folders exist via installer: `.claude/skills|commands`, `.gemini/commands` → `.agents/skills`, `.cursor/rules/*.mdc` + `ai-workflow.mdc` — plus shared `AGENTS.md` / `.agents/{templates,contracts,schemas,skills}` / `docs/`. Do not expect `.cursor/skills` or `.gemini/skills` mirrors.
 3. Do not create `docs/` or workflow files in parent/sibling directories.
+4. Configure `spec_config.json` project identifier:
+   - Read `.agents/configs/spec_config.json`.
+   - If `project` field is empty (`""`):
+     - Set `project` to the detected / confirmed repository project name (e.g. from package.json, directory name, or user declaration).
+     - Write back to `.agents/configs/spec_config.json`.
+   - If `project` field is already non-empty:
+     - **DO NOT** overwrite. The project identifier is strictly immutable per contract § 5.9.4.
+     - Log warning: `PROJECT_ALREADY_SET: project is already set to '<current_value>'. Preserving existing value.`
+     - Continue onboarding with the existing value.
 
 ---
 
@@ -160,6 +169,7 @@ Keep it short:
 ## Output checklist
 
 - [ ] `docs/` exists in this repo (no legacy lifecycle folders pre-created)
+- [ ] spec_config.json project identifier configured (or preserved if already set)
 - [ ] `AGENTS.md` filled with project context
 - [ ] Agent-specific context file created/updated **only for current agent** (Claude → `CLAUDE.md`, Gemini → `GEMINI.md`, Cursor → rules only)
 - [ ] `docs/project_overview.md` created/updated (**Vietnamese**)
