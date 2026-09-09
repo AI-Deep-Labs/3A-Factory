@@ -9,8 +9,11 @@ Run an automated software-delivery pipeline for **Claude Code**, **Gemini**, and
 ## Canonical path
 
 ```text
-docs/tasks/REQ-<NNNNNN>-<slug>/
+docs_root/REQ-<NNNNNN>-<slug>/
 ```
+
+- Default (in-repo): `docs/tasks/REQ-<NNNNNN>-<slug>/`
+- Override (external knowledge base): `<path>/<project>/tasks/REQ-<NNNNNN>-<slug>/` when `.agents/configs/spec_config.json` has `override: true` (contract § 5.9).
 
 ## Canonical workflow
 
@@ -103,7 +106,7 @@ Invoking **`/project-manager`** binds **Project Manager mode** for the session: 
 
 ## Greenfield policy
 
-- New feature artifacts live only under `docs/tasks/REQ-<NNNNNN>-<slug>/`.
+- New feature artifacts live only under `docs_root/REQ-<NNNNNN>-<slug>/` (default `docs/tasks/REQ-*` in repo, or `<path>/<project>/tasks/REQ-*` when spec_config override is enabled per contract § 5.9).
 - Project-wide ADR location: `docs/decisions/` (create on first project-wide ADR write).
 - Global docs may include `docs/project_overview.md` and `docs/misc/*` (create misc paths when handoff/qa-issues write).
 - Installer scaffolds `docs/` only — not `docs/decisions` or `docs/misc`.

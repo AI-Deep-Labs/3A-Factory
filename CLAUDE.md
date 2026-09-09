@@ -4,7 +4,7 @@ Read `AGENTS.md` first.
 
 **Spec is a Feature-local Spec Package, not a single document.**
 
-Canonical path: `docs/tasks/REQ-<NNNNNN>-<slug>/`
+Canonical path: docs/tasks/REQ-<NNNNNN>-<slug>/ (default in-repo) or <path>/<project>/tasks/REQ-<NNNNNN>-<slug>/ when spec_config.json override is enabled (contract § 5.9)
 
 Canonical workflow:
 
