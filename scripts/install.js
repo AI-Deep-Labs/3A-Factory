@@ -345,6 +345,7 @@ const SPEC_PACKAGE_TEMPLATES = [
 const sharedFiles = [
   { src: 'AGENTS.md', dest: 'AGENTS.md' },
   { src: '.agents/configs/subagents.json', dest: '.agents/configs/subagents.json' },
+  { src: '.agents/configs/spec_config.json', dest: '.agents/configs/spec_config.json' },
   { src: '.agents/agents/business-analyst.md', dest: '.agents/agents/business-analyst.md' },
   { src: '.agents/agents/architect.md', dest: '.agents/agents/architect.md' },
   { src: '.agents/agents/developer.md', dest: '.agents/agents/developer.md' },
