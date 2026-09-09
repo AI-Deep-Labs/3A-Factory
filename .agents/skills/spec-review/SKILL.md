@@ -24,6 +24,17 @@ May fix trivial format / obvious broken-reference / non-conflicting metadata iss
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
 4. Do not migrate or delete legacy artifacts.
 
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
+
 ## Inputs
 Read entire package:
 - `manifest.yaml`, `raw.md`, `discovery.md`, `analysis.md`, `requirements.md`

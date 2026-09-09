@@ -24,6 +24,17 @@ Do not replace acceptance / requirements ownership.
 4. Do not write new artifacts to legacy `docs/designs` (no `…-design.md` for new packages).
 5. Do not move/delete legacy artifacts.
 
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
+
 ## Inputs
 Mandatory:
 - `manifest.yaml`

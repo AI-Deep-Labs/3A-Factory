@@ -30,10 +30,21 @@ May be invoked by `project-manager` during auto-intake (natural-language intake 
 7. Do **not** write new artifacts under legacy `docs/requirements`, `docs/designs`, `docs/qa`, or `docs/reviews`.
 8. Do not move or delete legacy artifacts.
 
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
+
 ## Naming & numbering
 The agent allocates ids itself — **no helper script**.
 
-1. List **directory names** under `docs/tasks/` matching `REQ-*`.
+1. List directory names under `docs_root` matching `REQ-*`.
 2. Also include legacy basenames if those folders still exist: `.specs/REQ-*`, `docs/requirements/REQ-*`, `docs/designs/REQ-*`.
 3. Parse the numeric part after `REQ-` (legacy unpadded allowed). Compute **`next = max + 1`**. If none → **`000001`**.
 4. **Never** read numbers from `.agents/`, skills, contracts, templates, README, or markdown bodies. Tooling examples use `REQ-000001-…` only and do **not** consume the sequence.
@@ -54,7 +65,7 @@ The agent allocates ids itself — **no helper script**.
 2. If the request is explanation-only / no engineering lifecycle → answer without creating a package; stop.
 3. Otherwise allocate or reuse REQ id + slug.
 4. If package missing → create:
-   - `docs/tasks/REQ-<NNNNNN>-<slug>/`
+   - `docs_root/REQ-<NNNNNN>-<slug>/`
    - `decisions/`, `reviews/`, `qa/`, `qa/runs/`, `release/`
    - `manifest.yaml` from manifest template (`{{REQ_ID}}` = `REQ-<NNNNNN>` without slug, `{{SLUG}}`, `{{TITLE}}`, `{{RISK}}`)
 5. Write `raw.md` (Vietnamese body).

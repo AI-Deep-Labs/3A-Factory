@@ -27,6 +27,17 @@ Do **not** auto-Accept an ADR when user/maintainer review is required.
 8. Do not create migration/legacy paths.
 9. Do not pre-create empty `docs/decisions/` or `docs/misc/` during install/onboarding.
 
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
+
 ## When to create
 Create ADR only if: significant options, real trade-offs, hard to reverse, multi-component impact, or security/data/reliability/ops impact.
 
