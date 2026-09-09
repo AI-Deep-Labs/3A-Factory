@@ -18,7 +18,18 @@ Do not approve package/deploy.
 Do not write new reviews under legacy `docs/reviews` for Spec Package features.
 
 ## Package resolution
-Same as other execution skills (`docs/tasks/REQ-…/`, `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`).
+Same as other execution skills (`docs_root/REQ-…/`, `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`).
+
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
 
 ## Inputs
 ```text
@@ -61,7 +72,7 @@ WARNING
 
 ## Output
 ```text
-docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
+docs_root/<PACKAGE>/reviews/TASK-<NNN>-code-review.md
 ```
 Template: `.agents/templates/CODE-REVIEW-template.md` (Vietnamese body).  
 Result: `PASSED` | `FAILED`.

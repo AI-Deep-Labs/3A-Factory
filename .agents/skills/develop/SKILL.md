@@ -20,8 +20,19 @@ Do not write new evidence under legacy `docs/qa` or `docs/reviews` for Spec Pack
 
 ## Package resolution
 1. Valid package path → use.
-2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
+2. Else REQ id → exactly one `docs_root/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None → `PACKAGE_NOT_FOUND`.
+
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
 
 ## Hard gate (before any code change)
 Verify all:
@@ -104,7 +115,7 @@ Do not invent scripts or install dependencies.
 ## Evidence output
 Create/update (Vietnamese body):
 ```text
-docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
+docs_root/<PACKAGE>/reviews/TASK-<NNN>-implementation.md
 ```
 Use `.agents/templates/IMPLEMENTATION-EVIDENCE-template.md`.
 
@@ -124,7 +135,7 @@ APPROVAL_REQUIRED
 - relevant codebase and tests
 
 ## Output contract
-Implementation evidence at `docs/tasks/<PACKAGE>/reviews/TASK-<NNN>-implementation.md`. Return a pass/fail report to `project-manager`. DO NOT update `manifest.yaml` yourself.
+Implementation evidence at `docs_root/<PACKAGE>/reviews/TASK-<NNN>-implementation.md`. Return a pass/fail report to `project-manager`. DO NOT update `manifest.yaml` yourself.
 
 ## Stop condition
 Hand off back to `project-manager` with evidence path. Do not start QA. Do not mark `done`. Greenfield only — require Spec Package.

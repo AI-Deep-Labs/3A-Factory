@@ -63,14 +63,14 @@ When the user invokes **`/project-manager`** (Cursor rule, Claude command, or Ge
 - Follow **Session orchestration**: PM → read and execute `.agents/skills/<child>/SKILL.md` → re-read `manifest.yaml` → PM → …
 - Route **only** via routing table + `manifest.yaml` status; **do not skip phases** (triage → … → qa → converge as state requires)
 - Do **not** write requirements, design, application code, or tests directly (PM updates manifest execution fields only)
-- Do **not** use built-in planning mode or create artifacts outside `docs/tasks/REQ-*`
+- Do **not** use built-in planning mode or create artifacts outside `docs_root/REQ-*`
 - Do **not** auto-approve, auto-deploy, commit, or push
 - Do **not** call `deploy` from PM; deploy is explicit `/deploy` only
 - Do **not** mark tasks `done` (only `review` may)
 
 **Arguments:** slash args / user message = requirement text, REQ id, package path, approval response at active gate, or continue intent.
 
-If the user only typed `/project-manager` with no args, resolve package from context or list `docs/tasks/` and continue from manifest state — still follow the routing table.
+If the user only typed `/project-manager` with no args, resolve package from context or list `docs_root` and continue from manifest state — still follow the routing table.
 
 ## Onboarded detection
 
@@ -81,6 +81,8 @@ onboarded = AGENTS.md exists
 ```
 
 If any check fails → `ONBOARDING_REQUIRED` (do not triage or create packages).
+
+> **Note**: While `docs/` is still required in-repo for repository-level documentation (such as `docs/project_overview.md`), Spec Package tasks reside at `docs_root` (which points to `<path>/<project>/tasks/` when override is enabled per contract § 5.9).
 
 ## Session orchestration
 
@@ -107,10 +109,21 @@ PM → Read manifest → Determine next phase (e.g. 'develop') → Read subagent
 - Do **not** auto-deploy; do **not** auto-approve.
 
 ## Package resolution
-1. Valid `docs/tasks/` package path → use.
-2. Else REQ id → exactly one `docs/tasks/REQ-<NNNNNN>-*/`.
+1. Valid package path under `docs_root` → use.
+2. Else REQ id → exactly one `docs_root/REQ-<NNNNNN>-*/`.
 3. Multiple → `PACKAGE_CONFLICT`. None + new requirement text → start with `triage`.
 4. Do not write new feature artifacts under legacy `docs/requirements|designs|reviews|qa`.
+
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
 
 ## Inputs
 - `manifest.yaml`, `tasks.md`, `spec-review.md`

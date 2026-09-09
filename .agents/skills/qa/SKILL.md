@@ -17,7 +17,18 @@ Do not write new QA reports under legacy `docs/qa` for Spec Package features.
 Do not install new dependencies just to test.
 
 ## Package resolution
-`docs/tasks/REQ-…/` only for new packages; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND` as usual.
+`docs_root/REQ-…/` only for new packages; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND` as usual.
+
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
 
 ## Preconditions
 ```text
@@ -42,7 +53,7 @@ Unit Test, System Test, UAT, Performance, Security, Regression impact
 Item results: `PASSED` | `FAILED` | `BLOCKED` | `NOT_REQUIRED`.
 
 ## Evidence outputs
-Under `docs/tasks/<PACKAGE>/qa/`:
+Under `docs_root/<PACKAGE>/qa/`:
 ```text
 unit-test-report.md
 system-test-report.md

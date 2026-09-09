@@ -18,7 +18,18 @@ Do not ignore mismatches.
 May fix obvious broken references / non-semantic metadata / simple manifest summary mismatches — record every correction in the report.
 
 ## Package resolution
-`docs/tasks/REQ-…/`; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`.
+`docs_root/REQ-…/`; `PACKAGE_CONFLICT` / `PACKAGE_NOT_FOUND`.
+
+### Path resolution (spec_config override)
+Follow contract § 5.9:
+- Read `.agents/configs/spec_config.json`.
+- If file exists, JSON valid, and `override == true`:
+  - Validate `project` is non-empty string; if empty -> fail with `PROJECT_NOT_SET`.
+  - Validate `path` exists and is accessible; if invalid -> fail with `CONFIG_PATH_INVALID`.
+  - Resolve `docs_root = <path>/<project>/tasks/`.
+- Otherwise (missing file, JSON parse error, or `override == false`):
+  - Use default `docs_root = <repo_root>/docs/tasks/`.
+- Package directory: `docs_root/REQ-<NNNNNN>-<slug>/`.
 
 ## Preconditions
 - `manifest.status == converging` (or QA just PASSED and handed off)
@@ -49,7 +60,7 @@ Entire package + relevant git diff / sources + QA/review evidence.
 
 ## Output
 ```text
-docs/tasks/<PACKAGE>/qa/converge-report.md
+docs_root/<PACKAGE>/qa/converge-report.md
 ```
 Template: `.agents/templates/CONVERGE-REPORT-template.md` (Vietnamese).  
 Result: `PASSED` | `FAILED`.
