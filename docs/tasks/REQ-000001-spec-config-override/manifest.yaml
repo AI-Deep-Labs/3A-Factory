@@ -1,0 +1,89 @@
+schema_version: 1
+
+id: REQ-000001
+slug: spec-config-override
+title: Cải tiến cơ chế tạo spec với spec_config.json override path
+risk: medium
+status: converging
+
+artifacts:
+  raw: raw.md
+  discovery: discovery.md
+  analysis: analysis.md
+  requirements: requirements.md
+  design: design.md
+  tasks: tasks.md
+  acceptance: acceptance.md
+
+decisions: []
+
+validation:
+  status: passed
+  reviewed_at: "2026-09-09T15:49:00Z"
+  blockers: []
+  warnings: []
+
+approval:
+  spec_package:
+    status: approved
+    approved_by: user
+    approved_at: "2026-09-09T15:50:00Z"
+  develop:
+    status: not_required
+    approved_by: null
+    approved_at: null
+  user_review:
+    status: pending
+    approved_by: null
+    approved_at: null
+  deploy:
+    status: pending
+    approved_by: null
+    approved_at: null
+
+execution:
+  current_task: null
+  completed_tasks:
+    - TASK-001
+    - TASK-002
+    - TASK-003
+    - TASK-004
+    - TASK-005
+    - TASK-006
+  blocked_tasks: []
+  attempts:
+    TASK-001: 1
+    TASK-002: 1
+    TASK-003: 1
+    TASK-004: 1
+    TASK-005: 1
+    TASK-006: 1
+  last_activity_at: "2026-09-09T16:32:40Z"
+  last_activity_by: release_manager
+
+review:
+  status: passed
+  current_task: TASK-006
+  blockers: []
+  warnings: []
+  reviewed_at: "2026-09-09T16:32:18Z"
+
+qa:
+  unit_test: passed
+  system_test: passed
+  uat: passed
+  converge: pending
+  attempts: 1
+  blockers: []
+  last_run_at: "2026-09-09T16:33:30Z"
+
+git:
+  working_branch: feat/REQ-000001-spec-config-override
+  branch_guard_status: done
+  commits:
+    TASK-001: b87d2a3
+    TASK-002: e9baf83
+    TASK-003: 8e1881e
+    TASK-004: 221401c
+    TASK-005: 366d415
+    TASK-006: 0c7c3d9
