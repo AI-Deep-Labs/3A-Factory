@@ -5,6 +5,21 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.0] - 2026-09-10
+
+Centralized Spec Package Knowledge Base via `spec_config.json` Override Path — hỗ trợ chuyển hướng lưu trữ toàn bộ tài liệu Spec Package sang kho tri thức tập trung bên ngoài repository theo cấu trúc `<path>/<project>/tasks/REQ-*`.
+
+### Added
+- **`spec_config.json`**: File cấu hình mới tại `.agents/configs/spec_config.json` (scaffold mặc định bởi `scripts/install.js` với `override: false`, `project: ""`, `path: ""`).
+- **Contract § 5.9 Path Resolution (`.agents/contracts/spec-package.md`)**: Đặc tả thuật toán phân giải đường dẫn tài liệu tập trung, các failure tokens (`CONFIG_PATH_INVALID`, `CONFIG_MALFORMED`, `PROJECT_NOT_SET`, `PROJECT_ALREADY_SET`), và 4 nguyên tắc bất biến (Invariants).
+- **Release notes**: Bổ sung tài liệu phát hành chi tiết tại `release-notes/4.2.0.md`.
+
+### Changed
+- **`onboarding` skill (`.agents/skills/onboarding/SKILL.md`)**: Thêm bước thiết lập `project` identifier trong `spec_config.json` khi onboarding lần đầu; kích hoạt guard cấm ghi đè (immutability guard) khi đã có giá trị (`PROJECT_ALREADY_SET`).
+- **14 kỹ năng pipeline**: Đồng bộ hóa `Package resolution contract` theo chuẩn § 5.9 (`triage`, `analyze`, `requirements`, `design`, `tasks`, `acceptance`, `adr`, `spec`, `spec-review`, `develop`, `review`, `qa`, `converge`, `project-manager`).
+- **Tài liệu điều phối (`AGENTS.md`, `GEMINI.md`, `CLAUDE.md`)**: Cập nhật định nghĩa `Canonical path` sang `docs_root/REQ-<NNNNNN>-<slug>/` hỗ trợ cả in-repo default và external knowledge base override.
+- **`scripts/install.js`**: Tự động scaffold file cấu hình `spec_config.json` khi cài đặt pipeline vào repo mới.
+
 ## [4.1.2] - 2026-08-27
 
 Security & Strict Enforcement — Khóa quyền sửa code của Root Agent và thắt chặt Auto-intake để ngăn AI đi đường tắt.
