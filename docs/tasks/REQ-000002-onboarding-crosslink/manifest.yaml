@@ -1,0 +1,74 @@
+schema_version: 1
+
+id: REQ-000002
+slug: onboarding-crosslink
+title: Bổ sung Cross-link vào docs/project_overview.md
+risk: low
+status: done
+
+artifacts:
+  raw: raw.md
+  analysis: analysis.md
+  requirements: requirements.md
+  design: design.md
+  tasks: tasks.md
+  acceptance: acceptance.md
+  spec_review: spec-review.md
+
+decisions: []
+
+validation:
+  status: passed
+  reviewed_at: null
+  blockers: []
+  warnings: []
+
+approval:
+  spec_package:
+    status: approved
+    approved_by: user
+    approved_at: "2026-09-10T16:11:44Z"
+  develop:
+    status: not_required
+    approved_by: null
+    approved_at: null
+  user_review:
+    status: approved
+    approved_by: user
+    approved_at: "2026-09-10T16:32:08Z"
+  deploy:
+    status: pending
+    approved_by: null
+    approved_at: null
+
+execution:
+  current_task: null
+  completed_tasks:
+    - TASK-001
+  blocked_tasks: []
+  attempts:
+    TASK-001: 1
+  last_activity_at: "2026-09-10T16:22:59Z"
+  last_activity_by: release_manager
+
+review:
+  status: passed
+  current_task: TASK-001
+  blockers: []
+  warnings: []
+  reviewed_at: "2026-09-10T16:20:52Z"
+
+qa:
+  unit_test: passed
+  system_test: passed
+  uat: passed
+  converge: passed
+  attempts: 1
+  blockers: []
+  last_run_at: "2026-09-10T16:25:30Z"
+
+git:
+  working_branch: feat/REQ-000002-onboarding-crosslink
+  branch_guard_status: done
+  commits:
+    TASK-001: 14d5f27

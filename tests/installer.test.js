@@ -112,7 +112,7 @@ describe('installer smoke', () => {
         assert.match(pmRule, /MANDATORY PM MODE/);
         assert.match(pmRule, /Slash invocation \(mandatory\)/);
         const shared = fs.readFileSync(path.join(tmp, '.agents/skills/triage/SKILL.md'), 'utf8');
-        assert.match(shared, /^---\nname: triage\n/);
+        assert.match(shared, /^---\r?\nname: triage\r?\n/);
         assert.match(shared, /argument-hint:/);
         const pmSkill = fs.readFileSync(path.join(tmp, '.agents/skills/project-manager/SKILL.md'), 'utf8');
         assert.match(pmSkill, /AUTO-ACTIVATE/);

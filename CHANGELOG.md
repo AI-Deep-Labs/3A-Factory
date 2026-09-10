@@ -5,6 +5,19 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.1] - 2026-09-10
+
+Onboarding Knowledge Base Cross-linking — Bổ sung chỉ dẫn liên kết chéo "Knowledge Base & Feature Specs" vào tài liệu tổng quan repository (`docs/project_overview.md`) khi thực hiện onboarding.
+
+### Changed
+- **`onboarding` skill (`.agents/skills/onboarding/SKILL.md`)**:
+  - Thêm mục `13. Knowledge Base & Feature Specs` vào cấu trúc tối thiểu trong Phase D (`docs/project_overview.md`).
+  - Hướng dẫn chỉ rõ vị trí lưu trữ toàn bộ tài liệu đặc tả tính năng (Spec Packages) của project dựa trên cấu hình `spec_config.json` (`<path>/<project>/tasks/REQ-*` khi `override: true`, hoặc `docs/tasks/REQ-*` khi `override: false`).
+  - Cập nhật checklist kiểm tra tại Phase E / Output checklist.
+
+### Added
+- **Release notes**: Bổ sung tài liệu phát hành chi tiết tại `release-notes/4.2.1.md`.
+
 ## [4.2.0] - 2026-09-10
 
 Centralized Spec Package Knowledge Base via `spec_config.json` Override Path — hỗ trợ chuyển hướng lưu trữ toàn bộ tài liệu Spec Package sang kho tri thức tập trung bên ngoài repository theo cấu trúc `<path>/<project>/tasks/REQ-*`.
