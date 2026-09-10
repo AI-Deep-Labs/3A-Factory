@@ -144,6 +144,10 @@ Create/update `docs/project_overview.md` for future agents.
 10. Risks and Unknowns
 11. Recommendations for Future Agents
 12. Evidence Index (files read)
+13. Knowledge Base & Feature Specs:
+    - Chỉ điểm rõ ràng nơi lưu trữ toàn bộ tài liệu chi tiết về tính năng (Spec Packages) của project này.
+    - Nếu `.agents/configs/spec_config.json` có `override: true` và đường dẫn hợp lệ: chỉ định đường dẫn ngoài repo là `<path>/<project>/tasks/REQ-*` (theo hợp đồng § 5.9).
+    - Nếu `override: false` (mặc định): chỉ định đường dẫn nội bộ repo là `docs/tasks/REQ-*`.
 
 Larger repos: add communication, data, API, security when evidenced.
 
@@ -172,7 +176,7 @@ Keep it short:
 - [ ] spec_config.json project identifier configured (or preserved if already set)
 - [ ] `AGENTS.md` filled with project context
 - [ ] Agent-specific context file created/updated **only for current agent** (Claude → `CLAUDE.md`, Gemini → `GEMINI.md`, Cursor → rules only)
-- [ ] `docs/project_overview.md` created/updated (**Vietnamese**)
+- [ ] `docs/project_overview.md` created/updated (**Vietnamese**, includes Knowledge Base & Feature Specs cross-link)
 - [ ] No artifacts outside the current repo; no context files for other agents
 - [ ] User knows how to start the next REQ (natural language or slash override)
 
