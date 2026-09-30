@@ -5,6 +5,22 @@ All notable changes to this project are documented in this file.
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.1.0/),
 and this project adheres to [Semantic Versioning](https://semver.org/spec/v2.0.0.html).
 
+## [4.2.2] - 2026-10-01
+
+Handoff Enhancements & Centralized Knowledge Base Dynamic Routing — Nâng cấp kỹ năng và lệnh handoff với khả năng đặt tên file linh hoạt theo ngữ cảnh REQ/chủ đề và định tuyến thư mục lưu trữ theo `spec_config.json`.
+
+### Changed
+- **`handoff` skill (`.agents/skills/handoff/SKILL.md`) & slash command (`.agents/commands/handoff.md`)**:
+  - Hỗ trợ định tuyến thư mục lưu trữ theo `.agents/configs/spec_config.json`:
+    - Khi `override: true`: lưu tại `<path>/<project>/tasks/<REQ-slug>/misc/compact/` nếu có ngữ cảnh REQ, hoặc `<path>/<project>/misc/compact/` nếu không có REQ.
+    - Khi `override: false` (mặc định): lưu tại `docs/tasks/<REQ-slug>/misc/compact/` nếu có ngữ cảnh REQ, hoặc `docs/misc/compact/` nếu không có REQ.
+  - Quy tắc đặt tên file linh hoạt:
+    - Có ngữ cảnh REQ (đang thực hiện hoặc do người dùng chỉ định): `HANDOFF-<REQ-slug>-YYYYMMDD-HHMM.md`.
+    - Không có ngữ cảnh REQ: `HANDOFF-<topic-slug>-YYYYMMDD-HHMM.md` (tự động trích xuất slug chủ đề đang làm việc).
+
+### Added
+- **Release notes**: Bổ sung tài liệu phát hành chi tiết tại `release-notes/4.2.2.md`.
+
 ## [4.2.1] - 2026-09-10
 
 Onboarding Knowledge Base Cross-linking — Bổ sung chỉ dẫn liên kết chéo "Knowledge Base & Feature Specs" vào tài liệu tổng quan repository (`docs/project_overview.md`) khi thực hiện onboarding.
